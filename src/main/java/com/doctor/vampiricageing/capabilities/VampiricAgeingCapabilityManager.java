@@ -197,6 +197,7 @@ public class VampiricAgeingCapabilityManager {
             });
         }
         if(event.player.isAlive() && !event.player.getCommandSenderWorld().isClientSide && event.player.getRandom().nextFloat() <= 0.25 && event.player.tickCount % 18000 == 0 && getAge(event.player).orElse(null).getAge() > 3 && CommonConfig.highAgeBadOmen.get()) {
+            event.player.sendSystemMessage(Component.translatable("text.vampiricageing.bad_omen"));
             event.player.addEffect(new MobEffectInstance(ModEffects.BAD_OMEN_HUNTER.get(), 1, 36000));
         }
     }
@@ -262,6 +263,8 @@ public class VampiricAgeingCapabilityManager {
                 int blood = 0;
                 float saturationMod = 1.0F;
                 if(biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_PLAYER) {
+                    blood = VampirePlayer.getOpt((Player) target).map(v -> v.onBite(vamp)).orElse(0);
+                    saturationMod = VampirePlayer.getOpt((Player) target).map(VampirePlayer::getBloodSaturation).orElse(0f);
 
                 } else if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_CREATURE) {
                     LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(target);
