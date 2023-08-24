@@ -15,8 +15,11 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import de.teamlapen.vampirism.entity.ai.goals.BiteNearbyEntityVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.MoveToBiteableVampireGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -58,10 +61,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -156,7 +156,7 @@ public class VampiricAgeingCapabilityManager {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         final AgeingCapabilityProvider provider = new AgeingCapabilityProvider();
-        if(event.getObject() instanceof Player || event.getObject() instanceof AdvancedVampireEntity ) {
+        if(event.getObject() instanceof Player || event.getObject() instanceof AdvancedVampireEntity || event.getObject() instanceof AdvancedVampireEntity.IMob ) {
             event.addCapability(AGEING_KEY, provider);
         }
     }
@@ -164,6 +164,12 @@ public class VampiricAgeingCapabilityManager {
     @SubscribeEvent
     public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
         event.register(IAgeingCapability.class);
+    }
+    @SubscribeEvent
+    public static void onPotionEffectRemove(MobEffectEvent.Remove event) {
+        if(CommonConfig.sireingMechanic.get() && event.getEffect() == ModEffects.SANGUINARE.get() && event.getEntity() instanceof Player player && !event.getEntity().getCommandSenderWorld().isClientSide) {
+            player.getPersistentData().remove("AGE");
+        }
     }
 
     @SubscribeEvent
@@ -315,6 +321,14 @@ public class VampiricAgeingCapabilityManager {
                 age.setInfected(0);
                 syncAgeCap(event.getPlayer().getPlayer());
             });
+        } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
+            int sireAge = event.getPlayer().getPlayer().getPersistentData().getInt("AGE");
+            getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
+                age.setAge(sireAge);
+                age.setTime(0);
+                age.setInfected(0);
+                syncAgeCap(event.getPlayer().getPlayer());
+            });
         }
     }
 
@@ -352,6 +366,18 @@ public class VampiricAgeingCapabilityManager {
                 vamp.drinkBlood(blood, saturationMod);
             }
         }
+        //Advanced Vampires dont seem to come with the Goal to bite entities unlike Basic Vampires, not sure if intentional
+        //Cant get adding the same goals on level join to work properly
+        //saves out on a mixin at least
+        if(source instanceof AdvancedVampireEntity vamp && CommonConfig.sireingMechanic.get() && target instanceof ServerPlayer player && Helper.canBecomeVampire(player)) {
+            getAge(vamp).ifPresent(vampireAge -> {
+                if (vampireAge.getAge() > 1 && vamp.getRandom().nextFloat() > 0.85) {
+                        SanguinareEffect.addRandom(player, true);
+                    player.getPersistentData().remove("AGE");
+                    player.getPersistentData().putInt("AGE", vampireAge.getAge() - 1);
+                }
+            });
+        }
     }
 
     @SubscribeEvent
@@ -361,7 +387,6 @@ public class VampiricAgeingCapabilityManager {
                 if(vampireAge.getAge() != 0) {
                     return;
                 }
-
                 List<Float> percentages = CommonConfig.percentageAdvancedVampireAges.get();
                 float random = vamp.getRandom().nextFloat();
                 //im tired but i think this works right?
