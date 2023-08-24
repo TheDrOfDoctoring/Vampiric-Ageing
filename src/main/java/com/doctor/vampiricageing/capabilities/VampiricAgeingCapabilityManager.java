@@ -94,7 +94,7 @@ public class VampiricAgeingCapabilityManager {
     public static final Capability<IAgeingCapability> AGEING_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static boolean canAge(LivingEntity entity) {
-        if(entity instanceof Player player && entity.isAlive() && de.teamlapen.vampirism.util.Helper.isVampire(player) && !entity.getCommandSenderWorld().isClientSide) {
+        if(entity instanceof ServerPlayer player && entity.isAlive() && de.teamlapen.vampirism.util.Helper.isVampire(player)) {
             int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
             return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
@@ -147,7 +147,7 @@ public class VampiricAgeingCapabilityManager {
     public static void incrementInfected(ServerPlayer player) {
         getAge(player).ifPresent(age -> {
             age.setInfected(age.getInfected() + 1);
-            VampirePlayer.getOpt(player).ifPresent(vamp -> HelperLib.sync(vamp, age.serializeNBT(), player, false));
+            syncAgeCap(player);
             if(shouldIncreaseRankInfected(player)) {
                 increaseAge(player);
             }
@@ -275,14 +275,16 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
-        if(event.player.tickCount % 100 == 0 && canAge(event.player) && CommonConfig.timeBasedIncrease.get()) {
-            ServerPlayer player = (ServerPlayer) event.player;
-            getAge(player).ifPresent(age -> {
-                age.setTime(age.getAge() + 100);
-                if(shouldIncreaseRankTicks(player)) {
-                    increaseAge(player);
-                }
-            });
+        if(event.player.tickCount % 100 == 0 && event.player instanceof ServerPlayer player && CommonConfig.timeBasedIncrease.get()) {
+            if(canAge(player)) {
+                getAge(player).ifPresent(age -> {
+                    age.setTime(age.getTime() + 100);
+                    syncAgeCap(player);
+                    if(shouldIncreaseRankTicks(player)) {
+                        increaseAge(player);
+                    }
+                });
+            }
         }
         if(event.player.isAlive() && !event.player.getCommandSenderWorld().isClientSide && event.player.getRandom().nextFloat() <= 0.25 && event.player.tickCount % 18000 == 0 && getAge(event.player).orElse(null).getAge() > 3 && CommonConfig.highAgeBadOmen.get()) {
             event.player.sendSystemMessage(Component.translatable("text.vampiricageing.bad_omen"));

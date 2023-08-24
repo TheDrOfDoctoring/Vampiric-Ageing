@@ -45,7 +45,7 @@ description='''
 This mod adds a Vampiric Ageing system othe
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.vampiricageing]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -57,10 +57,16 @@ This mod adds a Vampiric Ageing system othe
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.vampiricageing]]
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.vampiricageing]]
+    modId="vampirism"
+    mandatory=true
+    versionRange="[1.9.0, )"
     ordering="NONE"
     side="BOTH"
