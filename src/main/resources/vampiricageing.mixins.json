@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.doctor.vampiricageing.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "vampiricageing.refmap.json",
+  "mixins": [
+    "InfectActionMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

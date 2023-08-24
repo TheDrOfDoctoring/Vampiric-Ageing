@@ -1,0 +1,10 @@
+{
+  "text.vampiricageing.progress_ticks": "You must survive for ",
+  "text.vampiricageing.progress_ticks_end": " more seconds to rank up.",
+  "text.vampiricageing.progress_infected": "You must infect ",
+  "text.vampiricageing.progress_infected_end": " more creatures with Vampirism to rank up.",
+  "command.vampiricageing.failed_to_execute": "Failed to execute command. Internal error.",
+  "command.vampiricageing.failed_to_execute.players": "Failed to execute command for %s. Internal error",
+  "command.vampiricageing.base.age.success": "%s is now a %s age %s",
+  "action.vampiricageing.drain_blood_action": "Blood Tap"
+}
