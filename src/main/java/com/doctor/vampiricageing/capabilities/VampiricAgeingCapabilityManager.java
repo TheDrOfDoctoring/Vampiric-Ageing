@@ -190,12 +190,14 @@ public class VampiricAgeingCapabilityManager {
         Player player = event.getEntity();
         if(!player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && canAge(player)) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
+            int ticksAlive = getAge(event.getEntity()).map(ageCap -> ageCap.getTime()).orElse(0);
+            int infected = getAge(event.getEntity()).map(ageCap -> ageCap.getInfected()).orElse(0);
             if(CommonConfig.timeBasedIncrease.get()) {
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks").append(String.valueOf(CommonConfig.ticksForNextAge.get().get(age) / 20)).append(Component.translatable("text.vampiricageing.progress_ticks_end")).withStyle(ChatFormatting.DARK_RED));
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks").append(String.valueOf((CommonConfig.ticksForNextAge.get().get(age) - ticksAlive) / 20)).append(Component.translatable("text.vampiricageing.progress_ticks_end")).withStyle(ChatFormatting.DARK_RED));
 
             }
             if(CommonConfig.biteBasedIncrease.get()) {
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected").append(String.valueOf(CommonConfig.infectedForNextAge.get().get(age))).append(Component.translatable("text.vampiricageing.progress_infected_end")).withStyle(ChatFormatting.DARK_RED));
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected").append(String.valueOf(CommonConfig.infectedForNextAge.get().get(age) - infected)).append(Component.translatable("text.vampiricageing.progress_infected_end")).withStyle(ChatFormatting.DARK_RED));
             }
         }
     }
