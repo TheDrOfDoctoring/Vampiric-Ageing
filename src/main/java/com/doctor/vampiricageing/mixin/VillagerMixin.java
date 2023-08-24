@@ -25,7 +25,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         if (Helper.isVampire(player) && CommonConfig.doesAgeAffectPrices.get()) {
             int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
             for(MerchantOffer merchantoffer1 : this.getOffers()) {
-                float ageMult = CommonConfig.ageAffectTradePrices.get().get(age);
+                double ageMult = CommonConfig.ageAffectTradePrices.get().get(age);
                 double d0 = 1 - ageMult;
 
                 int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;

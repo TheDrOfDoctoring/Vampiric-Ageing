@@ -204,15 +204,15 @@ public class VampiricAgeingCapabilityManager {
         Player player = event.getEntity();
         if(player.isShiftKeyDown() && CommonConfig.sireingMechanic.get() && Helper.isVampire(player) && event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().is(Items.GLASS_BOTTLE)) {
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-            if(age > 1 && VampirePlayer.get(player).getBloodLevel() > 2) {
+            if(age > 1 && VampirePlayer.get(player).getBloodLevel() > 8) {
                 age -= 1;
                 ItemStack mainHandStack = player.getMainHandItem();
                 mainHandStack.shrink(1);
                 ItemStack stack = ModItems.BLOOD_BOTTLE.get().getDefaultInstance();
                 stack.getOrCreateTag().putInt("AGE", age);
-                stack.setDamageValue(1);
+                stack.setDamageValue(4);
                 player.addItem(stack);
-                VampirePlayer.getOpt(player).ifPresent(vamp -> vamp.removeBlood(0.2f));
+                VampirePlayer.getOpt(player).ifPresent(vamp -> vamp.removeBlood(0.5f));
             }
 
         }
@@ -343,9 +343,9 @@ public class VampiricAgeingCapabilityManager {
         if(Helper.isVampire(event.getEntity())) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
             if(event.getSource() == VReference.SUNDAMAGE) {
-                event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age));
+                event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER || event.getSource() == VReference.NO_BLOOD) {
-                event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age));
+                event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
             }
         }
     }
@@ -394,8 +394,8 @@ public class VampiricAgeingCapabilityManager {
                 if(vampireAge.getAge() != 0) {
                     return;
                 }
-                List<? extends Float> percentages = CommonConfig.percentageAdvancedVampireAges.get();
-                float random = vamp.getRandom().nextFloat();
+                List<? extends Double> percentages = CommonConfig.percentageAdvancedVampireAges.get();
+                double random = vamp.getRandom().nextDouble();
                 //im tired but i think this works right?
                 if(random <= percentages.get(0)) {
                     vampireAge.setAge(1);
