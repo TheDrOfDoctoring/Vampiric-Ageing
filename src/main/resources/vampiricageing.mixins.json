@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "vampiricageing.refmap.json",
   "mixins": [
+    "BlockBehaviourMixin",
     "InfectActionMixin",
     "VillagerMixin"
   ],
