@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.Helper;
@@ -232,7 +233,7 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onChangeFaction(PlayerFactionEvent.FactionLevelChanged event) {
-        if(event.getNewLevel() == 0) {
+        if(event.getNewLevel() == 0 || event.getCurrentFaction() != VReference.VAMPIRE_FACTION) {
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(0);
                 age.setTime(0);

@@ -16,6 +16,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<Boolean> drainBloodAction;
     public static final ForgeConfigSpec.ConfigValue<Boolean> doesAgeAffectPrices;
     public static final ForgeConfigSpec.ConfigValue<Boolean> ageWaterWalking;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> vampirePowderedSnowImmunity;
     public static final ForgeConfigSpec.ConfigValue<Integer> ageWaterWalkingRank;
     public static final ForgeConfigSpec.ConfigValue<Integer> levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.ConfigValue<Integer> stepAssistBonus;
@@ -36,6 +37,7 @@ public class CommonConfig {
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
+        vampirePowderedSnowImmunity = COMMON_BUILDER.comment("Whether vampires should be immune to the effects of Powdered Snow. Applies to ALL vampires").define("powderedSnowImmunity", true);
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
         drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Drain Blood Action").defineInRange("drainBloodActionRank", 3, 0, 5);

@@ -16,7 +16,7 @@ public class AgeRankOverlay extends GuiComponent implements IGuiOverlay {
     private final Minecraft mc = Minecraft.getInstance();
     @Override
     public void render(@NotNull ForgeGui gui, @NotNull PoseStack mStack, float partialTicks, int width, int height) {
-        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui) {
+        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui && !this.mc.player.isInWater()) {
             gui.setupOverlayRenderState(true, false);
             VampiricAgeingCapabilityManager.getAge(this.mc.player).ifPresent(age -> {
                 if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && age.getAge() > 0) {
