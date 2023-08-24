@@ -23,3 +23,13 @@ However, some penalties also come with increasing age:
 - Increased vulnerability to Fire, Garlic and Holy Water scaling with Age Rank
 - Rare chance to randomly gain the Bad Omen effect 
 - Increased prices with villagers
+
+# Sire Mechanic
+
+Siring is an optional config that changes how Ageing works, when using this it is highly recommended to turn off Age Reset and to turn on Advanced Vampire Age (Enabled by Default) and to turn off the other forms of Ageing.
+
+With this mechanic enabled, when a player has a Glass Bottle in their off-hand and kills a Vampire with an Age Rank (Only players and advanced vampires can have an age rank), they gain a blood bottle with that rank. This bottle can be drunk to get that rank.
+
+Additionally, players with an Age Rank can use a Glass Bottle while Shifting to make a Blood Bottle with the rank below theirs, e.g if a Player has Rank 5, they will produce a bottle with Rank 4.
+
+

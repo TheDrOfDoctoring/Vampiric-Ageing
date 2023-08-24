@@ -15,6 +15,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<Boolean> highAgeBadOmen;
     public static final ForgeConfigSpec.ConfigValue<Boolean> drainBloodAction;
     public static final ForgeConfigSpec.ConfigValue<Boolean> doesAgeAffectPrices;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> sireingMechanic;
     public static final ForgeConfigSpec.ConfigValue<Boolean> ageWaterWalking;
     public static final ForgeConfigSpec.ConfigValue<Boolean> vampirePowderedSnowImmunity;
     public static final ForgeConfigSpec.ConfigValue<Integer> ageWaterWalkingRank;
@@ -24,19 +25,19 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<Integer> drainBloodActionCooldown;
     public static final ForgeConfigSpec.ConfigValue<Integer> drainBloodActionRank;
 
-
-
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> sunDamageReduction;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> genericVampireWeaknessReduction;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageExhaustionEffect;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> maxHealthIncrease;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageAffectTradePrices;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> sunDamageReduction;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> percentageAdvancedVampireAges;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> genericVampireWeaknessReduction;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> ageExhaustionEffect;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> maxHealthIncrease;
+    public static final ForgeConfigSpec.ConfigValue<List<Float>> ageAffectTradePrices;
+    public static final ForgeConfigSpec.ConfigValue<List<Integer>> ticksForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<Integer>> infectedForNextAge;
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
+        sireingMechanic = COMMON_BUILDER.comment("Intended to be a replacement for other forms of ageing, though will work with them. Overrides the mechanic to always begin at Level 1. Ranks can be gained by drinking blood of more powerful vampires. Highly recommended to turn off Death Reset and to make sure Advanced Vampire Age is turned on. More information on GitHub Readme or Curseforge Page").define("sireingMechanic", false);
         vampirePowderedSnowImmunity = COMMON_BUILDER.comment("Whether vampires should be immune to the effects of Powdered Snow. Applies to ALL vampires").define("powderedSnowImmunity", true);
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
@@ -46,6 +47,7 @@ public class CommonConfig {
         drainBloodAction = COMMON_BUILDER.comment("Whether the Drain Blood action is available for Aged Vampires").define("drainBloodAction", true);
         COMMON_BUILDER.comment("For any config with a list of 6 numbers, the very first number refers to a vampire with no age rank and the second number is the first age rank.");
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins").defineInRange("levelToBeginAgeMechanic", 14, 1, 14);
+        percentageAdvancedVampireAges = COMMON_BUILDER.comment("The percentage, as a decimal, of how likely an advanced vampire is to get each rank with advanced vampire ages enabled").define("percentageAdvancedVampireAges", List.of(0.5f, 0.3f, 0.1f, 0.08f, 0.02f));
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").define("maxHealthIncrease", List.of(0f, 2f, 4f, 6f, 8f, 10f));
         doesAgeAffectPrices = COMMON_BUILDER.comment("Whether Age makes a difference on Trade Prices").define("doesAgeAffectPrices", true);
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").define("ageAffectTradePrices", List.of(1f, 1.1f, 1.25f, 1.5f, 1.75f, 2f));

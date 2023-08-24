@@ -14,23 +14,28 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
+import jdk.jfr.Percentage;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -39,7 +44,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.Capability;
@@ -50,16 +57,22 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = VampiricAgeing.MODID)
@@ -69,6 +82,7 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID MAX_HEALTH_UUID = UUID.fromString("08251d58-2513-4768-b4b5-f2a1a239998e");
     public static final UUID EXHAUSTION_UUID = UUID.fromString("1f14dd76-7d9b-47b3-9951-1c221f78d49f");
     public static final UUID STEP_ASSIST_UUID = UUID.fromString("edee6b7f-755a-4dc5-a036-2b8108415c4c");
+    public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("94d546a9-6848-48cf-bcba-5e162987d58b");
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
         if (livingEntity == null) {
             return LazyOptional.empty();
@@ -82,7 +96,7 @@ public class VampiricAgeingCapabilityManager {
         if(entity instanceof Player player && entity.isAlive() && de.teamlapen.vampirism.util.Helper.isVampire(player) && !entity.getCommandSenderWorld().isClientSide) {
             int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-            return level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5;
+            return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
         }
         return false;
     }
@@ -98,6 +112,8 @@ public class VampiricAgeingCapabilityManager {
     public static void increaseAge(ServerPlayer player) {
         if(canAge(player)) {
             getAge(player).ifPresent(age -> {
+                player.level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
+                ModParticles.spawnParticlesServer(player.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
                 age.setAge(age.getAge() + 1);
                 syncAgeCap(player);
             });
@@ -140,7 +156,7 @@ public class VampiricAgeingCapabilityManager {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         final AgeingCapabilityProvider provider = new AgeingCapabilityProvider();
-        if(event.getObject() instanceof LivingEntity ) {
+        if(event.getObject() instanceof Player || event.getObject() instanceof AdvancedVampireEntity ) {
             event.addCapability(AGEING_KEY, provider);
         }
     }
@@ -161,11 +177,12 @@ public class VampiricAgeingCapabilityManager {
                 });
         event.getOriginal().invalidateCaps();
     }
+
     @SubscribeEvent
     public static void onCoffinInteract(PlayerInteractEvent event) {
         Player player = event.getEntity();
         if(!player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && canAge(player)) {
-            int age = getAge(player).orElse(null).getAge();
+            int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
             if(CommonConfig.timeBasedIncrease.get()) {
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks").append(String.valueOf(CommonConfig.ticksForNextAge.get().get(age) / 20)).append(Component.translatable("text.vampiricageing.progress_ticks_end")).withStyle(ChatFormatting.DARK_RED));
 
@@ -173,10 +190,27 @@ public class VampiricAgeingCapabilityManager {
             if(CommonConfig.biteBasedIncrease.get()) {
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected").append(String.valueOf(CommonConfig.infectedForNextAge.get().get(age))).append(Component.translatable("text.vampiricageing.progress_infected_end")).withStyle(ChatFormatting.DARK_RED));
             }
-
         }
     }
     @SubscribeEvent
+    public static void sireBloodInteract(PlayerInteractEvent event) {
+        Player player = event.getEntity();
+        if(player.isShiftKeyDown() && CommonConfig.sireingMechanic.get() && Helper.isVampire(player) && event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().is(Items.GLASS_BOTTLE)) {
+            int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+            if(age > 0 && VampirePlayer.get(player).getBloodLevel() > 2) {
+                age -= 1;
+                ItemStack mainHandStack = player.getMainHandItem();
+                mainHandStack.shrink(1);
+                ItemStack stack = ModItems.BLOOD_BOTTLE.get().getDefaultInstance();
+                stack.getOrCreateTag().putInt("AGE", age);
+                stack.setDamageValue(1);
+                player.addItem(stack);
+                VampirePlayer.getOpt(player).ifPresent(vamp -> vamp.removeBlood(0.2f));
+            }
+
+        }
+    }
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onDeath(LivingDeathEvent event) {
         if(event.getEntity() instanceof ServerPlayer player && Helper.isVampire(event.getEntity()) && CommonConfig.deathReset.get()) {
             getAge(player).ifPresent(age -> {
@@ -184,7 +218,48 @@ public class VampiricAgeingCapabilityManager {
                 syncAgeCap(player);
             });
         }
+        LivingEntity dead = event.getEntity();
+        if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof Player player && Helper.isVampire(dead) && CommonConfig.sireingMechanic.get()) {
+            if(player.getOffhandItem().is(Items.GLASS_BOTTLE) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
+                int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
+                ItemStack offHandStack = player.getOffhandItem();
+                offHandStack.shrink(1);
+                ItemStack stack = ModItems.BLOOD_BOTTLE.get().getDefaultInstance();
+                stack.getOrCreateTag().putInt("AGE", age);
+                stack.setDamageValue(1);
+                player.addItem(stack);
+            }
+        }
     }
+    @SubscribeEvent
+    public static void tooltipEvent(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        if(stack.is(ModItems.BLOOD_BOTTLE.get()) && CommonConfig.sireingMechanic.get()) {
+            if(stack.getOrCreateTag().contains("AGE")) {
+                int age = stack.getOrCreateTag().getInt("AGE");
+                event.getToolTip().add(Component.translatable("text.vampiricageing.blood_rank").append(String.valueOf(age)));
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void useItem(LivingEntityUseItemEvent.Finish event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getItem();
+        if(CommonConfig.sireingMechanic.get() && stack.getOrCreateTag().contains("AGE") && entity instanceof Player player && Helper.isVampire(entity) && event.getItem().is(ModItems.BLOOD_BOTTLE.get())) {
+            int age = stack.getOrCreateTag().getInt("AGE");
+            int ageRank = getAge(entity).map(ageCap -> ageCap.getAge()).orElse(0);
+            stack.getOrCreateTag().remove("AGE");
+            if(age > 0 && age > ageRank) {
+                getAge(entity).ifPresent(ageCap -> {
+                    ageCap.setAge(age);
+                    syncAgeCap(player);
+                });
+            }
+
+        }
+    }
+
+
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
@@ -286,25 +361,33 @@ public class VampiricAgeingCapabilityManager {
                 if(vampireAge.getAge() != 0) {
                     return;
                 }
+
+                List<Float> percentages = CommonConfig.percentageAdvancedVampireAges.get();
                 float random = vamp.getRandom().nextFloat();
-                if(random <= 0.5) {
+                //im tired but i think this works right?
+                if(random <= percentages.get(0)) {
                     vampireAge.setAge(1);
-                } else if (random <= 0.8 && random > 0.5) {
+                } else if ((random <= percentages.get(1) + percentages.get(0)) && random > percentages.get(0)) {
                     vampireAge.setAge(2);
-                } else if (random <= 0.95 && random > 0.8) {
+                } else if (random <= percentages.get(2) + percentages.get(1) && random > percentages.get(1)) {
                     vampireAge.setAge(3);
-                } else if (random <= 0.985 && random > 0.95) {
+                } else if (random <= percentages.get(3) + percentages.get(2) && random > percentages.get(2)) {
                     vampireAge.setAge(4);
-                } else if(random <= 1 && random > 0.985) {
+                } else if(random <= percentages.get(4) + percentages.get(3) && random > percentages.get(3)) {
                     vampireAge.setAge(5);
+                } else {
+                    vampireAge.setAge(0);
+                    return;
                 }
                 float ageMultiplier = Math.min(1, (float) vampireAge.getAge() / 2);
                 vamp.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "AGE_VAMPIRE_HEALTH_INCREASE", ageMultiplier, AttributeModifier.Operation.MULTIPLY_BASE));
                 vamp.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(ATTACK_DAMAGE_UUID, "AGE_VAMPIRE_DAMAGE_INCREASE", ageMultiplier, AttributeModifier.Operation.MULTIPLY_BASE));
+                vamp.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addPermanentModifier(new AttributeModifier(KNOCKBACK_RESISTANCE_UUID, "AGE_VAMPIRE_KNOCKBACK_RESISTANCE", 0.25 * ageMultiplier, AttributeModifier.Operation.ADDITION));
                 vamp.setHealth(vamp.getMaxHealth());
             });
         }
     }
+
 
     public static void syncAgeCap(Player player) {
         IAgeingCapability cap = getAge(player).orElse(new AgeingCapability());
