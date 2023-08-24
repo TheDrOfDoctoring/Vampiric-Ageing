@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -203,7 +204,7 @@ public class VampiricAgeingCapabilityManager {
         Player player = event.getEntity();
         if(player.isShiftKeyDown() && CommonConfig.sireingMechanic.get() && Helper.isVampire(player) && event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().is(Items.GLASS_BOTTLE)) {
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-            if(age > 0 && VampirePlayer.get(player).getBloodLevel() > 2) {
+            if(age > 1 && VampirePlayer.get(player).getBloodLevel() > 2) {
                 age -= 1;
                 ItemStack mainHandStack = player.getMainHandItem();
                 mainHandStack.shrink(1);
@@ -235,6 +236,9 @@ public class VampiricAgeingCapabilityManager {
                 stack.setDamageValue(1);
                 player.addItem(stack);
             }
+        }
+        if(dead.getPersistentData().contains("AGE")) {
+            dead.getPersistentData().remove("AGE");
         }
     }
     @SubscribeEvent
@@ -291,6 +295,7 @@ public class VampiricAgeingCapabilityManager {
         }
     }
 
+
     @SubscribeEvent
     public static void onPlayerDimChangedEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer) {
@@ -328,25 +333,27 @@ public class VampiricAgeingCapabilityManager {
                 age.setTime(0);
                 age.setInfected(0);
                 syncAgeCap(event.getPlayer().getPlayer());
+                event.getPlayer().getPlayer().getPersistentData().remove("AGE");
             });
         }
     }
 
     @SubscribeEvent
     public static void onDamage(LivingDamageEvent event) {
-        if(Helper.isVampire(event.getEntity()) && event.getSource() == VReference.SUNDAMAGE) {;
+        if(Helper.isVampire(event.getEntity())) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-            event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age));
-        } else if(Helper.isVampire(event.getEntity()) && (event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER || event.getSource() == VReference.NO_BLOOD)) {
-            int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-            event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age));
+            if(event.getSource() == VReference.SUNDAMAGE) {
+                event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age));
+            } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER || event.getSource() == VReference.NO_BLOOD) {
+                event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age));
+            }
         }
     }
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         Entity source = event.getSource().getEntity();
-        if(source instanceof ServerPlayer player && Helper.isVampire(player)) {
+        if(source instanceof Player player && Helper.isVampire(player)) {
             VampirePlayer vamp = VampirePlayer.get(player);
             if(vamp.getActionHandler().isActionActive(VampiricAgeingActions.DRAIN_BLOOD_ACTION.get())) {
                 IVampirePlayer.BITE_TYPE biteType = vamp.determineBiteType(target);
@@ -372,7 +379,7 @@ public class VampiricAgeingCapabilityManager {
         if(source instanceof AdvancedVampireEntity vamp && CommonConfig.sireingMechanic.get() && target instanceof ServerPlayer player && Helper.canBecomeVampire(player)) {
             getAge(vamp).ifPresent(vampireAge -> {
                 if (vampireAge.getAge() > 1 && vamp.getRandom().nextFloat() > 0.85) {
-                        SanguinareEffect.addRandom(player, true);
+                    SanguinareEffect.addRandom(player, true);
                     player.getPersistentData().remove("AGE");
                     player.getPersistentData().putInt("AGE", vampireAge.getAge() - 1);
                 }
@@ -387,7 +394,7 @@ public class VampiricAgeingCapabilityManager {
                 if(vampireAge.getAge() != 0) {
                     return;
                 }
-                List<Float> percentages = CommonConfig.percentageAdvancedVampireAges.get();
+                List<? extends Float> percentages = CommonConfig.percentageAdvancedVampireAges.get();
                 float random = vamp.getRandom().nextFloat();
                 //im tired but i think this works right?
                 if(random <= percentages.get(0)) {
