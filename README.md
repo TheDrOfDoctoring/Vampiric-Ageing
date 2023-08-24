@@ -15,8 +15,11 @@ By default, the player gains access to a number of benefits from ranking up:
 - Less Blood Drain, scaling with Age Rank
 - Step Assist at Rank 2
 - A new Action at Rank 3, which while active allows the player to drain blood from creatures they attack
+- Waterwalking at Rank 4
+- Vampires are now mostly unaffected by Powdered Snow
 
 However, some penalties also come with increasing age:
 
 - Increased vulnerability to Fire, Garlic and Holy Water scaling with Age Rank
 - Rare chance to randomly gain the Bad Omen effect 
+- Increased prices with villagers
