@@ -11,6 +11,7 @@ public class CommonConfig {
 
     public static final ForgeConfigSpec.BooleanValue timeBasedIncrease;
     public static final ForgeConfigSpec.BooleanValue biteBasedIncrease;
+    public static final ForgeConfigSpec.BooleanValue drainBasedIncrease;
     public static final ForgeConfigSpec.BooleanValue deathReset;
     public static final ForgeConfigSpec.BooleanValue advancedVampireAge;
     public static final ForgeConfigSpec.BooleanValue highAgeBadOmen;
@@ -40,6 +41,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageAffectTradePrices;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
 
     static {
@@ -67,10 +69,12 @@ public class CommonConfig {
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").defineList("ageAffectTradePrices", Arrays.asList(1D, 1.1D, 1.25D, 1.5D, 1.75D, 2D), t -> t instanceof Double);
         genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1D, 1D, 0.95D, 0.9D, 0.75D, 0.5D), it -> it instanceof Double);
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1D, 1.5D, 2D, 3D, 4D, 5D), it -> it instanceof Double);
-        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive or Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
-        timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive or Number of Bites to increase Age. Enable only one option").define("timeBasedIncrease", false);
+        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
+        drainBasedIncrease = COMMON_BUILDER.comment("Whether to use fully draining villagers of blood to increase Age. Enable only one option").define("drainBasedIncrease", false);
+        timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive  to increase Age. Enable only one option").define("timeBasedIncrease", false);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> it instanceof Integer);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> it instanceof Integer);
+        drainedForNextAge = COMMON_BUILDER.comment("How many entities drained for next Age Rank. Count is reset on Rank Up").defineList("drainedForNextAge", Arrays.asList(10, 25, 40, 70, 100), it -> it instanceof Integer);
         stepAssistBonus = COMMON_BUILDER.comment("The Age Rank at which a vampire gains step assist. Set to 0 to disable. ").defineInRange("stepAssistLevel", 2, 0, 5);
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> it instanceof Double);
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);

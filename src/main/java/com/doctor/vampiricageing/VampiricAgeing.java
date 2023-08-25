@@ -7,6 +7,7 @@ import com.doctor.vampiricageing.client.init.ClientRegistryHandler;
 import com.doctor.vampiricageing.command.VampiricAgeingCommands;
 import com.doctor.vampiricageing.config.ClientConfig;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.networking.ClientProxy;
 import com.doctor.vampiricageing.networking.IProxy;
 import com.doctor.vampiricageing.networking.Networking;
@@ -16,11 +17,13 @@ import com.mojang.logging.LogUtils;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.ISyncable;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -52,6 +55,7 @@ public class VampiricAgeing
         VampiricAgeingSkills.register(modEventBus);
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
         modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::gatherData);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
     }
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
@@ -59,6 +63,11 @@ public class VampiricAgeing
     }
     public void setup(final FMLCommonSetupEvent event) {
         Networking.registerMessages();
+    }
+    private void gatherData(final GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(generator, MODID, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), entityTypeTagProvider);
     }
 
 

@@ -3,6 +3,7 @@ package com.doctor.vampiricageing.capabilities;
 import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.actions.VampiricAgeingActions;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.networking.Networking;
 import com.doctor.vampiricageing.networking.SyncCapabilityPacket;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
@@ -72,6 +73,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -110,6 +112,9 @@ public class VampiricAgeingCapabilityManager {
 
     public static boolean shouldIncreaseRankInfected(Player player) {
             return getAge(player).map(age -> age.getInfected() >= CommonConfig.infectedForNextAge.get().get(age.getAge())).orElse(false);
+    }
+    public static boolean shouldIncreaseRankDrained(Player player) {
+        return getAge(player).map(age -> age.getDrained() >= CommonConfig.drainedForNextAge.get().get(age.getAge())).orElse(false);
     }
 
     public static void increaseAge(ServerPlayer player) {
@@ -166,6 +171,15 @@ public class VampiricAgeingCapabilityManager {
             }
         });
     }
+    public static void incrementDrained(ServerPlayer player) {
+        getAge(player).ifPresent(age -> {
+            age.setDrained(age.getDrained() + 1);
+            syncAgeCap(player);
+            if(shouldIncreaseRankDrained(player)) {
+                increaseAge(player);
+            }
+        });
+    }
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -203,14 +217,21 @@ public class VampiricAgeingCapabilityManager {
         Player player = event.getEntity();
         if(!player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && canAge(player)) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-            int ticksAlive = getAge(event.getEntity()).map(ageCap -> ageCap.getTime()).orElse(0);
-            int infected = getAge(event.getEntity()).map(ageCap -> ageCap.getInfected()).orElse(0);
+
+
+
             if(CommonConfig.timeBasedIncrease.get()) {
+                int ticksAlive = getAge(event.getEntity()).map(ageCap -> ageCap.getTime()).orElse(0);
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks").append(String.valueOf((CommonConfig.ticksForNextAge.get().get(age) - ticksAlive) / 20)).append(Component.translatable("text.vampiricageing.progress_ticks_end")).withStyle(ChatFormatting.DARK_RED));
 
             }
             if(CommonConfig.biteBasedIncrease.get()) {
+                int infected = getAge(event.getEntity()).map(ageCap -> ageCap.getInfected()).orElse(0);
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected").append(String.valueOf(CommonConfig.infectedForNextAge.get().get(age) - infected)).append(Component.translatable("text.vampiricageing.progress_infected_end")).withStyle(ChatFormatting.DARK_RED));
+            }
+            if(CommonConfig.drainBasedIncrease.get()) {
+                int drained = getAge(event.getEntity()).map(ageCap -> ageCap.getDrained()).orElse(0);
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_drained").append(String.valueOf(CommonConfig.drainedForNextAge.get().get(age) - drained)).append(Component.translatable("text.vampiricageing.progress_drained_end")).withStyle(ChatFormatting.DARK_RED));
             }
         }
     }
@@ -241,8 +262,8 @@ public class VampiricAgeingCapabilityManager {
             });
         }
         LivingEntity dead = event.getEntity();
-        if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof Player player && Helper.isVampire(dead) && CommonConfig.sireingMechanic.get()) {
-            if(player.getOffhandItem().is(Items.GLASS_BOTTLE) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
+        if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player && Helper.isVampire(dead) ) {
+            if(CommonConfig.sireingMechanic.get() && player.getOffhandItem().is(Items.GLASS_BOTTLE) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
                 int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
                 ItemStack offHandStack = player.getOffhandItem();
                 offHandStack.shrink(1);
@@ -250,6 +271,8 @@ public class VampiricAgeingCapabilityManager {
                 stack.getOrCreateTag().putInt("AGE", age);
                 stack.setDamageValue(1);
                 player.addItem(stack);
+            } else if(CommonConfig.drainBasedIncrease.get() && event.getSource() == VReference.NO_BLOOD && canAge(player) && dead.getType().is(EntityTypeTagProvider.countsForDrained)) {
+                incrementDrained(player);
             }
         }
         if(dead.getPersistentData().contains("AGE")) {
@@ -339,16 +362,12 @@ public class VampiricAgeingCapabilityManager {
         if(event.getNewLevel() == 0 || event.getCurrentFaction() != VReference.VAMPIRE_FACTION) {
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(0);
-                age.setTime(0);
-                age.setInfected(0);
                 syncAgeCap(event.getPlayer().getPlayer());
             });
         } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
             int sireAge = event.getPlayer().getPlayer().getPersistentData().getInt("AGE");
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(sireAge);
-                age.setTime(0);
-                age.setInfected(0);
                 syncAgeCap(event.getPlayer().getPlayer());
                 event.getPlayer().getPlayer().getPersistentData().remove("AGE");
             });
@@ -363,7 +382,7 @@ public class VampiricAgeingCapabilityManager {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
-            } else if((event.getSource() == VReference.NO_BLOOD || event.getSource() == DamageSource.STARVE) && CommonConfig.harsherOutOfBlood.get() && age > 0) {
+            } else if(event.getSource() == DamageSource.STARVE && CommonConfig.harsherOutOfBlood.get() && age > 0) {
                 event.setAmount(event.getAmount() * age);
             }
 

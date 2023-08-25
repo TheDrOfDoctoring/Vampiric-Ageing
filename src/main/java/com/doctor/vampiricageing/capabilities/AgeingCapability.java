@@ -10,6 +10,7 @@ public class AgeingCapability implements IAgeingCapability {
     private int timeSinceAgeLoss;
 
     private int infectedSinceAgeLoss;
+    private int drainedSinceAgeLoss;
 
 
     @Override
@@ -21,6 +22,7 @@ public class AgeingCapability implements IAgeingCapability {
     public void setAge(int age) {
         this.timeSinceAgeLoss = 0;
         this.infectedSinceAgeLoss = 0;
+        this.drainedSinceAgeLoss = 0;
         this.age = age;
 
     }
@@ -43,6 +45,15 @@ public class AgeingCapability implements IAgeingCapability {
     @Override
     public void setInfected(int infected) {
         this.infectedSinceAgeLoss = infected;
+    }
+    @Override
+    public int getDrained() {
+        return drainedSinceAgeLoss;
+    }
+
+    @Override
+    public void setDrained(int drained) {
+        this.drainedSinceAgeLoss = drained;
 
     }
     public CompoundTag serializeNBT() {
@@ -50,11 +61,13 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("age", age);
         tag.putInt("time", timeSinceAgeLoss);
         tag.putInt("infected", infectedSinceAgeLoss);
+        tag.putInt("drained", drainedSinceAgeLoss);
         return tag;
     }
 
     public void deserializeNBT(CompoundTag nbt) {
         this.age = nbt.getInt("age");
+        this.drainedSinceAgeLoss = nbt.getInt("drained");
         this.timeSinceAgeLoss = nbt.getInt("time");
         this.infectedSinceAgeLoss = nbt.getInt("infected");
     }
