@@ -35,4 +35,10 @@ A player can also gain a rank when they become a vampire if they were infected b
 
 Additionally, players with an Age Rank can use a Glass Bottle while Shifting to make a Blood Bottle with the rank below theirs, e.g if a Player has Rank 5, they will produce a bottle with Rank 4.
 
+# Additional Configuration Options
 
+Everything previously mentioned has configuration options for if its enabled and depending on the feature more detailed configs, for example the reduction in sun damage can be completely inverted to increase sun damage.
+
+The mod also comes with some more debatable design choices disabled by default such as the Sire Mechanic, but there is also options for using a time based system of ranking up, or greatly increasing the damage dealt to a vampire when they are starving to death.
+
+All of these options can be found in ``/config/vampiricageing-common.toml``, I recommend you take a look!

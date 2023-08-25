@@ -361,9 +361,12 @@ public class VampiricAgeingCapabilityManager {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
             if(event.getSource() == VReference.SUNDAMAGE) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
-            } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER || event.getSource() == VReference.NO_BLOOD) {
+            } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
+            } else if((event.getSource() == VReference.NO_BLOOD || event.getSource() == DamageSource.STARVE) && CommonConfig.harsherOutOfBlood.get() && age > 0) {
+                event.setAmount(event.getAmount() * age);
             }
+
         }
     }
     @SubscribeEvent
