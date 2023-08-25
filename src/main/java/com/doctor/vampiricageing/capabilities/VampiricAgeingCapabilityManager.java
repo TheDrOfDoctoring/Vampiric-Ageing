@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -22,6 +23,7 @@ import de.teamlapen.vampirism.entity.ai.goals.BiteNearbyEntityVampireGoal;
 import de.teamlapen.vampirism.entity.ai.goals.MoveToBiteableVampireGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
@@ -128,17 +130,28 @@ public class VampiricAgeingCapabilityManager {
         if(age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
             player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addPermanentModifier(new AttributeModifier(STEP_ASSIST_UUID, "AGE_STEP_ASSIST_CHANGE", 0.5, AttributeModifier.Operation.ADDITION));
         }
-        if(age >= CommonConfig.drainBloodActionRank.get()) {
-            VampirePlayer.getOpt(player).ifPresent(vamp -> vamp.getSkillHandler().enableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get()));
-        } else {
-            VampirePlayer.getOpt(player).ifPresent(vamp -> vamp.getSkillHandler().disableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get()));
-        }
+        checkSkills(age, player);
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).addPermanentModifier(new AttributeModifier(EXHAUSTION_UUID, "AGE_EXHAUSTION_CHANGE", CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
         player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
 
     }
+    public static void checkSkills(int age, ServerPlayer player) {
+        VampirePlayer.getOpt(player).ifPresent(vamp -> {
+            ISkillHandler<IVampirePlayer> handler = vamp.getSkillHandler();
+            if(age >= CommonConfig.drainBloodActionRank.get()) {
+                handler.enableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
+            } else {
+                handler.disableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
+            }
+            if(age >= CommonConfig.celerityActionRank.get()) {
+                handler.enableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
+            } else {
+                handler.disableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
+            }
+        });
+    }
 
-    private static void removeModifier(@NotNull AttributeInstance att, @NotNull UUID uuid) {
+    public static void removeModifier(@NotNull AttributeInstance att, @NotNull UUID uuid) {
         AttributeModifier m = att.getModifier(uuid);
         if (m != null) {
             att.removeModifier(m);

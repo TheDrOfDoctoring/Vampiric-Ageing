@@ -13,8 +13,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class VampiricAgeingSkills {
 
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, VampiricAgeing.MODID);
-
-    public static final RegistryObject<ISkill<IVampirePlayer>> BLOOD_DRAIN_SKILL = SKILLS.register("blood_drain_skill", () -> new ActionSkill<>(VampiricAgeingActions.DRAIN_BLOOD_ACTION, true));
+    public static final RegistryObject<ISkill<IVampirePlayer>> CELERTIY_ACTION = SKILLS.register("celerity_skill", () -> new ActionSkill<>(VampiricAgeingActions.CELERITY_ACTION, false));
+    public static final RegistryObject<ISkill<IVampirePlayer>> BLOOD_DRAIN_SKILL = SKILLS.register("blood_drain_skill", () -> new ActionSkill<>(VampiricAgeingActions.DRAIN_BLOOD_ACTION, false));
 
     public static void register(IEventBus bus) {
         SKILLS.register(bus);

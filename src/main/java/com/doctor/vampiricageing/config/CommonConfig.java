@@ -15,6 +15,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue advancedVampireAge;
     public static final ForgeConfigSpec.BooleanValue highAgeBadOmen;
     public static final ForgeConfigSpec.BooleanValue drainBloodAction;
+    public static final ForgeConfigSpec.BooleanValue celerityAction;
     public static final ForgeConfigSpec.BooleanValue doesAgeAffectPrices;
     public static final ForgeConfigSpec.BooleanValue sireingMechanic;
     public static final ForgeConfigSpec.BooleanValue ageWaterWalking;
@@ -25,6 +26,10 @@ public class CommonConfig {
     public static final ForgeConfigSpec.IntValue drainBloodActionDuration;
     public static final ForgeConfigSpec.IntValue drainBloodActionCooldown;
     public static final ForgeConfigSpec.IntValue drainBloodActionRank;
+    public static final ForgeConfigSpec.IntValue celerityActionDuration;
+    public static final ForgeConfigSpec.IntValue celerityActionCooldown;
+    public static final ForgeConfigSpec.IntValue celerityActionRank;
+    public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
 
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
@@ -43,10 +48,15 @@ public class CommonConfig {
         vampirePowderedSnowImmunity = COMMON_BUILDER.comment("Whether vampires should be immune to the effects of Powdered Snow. Applies to ALL vampires").define("powderedSnowImmunity", true);
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
-        drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Drain Blood Action").defineInRange("drainBloodActionRank", 3, 0, 5);
-        drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Drain Blood action in seconds").defineInRange("drainBloodActionCooldown", 600, 20, 36000);
-        drainBloodActionDuration = COMMON_BUILDER.comment("Duration of the Drain Blood action in seconds").defineInRange("drainBloodActionDuration", 1, 20, 36000);
-        drainBloodAction = COMMON_BUILDER.comment("Whether the Drain Blood action is available for Aged Vampires").define("drainBloodAction", true);
+        celerityActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Celerity Action").defineInRange("celerityActionRank", 1, 0, 5);
+        celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 600, 20, 36000);
+        celerityActionMultiplier = COMMON_BUILDER.comment("Speed Multiplier provided by Celerity Action").defineInRange("celerityActionMultiplier", 1.25D, 1, 5D);
+        celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityBloodActionDuration", 8, 20, 36000);
+        celerityAction = COMMON_BUILDER.comment("Whether the Celerity action is available for Aged Vampires").define("celerityBloodAction", true);
+        drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Blood Tap Action").defineInRange("drainBloodActionRank", 3, 0, 5);
+        drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Blood Tap action in seconds").defineInRange("drainBloodActionCooldown", 900, 20, 36000);
+        drainBloodActionDuration = COMMON_BUILDER.comment("Duration of the Blood Tap action in seconds").defineInRange("drainBloodActionDuration", 30, 20, 36000);
+        drainBloodAction = COMMON_BUILDER.comment("Whether the Blood Tap action is available for Aged Vampires").define("drainBloodAction", true);
         COMMON_BUILDER.comment("For any config with a list of 6 numbers, the very first number refers to a vampire with no age rank and the second number is the first age rank.");
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins, Level 4 is the minimum age to have access to the Infect Action").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
         percentageAdvancedVampireAges = COMMON_BUILDER.comment("The percentage, as a decimal, of how likely an advanced vampire is to get each rank with advanced vampire ages enabled").defineList("percentageAdvancedVampireAges", Arrays.asList(0.5D, 0.3D, 0.1D, 0.08D, 0.02D), it -> it instanceof Double);

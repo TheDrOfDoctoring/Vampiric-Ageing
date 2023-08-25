@@ -8,5 +8,6 @@
   "command.vampiricageing.failed_to_execute": "Failed to execute command. Internal error.",
   "command.vampiricageing.failed_to_execute.players": "Failed to execute command for %s. Internal error",
   "command.vampiricageing.base.age.success": "%s is now age %s",
-  "action.vampiricageing.drain_blood_action": "Blood Tap"
+  "action.vampiricageing.drain_blood_action": "Blood Tap",
+  "action.vampiricageing.celerity_action": "Celerity"
 }

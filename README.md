@@ -17,6 +17,7 @@ By default, the player gains access to a number of benefits from ranking up:
 - A new Action at Rank 3, which while active allows the player to drain blood from creatures they attack
 - Waterwalking at Rank 4
 - Vampires are now mostly unaffected by Powdered Snow
+- Celerity (Speed Increase) Action at Rank 1
 
 However, some penalties also come with increasing age:
 
