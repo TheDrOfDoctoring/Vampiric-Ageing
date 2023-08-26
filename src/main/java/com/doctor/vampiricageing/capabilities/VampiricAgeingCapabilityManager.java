@@ -82,6 +82,7 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = VampiricAgeing.MODID)
 public class VampiricAgeingCapabilityManager {
+    //this is starting to get a bit messy isnt it
     public static final ResourceLocation AGEING_KEY = new ResourceLocation(VampiricAgeing.MODID, "ageing");
     public static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("060749f1-7868-4fdf-8a54-eb5ddf93742e");
     public static final UUID MAX_HEALTH_UUID = UUID.fromString("08251d58-2513-4768-b4b5-f2a1a239998e");
@@ -111,7 +112,7 @@ public class VampiricAgeingCapabilityManager {
     }
 
     public static boolean shouldIncreaseRankInfected(Player player) {
-            return getAge(player).map(age -> age.getInfected() >= CommonConfig.infectedForNextAge.get().get(age.getAge())).orElse(false);
+        return getAge(player).map(age -> age.getInfected() >= CommonConfig.infectedForNextAge.get().get(age.getAge())).orElse(false);
     }
     public static boolean shouldIncreaseRankDrained(Player player) {
         return getAge(player).map(age -> age.getDrained() >= CommonConfig.drainedForNextAge.get().get(age.getAge())).orElse(false);
@@ -262,8 +263,8 @@ public class VampiricAgeingCapabilityManager {
             });
         }
         LivingEntity dead = event.getEntity();
-        if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player && Helper.isVampire(dead) ) {
-            if(CommonConfig.sireingMechanic.get() && player.getOffhandItem().is(Items.GLASS_BOTTLE) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
+        if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player ) {
+            if (CommonConfig.sireingMechanic.get() && player.getOffhandItem().is(Items.GLASS_BOTTLE) && Helper.isVampire(dead) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
                 int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
                 ItemStack offHandStack = player.getOffhandItem();
                 offHandStack.shrink(1);
@@ -271,8 +272,6 @@ public class VampiricAgeingCapabilityManager {
                 stack.getOrCreateTag().putInt("AGE", age);
                 stack.setDamageValue(1);
                 player.addItem(stack);
-            } else if(CommonConfig.drainBasedIncrease.get() && event.getSource() == VReference.NO_BLOOD && canAge(player) && dead.getType().is(EntityTypeTagProvider.countsForDrained)) {
-                incrementDrained(player);
             }
         }
         if(dead.getPersistentData().contains("AGE")) {
@@ -280,7 +279,7 @@ public class VampiricAgeingCapabilityManager {
         }
     }
     @SubscribeEvent
-    public static void tooltipEvent(ItemTooltipEvent event) {
+        public static void tooltipEvent(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         if(stack.is(ModItems.BLOOD_BOTTLE.get()) && CommonConfig.sireingMechanic.get()) {
             if(stack.getOrCreateTag().contains("AGE")) {
