@@ -20,7 +20,7 @@ public class CelerityAction extends DefaultVampireAction implements ILastingActi
 
     public static final UUID CELERITY_UUID = UUID.fromString("31c9aa6e-38e9-40ad-868f-b494981605a8");
     public boolean activate(@NotNull IVampirePlayer vampire, IAction.ActivationContext context) {
-        vampire.getRepresentingPlayer().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(CELERITY_UUID, "SPEED_CELERITY_INCREASE", CommonConfig.celerityActionMultiplier.get(), AttributeModifier.Operation.MULTIPLY_BASE));
+        vampire.getRepresentingPlayer().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(CELERITY_UUID, "SPEED_CELERITY_INCREASE", CommonConfig.celerityActionMultiplier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         return true;
     }
 
