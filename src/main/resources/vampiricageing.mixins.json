@@ -5,6 +5,7 @@
   "refmap": "vampiricageing.refmap.json",
   "mixins": [
     "BlockBehaviourMixin",
+    "BloodStatsMixin",
     "InfectActionMixin",
     "PowderSnowBlockMixin",
     "VampirePlayerMixin",

@@ -22,6 +22,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue sireingMechanic;
     public static final ForgeConfigSpec.BooleanValue ageWaterWalking;
     public static final ForgeConfigSpec.BooleanValue vampirePowderedSnowImmunity;
+    public static final ForgeConfigSpec.BooleanValue shouldAgeAffectExhaustion;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.IntValue stepAssistBonus;
@@ -79,6 +80,7 @@ public class CommonConfig {
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 1.50D, 3D, 4.5D), it -> it instanceof Double);
         drainedForNextAge = COMMON_BUILDER.comment("How many entities drained for next Age Rank. Count is reset on Rank Up").defineList("drainedForNextAge", Arrays.asList(10, 25, 40, 70, 100), it -> it instanceof Integer);
         stepAssistBonus = COMMON_BUILDER.comment("The Age Rank at which a vampire gains step assist. Set to 0 to disable. ").defineInRange("stepAssistLevel", 2, 0, 5);
+        shouldAgeAffectExhaustion = COMMON_BUILDER.comment("Whether Age affects Blood Exhaustion").define("ageAffectsBloodExhaustion", true);
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> it instanceof Double);
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         highAgeBadOmen = COMMON_BUILDER.comment("When enabled, there is a chance to randomly get the Bad Omen effect as a High Age Vampire").define("highAgeOmen", true);

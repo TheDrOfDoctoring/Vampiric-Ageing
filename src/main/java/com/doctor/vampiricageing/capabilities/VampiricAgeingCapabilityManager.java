@@ -138,9 +138,11 @@ public class VampiricAgeingCapabilityManager {
         if(age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
             player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addPermanentModifier(new AttributeModifier(STEP_ASSIST_UUID, "AGE_STEP_ASSIST_CHANGE", 0.5, AttributeModifier.Operation.ADDITION));
         }
+        if(CommonConfig.shouldAgeAffectExhaustion.get()) {
+            player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).addPermanentModifier(new AttributeModifier(EXHAUSTION_UUID, "AGE_EXHAUSTION_CHANGE", CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
         checkSkills(age, player);
         player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).addPermanentModifier(new AttributeModifier(EXHAUSTION_UUID, "AGE_EXHAUSTION_CHANGE", CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
         player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
 
     }
