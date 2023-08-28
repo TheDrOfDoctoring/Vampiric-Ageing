@@ -40,6 +40,8 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageExhaustionEffect;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageAffectTradePrices;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
+
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
@@ -52,9 +54,9 @@ public class CommonConfig {
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
         celerityActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Celerity Action").defineInRange("celerityActionRank", 1, 0, 5);
-        celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 600, 20, 36000);
-        celerityActionMultiplier = COMMON_BUILDER.comment("Speed Multiplier provided by Celerity Action").defineInRange("celerityActionMultiplier", 1.0125D, 1, 5D);
-        celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityBloodActionDuration", 4, 1, 36000);
+        celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 300, 20, 36000);
+        celerityActionMultiplier = COMMON_BUILDER.comment("Speed Multiplier provided by Celerity Action").defineInRange("celerityActionMultiplier", 1.025D, 1, 5D);
+        celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityBloodActionDuration", 8, 1, 36000);
         celerityAction = COMMON_BUILDER.comment("Whether the Celerity action is available for Aged Vampires").define("celerityBloodAction", true);
         drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Blood Tap Action").defineInRange("drainBloodActionRank", 3, 0, 5);
         drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Blood Tap action in seconds").defineInRange("drainBloodActionCooldown", 900, 1, 36000);
@@ -74,6 +76,7 @@ public class CommonConfig {
         timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive  to increase Age. Enable only one option").define("timeBasedIncrease", false);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> it instanceof Integer);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> it instanceof Integer);
+        ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 1.50D, 3D, 4.5D), it -> it instanceof Double);
         drainedForNextAge = COMMON_BUILDER.comment("How many entities drained for next Age Rank. Count is reset on Rank Up").defineList("drainedForNextAge", Arrays.asList(10, 25, 40, 70, 100), it -> it instanceof Integer);
         stepAssistBonus = COMMON_BUILDER.comment("The Age Rank at which a vampire gains step assist. Set to 0 to disable. ").defineInRange("stepAssistLevel", 2, 0, 5);
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> it instanceof Double);

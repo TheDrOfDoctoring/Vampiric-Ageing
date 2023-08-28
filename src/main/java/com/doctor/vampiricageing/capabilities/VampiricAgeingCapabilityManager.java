@@ -89,6 +89,7 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID EXHAUSTION_UUID = UUID.fromString("1f14dd76-7d9b-47b3-9951-1c221f78d49f");
     public static final UUID STEP_ASSIST_UUID = UUID.fromString("edee6b7f-755a-4dc5-a036-2b8108415c4c");
     public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("94d546a9-6848-48cf-bcba-5e162987d58b");
+    public static final UUID STRENGTH_INCREASE = UUID.fromString("ee0dca39-3d03-4f75-aed0-c1ae017969f2");
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
         if (livingEntity == null) {
             return LazyOptional.empty();
@@ -133,10 +134,12 @@ public class VampiricAgeingCapabilityManager {
         removeModifier(player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()), EXHAUSTION_UUID);
         removeModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
         removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
+        removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), STRENGTH_INCREASE);
         if(age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
             player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addPermanentModifier(new AttributeModifier(STEP_ASSIST_UUID, "AGE_STEP_ASSIST_CHANGE", 0.5, AttributeModifier.Operation.ADDITION));
         }
         checkSkills(age, player);
+        player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).addPermanentModifier(new AttributeModifier(EXHAUSTION_UUID, "AGE_EXHAUSTION_CHANGE", CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
         player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
 
