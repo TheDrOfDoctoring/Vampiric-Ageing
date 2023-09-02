@@ -18,12 +18,15 @@ By default, the player gains access to a number of benefits from ranking up:
 - Waterwalking at Rank 4
 - Vampires are now mostly unaffected by Powdered Snow
 - Celerity (Speed Increase) Action at Rank 1
+- Increased Damage, scaling with Age Rank
+- Enhanced Regeneration, scaling with Age Rank
 
 However, some penalties also come with increasing age:
 
 - Increased vulnerability to Fire, Garlic and Holy Water scaling with Age Rank
 - Rare chance to randomly gain the Bad Omen effect 
 - Harsher prices with villagers
+- Hunter Mobs deal more damage
 
 # Sire Mechanic
 
