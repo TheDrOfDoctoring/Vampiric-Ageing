@@ -396,6 +396,14 @@ public class VampiricAgeingCapabilityManager {
         }
     }
     @SubscribeEvent
+    public static void onHeal(LivingHealEvent event) {
+        if(CommonConfig.shouldAgeAffectHealing.get() && Helper.isVampire(event.getEntity())) {
+            int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
+            event.setAmount(event.getAmount() * CommonConfig.ageHealingMultiplier.get().get(age));
+        }
+
+    }
+    @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         Entity source = event.getSource().getEntity();

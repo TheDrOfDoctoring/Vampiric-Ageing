@@ -23,6 +23,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue ageWaterWalking;
     public static final ForgeConfigSpec.BooleanValue vampirePowderedSnowImmunity;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectExhaustion;
+    public static final ForgeConfigSpec.BooleanValue shouldAgeAffectHealing;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.IntValue stepAssistBonus;
@@ -42,6 +43,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageAffectTradePrices;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
@@ -84,6 +86,8 @@ public class CommonConfig {
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> it instanceof Double);
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         highAgeBadOmen = COMMON_BUILDER.comment("When enabled, there is a chance to randomly get the Bad Omen effect as a High Age Vampire").define("highAgeOmen", true);
+        shouldAgeAffectHealing = COMMON_BUILDER.comment("Whether Age Rank affects healing").define("ageHealingAffect", true);
+        ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1.5f, 2f, 2.5f, 3f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
