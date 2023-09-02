@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "vampirism:injection_empty"
+    },
+    {
+      "item": "vampirism:vampire_blood_bottle"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "vampiricageing:blood_tester"
+  }
+}

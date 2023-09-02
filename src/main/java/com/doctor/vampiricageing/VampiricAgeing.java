@@ -8,6 +8,7 @@ import com.doctor.vampiricageing.command.VampiricAgeingCommands;
 import com.doctor.vampiricageing.config.ClientConfig;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
+import com.doctor.vampiricageing.init.ModItems;
 import com.doctor.vampiricageing.networking.ClientProxy;
 import com.doctor.vampiricageing.networking.IProxy;
 import com.doctor.vampiricageing.networking.Networking;
@@ -56,6 +57,7 @@ public class VampiricAgeing
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::gatherData);
+        ModItems.ITEMS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
     }
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
