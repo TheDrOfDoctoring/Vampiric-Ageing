@@ -1,10 +1,7 @@
 {
-  "text.vampiricageing.progress_ticks": "You must survive for ",
-  "text.vampiricageing.progress_ticks_end": " more seconds to rank up.",
-  "text.vampiricageing.progress_infected": "You must infect ",
-  "text.vampiricageing.progress_infected_end": " more creatures with Vampirism to rank up.",
-  "text.vampiricageing.progress_drained": "You must completely drain ",
-  "text.vampiricageing.progress_drained_end": " more creatures of their blood to rank up.",
+  "text.vampiricageing.progress_ticks": "You must survive for %s more seconds to increase age",
+  "text.vampiricageing.progress_infected": "You must infect %s more creatures to increase age",
+  "text.vampiricageing.progress_drained": "You must completely drain %s more creatures to increase age",
   "text.vampiricageing.blood_rank": "Age Rank: ",
   "text.vampiricageing.bad_omen": "Your notoriety as a vampire has lead to some unwanted attention",
   "text.vampiricageing.vampire_blood_rank": "The vampire has Age Rank %s",

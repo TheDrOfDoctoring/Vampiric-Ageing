@@ -228,16 +228,19 @@ public class VampiricAgeingCapabilityManager {
 
             if(CommonConfig.timeBasedIncrease.get()) {
                 int ticksAlive = getAge(event.getEntity()).map(ageCap -> ageCap.getTime()).orElse(0);
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks").append(String.valueOf((CommonConfig.ticksForNextAge.get().get(age) - ticksAlive) / 20)).append(Component.translatable("text.vampiricageing.progress_ticks_end")).withStyle(ChatFormatting.DARK_RED));
+                int secondsForNextAge = (CommonConfig.ticksForNextAge.get().get(age) - ticksAlive) / 20;
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_ticks", secondsForNextAge).withStyle(ChatFormatting.DARK_RED));
 
             }
             if(CommonConfig.biteBasedIncrease.get()) {
                 int infected = getAge(event.getEntity()).map(ageCap -> ageCap.getInfected()).orElse(0);
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected").append(String.valueOf(CommonConfig.infectedForNextAge.get().get(age) - infected)).append(Component.translatable("text.vampiricageing.progress_infected_end")).withStyle(ChatFormatting.DARK_RED));
+                int infectedForNextAge = CommonConfig.infectedForNextAge.get().get(age) - infected;
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_infected", infectedForNextAge).withStyle(ChatFormatting.DARK_RED));
             }
             if(CommonConfig.drainBasedIncrease.get()) {
                 int drained = getAge(event.getEntity()).map(ageCap -> ageCap.getDrained()).orElse(0);
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_drained").append(String.valueOf(CommonConfig.drainedForNextAge.get().get(age) - drained)).append(Component.translatable("text.vampiricageing.progress_drained_end")).withStyle(ChatFormatting.DARK_RED));
+                int drainedForNextAge = CommonConfig.drainedForNextAge.get().get(age) - drained;
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_drained", drainedForNextAge).withStyle(ChatFormatting.DARK_RED));
             }
         }
     }
