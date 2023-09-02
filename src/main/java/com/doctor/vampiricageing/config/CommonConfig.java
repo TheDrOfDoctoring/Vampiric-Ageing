@@ -21,6 +21,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue harsherOutOfBlood;
     public static final ForgeConfigSpec.BooleanValue sireingMechanic;
     public static final ForgeConfigSpec.BooleanValue ageWaterWalking;
+    public static final ForgeConfigSpec.BooleanValue shouldAgeIncreaseHunterMobDamage;
     public static final ForgeConfigSpec.BooleanValue vampirePowderedSnowImmunity;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectExhaustion;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectHealing;
@@ -39,11 +40,13 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> genericVampireWeaknessReduction;
+
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageExhaustionEffect;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageAffectTradePrices;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
@@ -88,6 +91,8 @@ public class CommonConfig {
         highAgeBadOmen = COMMON_BUILDER.comment("When enabled, there is a chance to randomly get the Bad Omen effect as a High Age Vampire").define("highAgeOmen", true);
         shouldAgeAffectHealing = COMMON_BUILDER.comment("Whether Age Rank affects healing").define("ageHealingAffect", true);
         ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1.5f, 2f, 2.5f, 3f), it -> it instanceof Float);
+        shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
+        damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1.5f, 2f, 2.5f, 3f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
