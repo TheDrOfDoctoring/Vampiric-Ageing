@@ -21,7 +21,7 @@ modId="vampiricageing" #mandatory
 # see the associated build.gradle script for how to populate this completely automatically during a build
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="Vampiric Aging" #mandatory
+displayName="Vampiric Ageing" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -42,7 +42,7 @@ authors="Doctor" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This mod adds a Vampiric Ageing system othe
+This mod adds a Vampiric Ageing system other than the existing systems in Vampirism.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.vampiricageing]] #optional
