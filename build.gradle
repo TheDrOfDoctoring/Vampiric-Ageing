@@ -14,7 +14,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 apply plugin: 'org.spongepowered.mixin'
-version = '1.0.4'
+version = '1.0.5'
 group = 'com.doctor.vampiricageing' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'vampiricageing'
 
