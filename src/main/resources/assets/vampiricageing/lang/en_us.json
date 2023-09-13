@@ -1,7 +1,8 @@
 {
-  "text.vampiricageing.progress_ticks": "You must survive for %s more seconds to increase age",
-  "text.vampiricageing.progress_infected": "You must infect %s more creatures to increase age",
-  "text.vampiricageing.progress_drained": "You must completely drain %s more creatures to increase age",
+  "text.vampiricageing.progress_ticks": "You must survive for %s more seconds to increase your age rank",
+  "text.vampiricageing.progress_infected": "You must infect %s more creatures to increase your age rank",
+  "text.vampiricageing.progress_devour": "You must acquire %s more devour points to increase your age rank",
+  "text.vampiricageing.progress_drained": "You must completely drain %s more creatures to increase your age rank",
   "text.vampiricageing.blood_rank": "Age Rank: ",
   "text.vampiricageing.bad_omen": "Your notoriety as a vampire has lead to some unwanted attention",
   "text.vampiricageing.vampire_blood_rank": "The vampire has Age Rank %s",

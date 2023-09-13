@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:creeper",
+    "minecraft:ghast",
+    "minecraft:blaze",
+    "minecraft:enderman",
+    "minecraft:guardian",
+    "vampirism:hunter",
+    "vampirism:vampire",
+    "werewolves:werewolf_survivalist",
+    "werewolves:alpha_werewolf"
+  ]
+}

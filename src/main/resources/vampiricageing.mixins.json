@@ -3,11 +3,14 @@
   "package": "com.doctor.vampiricageing.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "vampiricageing.refmap.json",
+  "plugin": "com.doctor.vampiricageing.VampiricAgeingMixinPlugin",
   "mixins": [
     "BlockBehaviourMixin",
     "BloodStatsMixin",
+    "HowlActionMixin",
     "InfectActionMixin",
     "PowderSnowBlockMixin",
+    "SilverOilMixin",
     "VampirePlayerMixin",
     "VillagerMixin"
   ],

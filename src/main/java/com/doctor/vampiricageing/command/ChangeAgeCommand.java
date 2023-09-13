@@ -32,11 +32,12 @@ public class ChangeAgeCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int setAge(@NotNull CommandContext<CommandSourceStack> context, int age, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-                if (age < 6 && age >= 0 && Helper.isVampire(player)) {
+                int level = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+                if (age < 6 && age >= 0 && level > 0 && !Helper.isHunter(player)) {
                     VampiricAgeingCapabilityManager.getAge(player).ifPresent(ageCap -> ageCap.setAge(age));
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
                     context.getSource().sendSuccess(Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
-                } else {
+                } else{
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute"));
                 }
             }
