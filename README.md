@@ -64,5 +64,6 @@ By default, the player gains access to a number of benefits from ranking up:
 - Heal on bite based on age
 
 However, there are some penalties upon ageing.
-- Increased damage from silver oil
+- Increased damage from silver oil (Optional, now disabled by default)
 - Increased damage from hunter
+- Harsher prices with villagers (same config option as for vampires)
