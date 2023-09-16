@@ -22,7 +22,7 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> pettyDevour = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(VampiricAgeing.MODID, "petty_devour"));
     public static final TagKey<EntityType<?>> commonDevour = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(VampiricAgeing.MODID, "common_devour"));
     public static final TagKey<EntityType<?>> greaterDevour = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(VampiricAgeing.MODID, "greater_devour"));
-    public static final TagKey<EntityType<?>> exquisiteDevour = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(VampiricAgeing.MODID, "exquisite_for_draining"));
+    public static final TagKey<EntityType<?>> exquisiteDevour = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(VampiricAgeing.MODID, "exquisite_draining"));
     @Override
     protected void addTags() {
         this.tag(countsForDrained).add(EntityType.VILLAGER);
