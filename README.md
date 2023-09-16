@@ -62,6 +62,7 @@ By default, the player gains access to a number of benefits from ranking up:
 - Increased damage, scaling with age rank
 - Wolves summoned from howling are stronger based on age
 - Heal on bite based on age
+- Biting mobs nourishes you
 - Can stay in werewolf forms longer
 
 However, there are some penalties upon ageing.

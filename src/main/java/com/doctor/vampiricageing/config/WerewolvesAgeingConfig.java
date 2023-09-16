@@ -11,10 +11,14 @@ public class WerewolvesAgeingConfig {
     public static final ForgeConfigSpec.BooleanValue werewolfAgeing;
     public static final ForgeConfigSpec.BooleanValue devourBasedAgeing;
     public static final ForgeConfigSpec.BooleanValue ageBuffsHowl;
+    public static final ForgeConfigSpec.BooleanValue bitingGivesFood;
     public static final ForgeConfigSpec.IntValue pettyDevourWorth;
     public static final ForgeConfigSpec.IntValue commonDevourWorth;
     public static final ForgeConfigSpec.IntValue greaterDevourWorth;
     public static final ForgeConfigSpec.IntValue exquisiteDevourWorth;
+    public static final ForgeConfigSpec.IntValue rankForBiteFood;
+    public static final ForgeConfigSpec.IntValue biteNutrition;
+    public static final ForgeConfigSpec.DoubleValue biteSaturation;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> devouredForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> biteDamageMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> silverOilDamageMultiplier;
@@ -41,6 +45,10 @@ public class WerewolvesAgeingConfig {
         healonBiteAmount = COMMON_BUILDER.comment("How much the player is healed for biting an entity based on rank").defineList("healonBiteAmount", Arrays.asList(0f, 0f, 0f, 1f, 2f, 4f), it -> it instanceof Float);
         formTimeMultiplier = COMMON_BUILDER.comment("How much the duration of time a player can stay in werewolf form is multiplied by").defineList("formTimeMultiplier", Arrays.asList(1f, 1.5f, 2f, 3f, 4f, 5f), it -> it instanceof Float);
         ageBuffsHowl = COMMON_BUILDER.comment("Whether higher age ranks buffs the mobs summoned by howling").define("ageBuffsHowl", true);
+        bitingGivesFood = COMMON_BUILDER.comment("When enabled, biting an entity").define("bitingGivesFood", true);
+        rankForBiteFood = COMMON_BUILDER.comment("Requires bitingGivesFood to be enabled. At what rank should biting begin to give food").defineInRange("rankForBitefood", 2, 0, 5);
+        biteNutrition = COMMON_BUILDER.comment("How much nutrition (hungar bar value) a bite gives").defineInRange("biteNutrition", 2, 0, 20);
+        biteSaturation = COMMON_BUILDER.comment("How much saturation a bite gives").defineInRange("biteSaturation", 0.5D, 0D, 1.2D);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 1.50D, 3D, 4.5D), it -> it instanceof Double);
         WEREWOLF_AGEING_CONFIG = COMMON_BUILDER.build();
     }

@@ -13,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -68,6 +69,10 @@ public class WerewolfAgeingManager {
             if(event.getSource().getEntity() instanceof Player player && Helper.isWerewolf(player) && !player.getCommandSenderWorld().isClientSide) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 player.heal(WerewolvesAgeingConfig.healonBiteAmount.get().get(age));
+                if(WerewolvesAgeingConfig.bitingGivesFood.get() && age >= WerewolvesAgeingConfig.rankForBiteFood.get()) {
+                    FoodData foodData = player.getFoodData();
+                    foodData.eat(WerewolvesAgeingConfig.biteNutrition.get(), WerewolvesAgeingConfig.biteSaturation.get().floatValue());
+                }
             }
         }
     }
