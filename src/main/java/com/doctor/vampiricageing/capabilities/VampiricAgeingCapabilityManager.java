@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
@@ -417,6 +418,9 @@ public class VampiricAgeingCapabilityManager {
             if(event.getSource() == VReference.SUNDAMAGE) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
+                if(event.getEntity() instanceof Player player && CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get()) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
+                    return;
+                }
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
             } else if(event.getSource() == DamageSource.STARVE && CommonConfig.harsherOutOfBlood.get() && age > 0) {
                 event.setAmount(event.getAmount() * age);

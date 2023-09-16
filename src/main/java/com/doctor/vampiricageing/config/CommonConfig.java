@@ -24,6 +24,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue shouldAgeIncreaseHunterMobDamage;
     public static final ForgeConfigSpec.BooleanValue vampirePowderedSnowImmunity;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectExhaustion;
+    public static final ForgeConfigSpec.BooleanValue rageModeWeaknessToggle;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectHealing;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
@@ -75,6 +76,7 @@ public class CommonConfig {
         doesAgeAffectPrices = COMMON_BUILDER.comment("Whether Age makes a difference on Trade Prices").define("doesAgeAffectPrices", true);
         harsherOutOfBlood = COMMON_BUILDER.comment("Makes running out of blood harsher on vampire, scaling with age").define("harsherOutOfBlood", false);
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").defineList("ageAffectTradePrices", Arrays.asList(1D, 1.1D, 1.25D, 1.5D, 1.75D, 2D), t -> t instanceof Double);
+        rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle    ", true);
         genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1D, 1D, 0.95D, 0.9D, 0.75D, 0.5D), it -> it instanceof Double);
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1D, 1.5D, 2D, 3D, 4D, 5D), it -> it instanceof Double);
         biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
