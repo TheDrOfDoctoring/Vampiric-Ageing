@@ -4,12 +4,9 @@ import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.actions.VampiricAgeingActions;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
-import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.networking.Networking;
 import com.doctor.vampiricageing.networking.SyncCapabilityPacket;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -20,44 +17,31 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.SundamageRegistry;
-import de.teamlapen.vampirism.entity.ai.goals.BiteNearbyEntityVampireGoal;
-import de.teamlapen.vampirism.entity.ai.goals.MoveToBiteableVampireGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.werewolves.api.WReference;
-import jdk.jfr.Percentage;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -67,7 +51,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -77,10 +60,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,7 +81,9 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("94d546a9-6848-48cf-bcba-5e162987d58b");
     public static final UUID STRENGTH_INCREASE = UUID.fromString("ee0dca39-3d03-4f75-aed0-c1ae017969f2");
     public static final UUID WEREWOLF_STRENGTH_INCREASE = UUID.fromString("a47672d2-88c8-41de-bafe-8683de11f82a");
-    public static final UUID WEREWOLF_FORM_AGE_TIMER = UUID.fromString("e6e12ffb-8872-420a-bd84-4c49dce8e6f3");
+
+
+
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
         if (livingEntity == null) {
             return LazyOptional.empty();

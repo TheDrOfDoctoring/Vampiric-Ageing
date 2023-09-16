@@ -12,7 +12,8 @@
     "PowderSnowBlockMixin",
     "SilverOilMixin",
     "VampirePlayerMixin",
-    "VillagerMixin"
+    "VillagerMixin",
+    "WerewolfFormActionMixin"
   ],
   "client": [
   ],
