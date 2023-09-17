@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -72,6 +73,18 @@ public class WerewolfAgeingManager {
                 if(WerewolvesAgeingConfig.bitingGivesFood.get() && age >= WerewolvesAgeingConfig.rankForBiteFood.get()) {
                     FoodData foodData = player.getFoodData();
                     foodData.eat(WerewolvesAgeingConfig.biteNutrition.get(), WerewolvesAgeingConfig.biteSaturation.get().floatValue());
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onFootEatenFinish(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntity() instanceof Player player && Helper.isWerewolf((Player) event.getEntity())) {
+            if (Helper.isRawMeat(event.getItem())) {
+                int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+                int multiplier = WerewolvesAgeingConfig.nourishmentMultipliers.get().get(age) - 1;
+                for(int i = 1; i <= multiplier; i++) {
+                    player.getFoodData().eat(event.getItem().getItem(), event.getItem(), player);
                 }
             }
         }

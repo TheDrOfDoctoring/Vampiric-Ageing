@@ -64,6 +64,7 @@ By default, the player gains access to a number of benefits from ranking up:
 - Heal on bite based on age
 - Biting mobs nourishes you
 - Can stay in werewolf forms longer
+- Raw Meat is even more nourishing based on age rank
 
 However, there are some penalties upon ageing.
 - Increased damage from silver oil (Optional, now disabled by default)
