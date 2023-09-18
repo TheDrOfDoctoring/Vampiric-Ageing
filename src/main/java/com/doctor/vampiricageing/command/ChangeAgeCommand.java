@@ -39,7 +39,7 @@ public class ChangeAgeCommand extends BasicCommand {
                     context.getSource().sendSuccess(Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
                 } else if(age > 5 || age < 0) {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.age", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.age"));
-                } else if(Helper.isHunter(player)) {
+                } else if(!Helper.isVampire(player) || !de.teamlapen.werewolves.util.Helper.isWerewolf(player)) {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.wrong_faction", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.wrong_faction"));
                 } else {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute"));
