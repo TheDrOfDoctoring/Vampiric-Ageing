@@ -27,7 +27,7 @@ public class ChangeAgeCommand extends BasicCommand {
                         .then(Commands.argument("age", IntegerArgumentType.integer(0))
                                 .executes(context -> setAge(context, IntegerArgumentType.getInteger(context, "age"), Lists.newArrayList(context.getSource().getPlayerOrException())))
                                 .then(Commands.argument("player", EntityArgument.entities())
-                                        .executes(context -> setAge(context, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player")))));
+                                        .executes(context -> setAge(context, IntegerArgumentType.getInteger(context, "age"), EntityArgument.getPlayers(context, "player")))));
     }
     @SuppressWarnings("SameReturnValue")
     private static int setAge(@NotNull CommandContext<CommandSourceStack> context, int age, @NotNull Collection<ServerPlayer> players) {
@@ -37,7 +37,11 @@ public class ChangeAgeCommand extends BasicCommand {
                     VampiricAgeingCapabilityManager.getAge(player).ifPresent(ageCap -> ageCap.setAge(age));
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
                     context.getSource().sendSuccess(Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
-                } else{
+                } else if(age > 5 || age < 0) {
+                    context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.age", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.age"));
+                } else if(Helper.isHunter(player)) {
+                    context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.wrong_faction", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.wrong_faction"));
+                } else {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute"));
                 }
             }
