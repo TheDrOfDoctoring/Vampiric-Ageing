@@ -61,12 +61,12 @@ public class CommonConfig {
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
         celerityActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Celerity Action").defineInRange("celerityActionRank", 1, 0, 5);
-        celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 300, 20, 36000);
+        celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 60, 20, 36000);
         celerityActionMultiplier = COMMON_BUILDER.comment("Speed Multiplier provided by Celerity Action").defineInRange("celerityActionMultiplier", 1.025D, 1, 5D);
         celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityBloodActionDuration", 8, 1, 36000);
         celerityAction = COMMON_BUILDER.comment("Whether the Celerity action is available for Aged Vampires").define("celerityBloodAction", true);
         drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Blood Tap Action").defineInRange("drainBloodActionRank", 3, 0, 5);
-        drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Blood Tap action in seconds").defineInRange("drainBloodActionCooldown", 900, 1, 36000);
+        drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Blood Tap action in seconds").defineInRange("drainBloodActionCooldown", 150, 1, 36000);
         drainBloodActionDuration = COMMON_BUILDER.comment("Duration of the Blood Tap action in seconds").defineInRange("drainBloodActionDuration", 10, 1, 36000);
         drainBloodAction = COMMON_BUILDER.comment("Whether the Blood Tap action is available for Aged Vampires").define("drainBloodAction", true);
         COMMON_BUILDER.comment("For any config with a list of 6 numbers, the very first number refers to a vampire with no age rank and the second number is the first age rank.");
@@ -76,7 +76,7 @@ public class CommonConfig {
         doesAgeAffectPrices = COMMON_BUILDER.comment("Whether Age makes a difference on Trade Prices").define("doesAgeAffectPrices", true);
         harsherOutOfBlood = COMMON_BUILDER.comment("Makes running out of blood harsher on vampire, scaling with age").define("harsherOutOfBlood", false);
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").defineList("ageAffectTradePrices", Arrays.asList(1D, 1.1D, 1.25D, 1.5D, 1.75D, 2D), t -> t instanceof Double);
-        rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle    ", true);
+        rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle", true);
         genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1D, 1D, 0.95D, 0.9D, 0.75D, 0.5D), it -> it instanceof Double);
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1D, 1.5D, 2D, 3D, 4D, 5D), it -> it instanceof Double);
         biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
@@ -92,7 +92,7 @@ public class CommonConfig {
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         highAgeBadOmen = COMMON_BUILDER.comment("When enabled, there is a chance to randomly get the Bad Omen effect as a High Age Vampire").define("highAgeOmen", true);
         shouldAgeAffectHealing = COMMON_BUILDER.comment("Whether Age Rank affects healing").define("ageHealingAffect", true);
-        ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1.5f, 2f, 2.5f, 3f), it -> it instanceof Float);
+        ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> it instanceof Float);
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
         damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1.5f, 2f, 2.5f, 3f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
