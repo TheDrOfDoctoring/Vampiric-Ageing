@@ -75,6 +75,7 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID BITE_DAMAGE_MULTIPLIER_UUID = UUID.fromString("7936e1c2-3439-4819-b0e3-ea57dcc3e8ba");
     public static final UUID MAX_HEALTH_UUID = UUID.fromString("08251d58-2513-4768-b4b5-f2a1a239998e");
     public static final UUID WEREWOLF_MAX_HEALTH_AGE_UUID = UUID.fromString("47461eb3-1376-460d-b542-5d4d17d84b86");
+    public static final UUID AGE_ADVANCED_SPEED_INCREASE = UUID.fromString("5728457b-ce7e-4bb5-96de-d1c6809dd1c3");
     public static final UUID EXHAUSTION_UUID = UUID.fromString("1f14dd76-7d9b-47b3-9951-1c221f78d49f");
     public static final UUID STEP_ASSIST_UUID = UUID.fromString("edee6b7f-755a-4dc5-a036-2b8108415c4c");
     public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("94d546a9-6848-48cf-bcba-5e162987d58b");
@@ -494,6 +495,9 @@ public class VampiricAgeingCapabilityManager {
                 vamp.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(ATTACK_DAMAGE_UUID, "AGE_VAMPIRE_DAMAGE_INCREASE", ageMultiplier, AttributeModifier.Operation.MULTIPLY_BASE));
                 vamp.getAttribute(Attributes.KNOCKBACK_RESISTANCE).addPermanentModifier(new AttributeModifier(KNOCKBACK_RESISTANCE_UUID, "AGE_VAMPIRE_KNOCKBACK_RESISTANCE", 0.25 * ageMultiplier, AttributeModifier.Operation.ADDITION));
                 vamp.setHealth(vamp.getMaxHealth());
+                if(vampireAge.getAge() > 2) {
+                    vamp.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(AGE_ADVANCED_SPEED_INCREASE, "AGE_VAMPIRE_SPEED_INCREASE", 0.2 * ageMultiplier, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                }
             });
         }
     }
