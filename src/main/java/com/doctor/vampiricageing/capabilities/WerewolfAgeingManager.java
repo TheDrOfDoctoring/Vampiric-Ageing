@@ -1,11 +1,7 @@
 package com.doctor.vampiricageing.capabilities;
 
-import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.werewolves.api.WReference;
-import de.teamlapen.werewolves.blocks.StoneAltarBlock;
 import de.teamlapen.werewolves.blocks.StoneAltarFireBowlBlock;
 import de.teamlapen.werewolves.util.BiteDamageSource;
 import de.teamlapen.werewolves.util.Helper;

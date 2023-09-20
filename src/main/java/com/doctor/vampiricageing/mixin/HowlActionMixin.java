@@ -1,15 +1,11 @@
 package com.doctor.vampiricageing.mixin;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
-import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.werewolves.api.entities.player.IWerewolfPlayer;
-import de.teamlapen.werewolves.config.WerewolvesConfig;
 import de.teamlapen.werewolves.entities.AggressiveWolfEntity;
 import de.teamlapen.werewolves.entities.player.werewolf.actions.HowlingAction;
-import net.minecraft.client.renderer.EffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;

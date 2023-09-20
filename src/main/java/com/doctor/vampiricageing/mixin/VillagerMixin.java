@@ -1,13 +1,8 @@
 package com.doctor.vampiricageing.mixin;
 
-import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
-import com.doctor.vampiricageing.capabilities.WerewolfAgeingManager;
 import com.doctor.vampiricageing.config.CommonConfig;
-import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.core.ModVillage;
-import de.teamlapen.vampirism.data.TagGenerator;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -17,7 +12,6 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

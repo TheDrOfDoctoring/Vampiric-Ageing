@@ -1,17 +1,12 @@
 package com.doctor.vampiricageing.mixin;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
-import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.werewolves.items.oil.SilverOil;
 import de.teamlapen.werewolves.util.Helper;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

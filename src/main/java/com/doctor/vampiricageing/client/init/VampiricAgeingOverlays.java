@@ -1,8 +1,6 @@
 package com.doctor.vampiricageing.client.init;
 
-import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.client.overlay.AgeRankOverlay;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 

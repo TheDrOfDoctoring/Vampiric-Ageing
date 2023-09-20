@@ -30,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -260,7 +259,7 @@ public class VampiricAgeingCapabilityManager {
         Player player = event.getEntity();
         if(player.isShiftKeyDown() && CommonConfig.sireingMechanic.get() && Helper.isVampire(player) && event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().is(Items.GLASS_BOTTLE)) {
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-            if(age > 1 && VampirePlayer.get(player).getBloodLevel() > 8) {
+            if(age > 1 && VampirePlayer.getOpt(player).map(vamp -> vamp.getBloodLevel() > 8).orElse(false)) {
                 age -= 1;
                 ItemStack mainHandStack = player.getMainHandItem();
                 mainHandStack.shrink(1);
@@ -401,7 +400,7 @@ public class VampiricAgeingCapabilityManager {
             if(event.getSource() == VReference.SUNDAMAGE) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
-                if(event.getEntity() instanceof Player player && CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get()) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
+                if(event.getEntity() instanceof Player player && CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
                     return;
                 }
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
@@ -426,24 +425,31 @@ public class VampiricAgeingCapabilityManager {
         LivingEntity target = event.getEntity();
         Entity source = event.getSource().getEntity();
         if(source instanceof Player player && Helper.isVampire(player)) {
-            VampirePlayer vamp = VampirePlayer.get(player);
-            if(vamp.getActionHandler().isActionActive(VampiricAgeingActions.DRAIN_BLOOD_ACTION.get())) {
-                IVampirePlayer.BITE_TYPE biteType = vamp.determineBiteType(target);
-                int blood = 0;
-                float saturationMod = 1.0F;
-                if(biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_PLAYER) {
-                    blood = VampirePlayer.getOpt((Player) target).map(v -> v.onBite(vamp)).orElse(0);
-                    saturationMod = VampirePlayer.getOpt((Player) target).map(VampirePlayer::getBloodSaturation).orElse(0f);
+            VampirePlayer.getOpt(player).ifPresent(vamp -> {
+                if(vamp.getActionHandler().isActionActive(VampiricAgeingActions.DRAIN_BLOOD_ACTION.get())) {
+                    IVampirePlayer.BITE_TYPE biteType = vamp.determineBiteType(target);
+                    int blood = 0;
+                    float saturationMod = 1.0F;
+                    if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_PLAYER) {
+                        blood = VampirePlayer.getOpt((Player) target).map(v -> v.onBite(vamp)).orElse(0);
+                        saturationMod = VampirePlayer.getOpt((Player) target).map(VampirePlayer::getBloodSaturation).orElse(0f);
+                        vamp.drinkBlood(blood, saturationMod);
+                    } else if (biteType == IVampirePlayer.BITE_TYPE.HUNTER_CREATURE && target instanceof Player targetPlayer) {
+                        targetPlayer.getFoodData().addExhaustion(1f);
+                        vamp.drinkBlood(1, 0);
 
-                } else if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_CREATURE) {
-                    LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(target);
-                    blood = opt.map((creature) -> {
-                        return creature.onBite(vamp);
-                    }).orElse(0);
-                    saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0.0F);
+                    } else if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_CREATURE) {
+                        LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(target);
+                        blood = opt.map((creature) -> {
+                            return creature.onBite(vamp);
+                        }).orElse(0);
+                        saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0.0F);
+
+                        vamp.drinkBlood(blood, saturationMod);
+                    }
                 }
-                vamp.drinkBlood(blood, saturationMod);
-            }
+            });
+
         }
         //Advanced Vampires dont seem to come with the Goal to bite entities unlike Basic Vampires, not sure if intentional
         //Cant get adding the same goals on level join to work properly

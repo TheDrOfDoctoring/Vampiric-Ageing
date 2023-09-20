@@ -72,7 +72,7 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("time", timeSinceAgeLoss);
         tag.putInt("infected", infectedSinceAgeLoss);
         tag.putInt("drained", drainedSinceAgeLoss);
-        tag.putInt("devoured    ", devouredSinceAgeLoss);
+        tag.putInt("devoured", devouredSinceAgeLoss);
         return tag;
     }
 

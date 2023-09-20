@@ -1,11 +1,9 @@
 package com.doctor.vampiricageing.mixin;
 
-import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.player.vampire.actions.InfectAction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
