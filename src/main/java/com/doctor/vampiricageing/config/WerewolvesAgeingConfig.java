@@ -51,7 +51,7 @@ public class WerewolvesAgeingConfig {
         biteNutrition = COMMON_BUILDER.comment("How much nutrition (hungar bar value) a bite gives").defineInRange("biteNutrition", 1, 0, 20);
         biteSaturation = COMMON_BUILDER.comment("How much saturation a bite gives").defineInRange("biteSaturation", 0.2D, 0D, 1.2D);
         nourishmentMultipliers = COMMON_BUILDER.comment("How much more nourishing raw meat is for a werewolf based on age rank").defineList("nourishmentMultipliers", Arrays.asList(1, 1, 2, 2, 3, 3), it -> it instanceof Integer);
-        ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 1.50D, 3D, 4.5D), it -> it instanceof Double);
+        ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 3D, 4D, 4.5D), it -> it instanceof Double);
         WEREWOLF_AGEING_CONFIG = COMMON_BUILDER.build();
     }
 }
