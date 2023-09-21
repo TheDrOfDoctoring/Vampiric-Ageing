@@ -437,7 +437,7 @@ public class VampiricAgeingCapabilityManager {
                         vamp.drinkBlood(blood, saturationMod);
                     } else if (biteType == IVampirePlayer.BITE_TYPE.HUNTER_CREATURE && target instanceof Player targetPlayer) {
                         targetPlayer.getFoodData().addExhaustion(1f);
-                        vamp.drinkBlood(1, 0);
+                        vamp.drinkBlood(1, 0.1f);
 
                     } else if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_CREATURE) {
                         LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(target);
