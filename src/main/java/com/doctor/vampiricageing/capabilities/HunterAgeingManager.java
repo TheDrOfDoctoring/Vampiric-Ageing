@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.werewolves.mixin.FoodStatsAccessor;
+import com.doctor.vampiricageing.mixin.FoodStatsAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,7 +48,7 @@ public class HunterAgeingManager {
     }
 
     @SubscribeEvent
-    public void onEntityDeath(LivingDeathEvent event) {
+    public static void onEntityDeath(LivingDeathEvent event) {
         if(event.getSource().getEntity() instanceof ServerPlayer player && Helper.isHunter(player) && VampiricAgeingCapabilityManager.canAge(player)) {
             int pointWorth;
             if(event.getEntity().getType().is(EntityTypeTagProvider.pettyHunt)) {
@@ -64,7 +64,7 @@ public class HunterAgeingManager {
         }
     }
     @SubscribeEvent
-    public void onPlayerTick(LivingEvent.LivingTickEvent event) {
+    public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
         if(!(event.getEntity().level.getGameTime() % 20 == 0)) {
             return;
         }
@@ -98,7 +98,7 @@ public class HunterAgeingManager {
 
     }
     @SubscribeEvent
-    public void onInteract(PlayerInteractEvent event) {
+    public static void onInteract(PlayerInteractEvent event) {
         Player player = event.getEntity();
         if (Helper.isHunter(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof MedChairBlock && VampiricAgeingCapabilityManager.canAge(player)) {
             int age = VampiricAgeingCapabilityManager.getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
