@@ -3,13 +3,16 @@ package com.doctor.vampiricageing.capabilities;
 import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.actions.VampiricAgeingActions;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.networking.Networking;
 import com.doctor.vampiricageing.networking.SyncCapabilityPacket;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
@@ -18,8 +21,11 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
@@ -64,6 +70,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
+import static de.teamlapen.vampirism.util.Helper.isHunter;
 import static de.teamlapen.vampirism.util.Helper.isVampire;
 import static de.teamlapen.werewolves.util.Helper.isWerewolf;
 
@@ -81,7 +88,8 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("94d546a9-6848-48cf-bcba-5e162987d58b");
     public static final UUID STRENGTH_INCREASE = UUID.fromString("ee0dca39-3d03-4f75-aed0-c1ae017969f2");
     public static final UUID WEREWOLF_STRENGTH_INCREASE = UUID.fromString("a47672d2-88c8-41de-bafe-8683de11f82a");
-
+    public static final UUID HUNTER_MAX_HEALTH_UUID = UUID.fromString("c668f879-d57a-4182-ba82-87d93610e934");
+    public static final UUID HUNTER_SPEED_INCREASE_UUID = UUID.fromString("4277f565-237e-4802-9653-203aa2ef92bb");
 
 
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
@@ -99,10 +107,17 @@ public class VampiricAgeingCapabilityManager {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
-            } else if(ModList.get().isLoaded(VampiricAgeing.WEREWOLVES_MODID) && isWerewolf(player)) {
+
+            } else if(CapabilityHelper.isWerewolfCheckMod(player)) {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(WReference.WEREWOLF_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
+
+            } else if(HunterAgeingConfig.hunterAgeing.get() && isHunter(player)) {
+                int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0);
+                int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+                return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
+
             }
         }
         return false;
@@ -149,7 +164,7 @@ public class VampiricAgeingCapabilityManager {
 
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
-        } else if (ModList.get().isLoaded(VampiricAgeing.WEREWOLVES_MODID) && isWerewolf(player)) {
+        } else if(CapabilityHelper.isWerewolfCheckMod(player)) {
             removeModifier(player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()), BITE_DAMAGE_MULTIPLIER_UUID);
             removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), WEREWOLF_STRENGTH_INCREASE);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), WEREWOLF_MAX_HEALTH_AGE_UUID);
@@ -157,6 +172,15 @@ public class VampiricAgeingCapabilityManager {
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(WEREWOLF_STRENGTH_INCREASE, "WEREWOLF_AGE_ATTACK_DAMAGE_INCREASE", WerewolvesAgeingConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(WEREWOLF_MAX_HEALTH_AGE_UUID, "WEREWOLF_MAX_HEALTH_AGE_CHANGE", WerewolvesAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()).addPermanentModifier(new AttributeModifier(BITE_DAMAGE_MULTIPLIER_UUID, "AGE_BITE_DAMAGE_INCREASE", WerewolvesAgeingConfig.biteDamageMultiplier.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        } else if(isHunter(player)) {
+            removeModifier(player.getAttribute(Attributes.MAX_HEALTH), HUNTER_MAX_HEALTH_UUID);
+            removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_SPEED_INCREASE_UUID);
+            removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
+            if(age > 0 && age >= HunterAgeingConfig.stepAssistAge.get()) {
+                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addPermanentModifier(new AttributeModifier(STEP_ASSIST_UUID, "AGE_STEP_ASSIST_CHANGE", 0.5, AttributeModifier.Operation.ADDITION));
+            }
+            player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HUNTER_MAX_HEALTH_UUID, "HUNTER_AGE_MAX_HEALTH_INCREASE", HunterAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
+            player.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(HUNTER_SPEED_INCREASE_UUID, "HUNTER_AGE_SPEED_INCREASE", HunterAgeingConfig.movementSpeedBonus.get().get(age), AttributeModifier.Operation.ADDITION));
         }
     }
     public static void checkSkills(int age, ServerPlayer player) {
@@ -172,6 +196,15 @@ public class VampiricAgeingCapabilityManager {
                     handler.enableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
+                }
+            });
+        }  else if(Helper.isHunter(player)) {
+            HunterPlayer.getOpt(player).ifPresent(hunter -> {
+                ISkillHandler<IHunterPlayer> handler = hunter.getSkillHandler();
+                if(age >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
+                    handler.enableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
+                } else {
+                    handler.disableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
                 }
             });
         }

@@ -12,6 +12,7 @@ public class AgeingCapability implements IAgeingCapability {
     private int infectedSinceAgeLoss;
     private int drainedSinceAgeLoss;
     private int devouredSinceAgeLoss;
+    private int huntedSinceAgeLoss;
 
 
     @Override
@@ -39,9 +40,21 @@ public class AgeingCapability implements IAgeingCapability {
     }
 
     @Override
+    public int getHunted() {
+        return huntedSinceAgeLoss;
+    }
+
+    @Override
+    public void setHunted(int hunted) {
+        this.huntedSinceAgeLoss = hunted;
+    }
+
+    @Override
     public int getInfected() {
         return infectedSinceAgeLoss;
     }
+
+
 
     @Override
     public void setInfected(int infected) {
@@ -73,6 +86,7 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("infected", infectedSinceAgeLoss);
         tag.putInt("drained", drainedSinceAgeLoss);
         tag.putInt("devoured", devouredSinceAgeLoss);
+        tag.putInt("hunted", huntedSinceAgeLoss);
         return tag;
     }
 
@@ -82,5 +96,6 @@ public class AgeingCapability implements IAgeingCapability {
         this.drainedSinceAgeLoss = nbt.getInt("drained");
         this.timeSinceAgeLoss = nbt.getInt("time");
         this.infectedSinceAgeLoss = nbt.getInt("infected");
+        this.huntedSinceAgeLoss = nbt.getInt("hunted");
     }
 }

@@ -9,6 +9,7 @@
     "BloodStatsMixin",
     "HowlActionMixin",
     "InfectActionMixin",
+    "PlayerMixin",
     "PowderSnowBlockMixin",
     "SilverOilMixin",
     "VampirePlayerMixin",

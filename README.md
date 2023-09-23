@@ -48,6 +48,28 @@ The mod also comes with some more debatable design choices disabled by default s
 
 All of these options can be found in ``/config/vampiricageing-common.toml``, I recommend you take a look!
 
+## Hunters
+
+By default, Ageing begins at Hunter Level 14 (Some configuration options are the same as the main config file). To increase their Age Rank, a player must hunt enemy faction creatures such as Vampires or Werewolves. Different creatures contribute different amount of points towards progressing to the next Age Rank. This progress can be checked by interacting with an Injection Chair.
+
+### Abilities
+
+As Hunters age, they learn to use the other factions abilities against them, this allows them to gain these abilities with ageing:
+
+- Increased damage against enemy faction creatures, scaling with age rank.
+- Increased health, scaling with age rank
+- Increased mining speed, scaling with age rank
+- Increased movement speed, scaling with age rank
+- Step Assist at Age 4
+- Faster regeneration at Age 3
+- Teleport Action at Age 5
+- New "Seniority" Oil that does more damage to werewolves or vampires the higher their age.
+
+However, there are some penalties upon ageing.
+
+- Faster exhaustion (Food Drain), scaling with age rank
+- Decreased XP gain, scaling with age rank
+
 ## Werewolves
 
 

@@ -25,5 +25,8 @@ public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
     void setDrained(int drained);
 
     int getDrained();
+    void setHunted(int hunted);
+
+    int getHunted();
 
 }

@@ -1,14 +1,17 @@
 package com.doctor.vampiricageing;
 
 import com.doctor.vampiricageing.actions.VampiricAgeingActions;
+import com.doctor.vampiricageing.capabilities.HunterAgeingManager;
 import com.doctor.vampiricageing.capabilities.WerewolfAgeingManager;
 import com.doctor.vampiricageing.client.init.ClientRegistryHandler;
 import com.doctor.vampiricageing.command.VampiricAgeingCommands;
 import com.doctor.vampiricageing.config.ClientConfig;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.init.ModItems;
+import com.doctor.vampiricageing.init.ModOils;
 import com.doctor.vampiricageing.networking.ClientProxy;
 import com.doctor.vampiricageing.networking.IProxy;
 import com.doctor.vampiricageing.networking.Networking;
@@ -53,8 +56,10 @@ public class VampiricAgeing
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::processIMC);
         ModItems.ITEMS.register(modEventBus);
+        ModOils.OILS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
-
+        ModConfig hunterAgeingConfig = new ModConfig(ModConfig.Type.COMMON, HunterAgeingConfig.HUNTER_AGEING_CONFIG, ModLoadingContext.get().getActiveContainer(), MODID+"-hunterAgeing.toml");
+        ModLoadingContext.get().getActiveContainer().addConfig(hunterAgeingConfig);
         if(ModList.get().isLoaded(WEREWOLVES_MODID)) {
             ModConfig werewolfAgeingConfig = new ModConfig(ModConfig.Type.COMMON, WerewolvesAgeingConfig.WEREWOLF_AGEING_CONFIG, ModLoadingContext.get().getActiveContainer(), MODID+"-werewolfAgeing.toml");
             ModLoadingContext.get().getActiveContainer().addConfig(werewolfAgeingConfig);
@@ -75,7 +80,6 @@ public class VampiricAgeing
         if(ModList.get().isLoaded(WEREWOLVES_MODID)) {
             MinecraftForge.EVENT_BUS.register(new WerewolfAgeingManager());
         }
-
     }
 
 

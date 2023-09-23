@@ -12,6 +12,7 @@ public class VampiricAgeingActions {
 
     public static final RegistryObject<DrainBloodAction> DRAIN_BLOOD_ACTION = ACTIONS.register("drain_blood_action", DrainBloodAction::new);
     public static final RegistryObject<CelerityAction> CELERITY_ACTION = ACTIONS.register("celerity_action", CelerityAction::new);
+    public static final RegistryObject<HunterTeleportAction> HUNTER_TELEPORT_ACTION = ACTIONS.register("hunter_teleport_action", HunterTeleportAction::new);
 
     public static void register(IEventBus bus) {
         ACTIONS.register(bus);
