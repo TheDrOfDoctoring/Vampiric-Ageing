@@ -134,7 +134,10 @@ public class HunterAgeingManager {
     }
     @SubscribeEvent
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
-        if(!HunterAgeingConfig.hunterIncreasedMiningSpeed.get() && !Helper.isHunter(event.getEntity()) || !HunterAgeingConfig.hunterAgeing.get() ) {
+        if(!HunterAgeingConfig.hunterIncreasedMiningSpeed.get() || !HunterAgeingConfig.hunterAgeing.get() ) {
+            return;
+        }
+        if(!Helper.isHunter(event.getEntity())) {
             return;
         }
         int age = VampiricAgeingCapabilityManager.getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
