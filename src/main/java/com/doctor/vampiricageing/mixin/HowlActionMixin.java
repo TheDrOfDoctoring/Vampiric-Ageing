@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -25,9 +26,9 @@ import java.util.UUID;
 public class HowlActionMixin {
 
      @Unique
-     final UUID SPEED_INCREASE_UUID = UUID.fromString("ee73a62e-8bac-4fe6-9e95-fe0bf16a1305");
-    @Inject(method = "*", at = @At(value = "INVOKE", target = "Lde/teamlapen/lib/lib/util/UtilLib;spawnEntityInWorld(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/AxisAlignedBB;Lnet/minecraft/entity/Entity;ILjava/util/List;Lnet/minecraft/entity/SpawnReason;)Z"), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
-    private void activate(IWerewolfPlayer werewolfPlayer, IAction.ActivationContext context, CallbackInfoReturnable<Boolean> cir, PlayerEntity player, AxisAlignedBB bb, List entities, World world, int wolfAmount, int i, AggressiveWolfEntity wolf) {
+     private static final UUID SPEED_INCREASE_UUID = UUID.fromString("ee73a62e-8bac-4fe6-9e95-fe0bf16a1305");
+    @Inject(method = "lambda$activate$2", at = @At(value = "INVOKE", target = "Lde/teamlapen/lib/lib/util/UtilLib;spawnEntityInWorld(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/AxisAlignedBB;Lnet/minecraft/entity/Entity;ILjava/util/List;Lnet/minecraft/entity/SpawnReason;)Z"), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
+    private static void activate(PlayerEntity player, World world, AggressiveWolfEntity wolf, CallbackInfo ci) {
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         //this thing has caused an unreasonable amount of trouble for how simple it is
         if(WerewolvesAgeingConfig.ageBuffsHowl.get() && age > 0) {

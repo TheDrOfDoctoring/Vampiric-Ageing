@@ -360,7 +360,7 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
-        if(event.player.tickCount % 100 == 0 && event.player instanceof ServerPlayerEntity && CommonConfig.timeBasedIncrease.get()) {
+        if(event.player.level.getGameTime() % 100 == 0 && event.player instanceof ServerPlayerEntity && CommonConfig.timeBasedIncrease.get()) {
             ServerPlayerEntity player = (ServerPlayerEntity) event.player;
             if(canAge(player) && Helper.isVampire(player)) {
                 getAge(player).ifPresent(age -> {

@@ -4,6 +4,8 @@ import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -26,11 +28,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BlockBehaviourMixin {
     @Unique
     public final VoxelShape voxelShape = VoxelShapes.block();
-    @Shadow public abstract FluidState getFluidState();
+
+    @Shadow public abstract Block getBlock();
 
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", at = @At(value = "RETURN"), cancellable = true)
     private void getCollisionShape(IBlockReader reader, BlockPos pos, ISelectionContext con, CallbackInfoReturnable<VoxelShape> cir) {
-        if (getFluidState() == Fluids.WATER.defaultFluidState() && CommonConfig.ageWaterWalking.get()) {
+        if (getBlock() == Blocks.WATER && CommonConfig.ageWaterWalking.get()) {
             Entity entity = con.getEntity();
             if(entity instanceof PlayerEntity && Helper.isVampire(entity) && vampiricageing$isAbove(entity, voxelShape, pos) && !entity.isInWater() && !entity.isShiftKeyDown()) {
                    PlayerEntity player = (PlayerEntity) entity;
