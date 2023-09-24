@@ -25,6 +25,8 @@ public class AgeingCapability implements IAgeingCapability {
         this.timeSinceAgeLoss = 0;
         this.infectedSinceAgeLoss = 0;
         this.drainedSinceAgeLoss = 0;
+        this.huntedSinceAgeLoss = 0;
+        this.devouredSinceAgeLoss = 0;
         this.age = age;
 
     }
