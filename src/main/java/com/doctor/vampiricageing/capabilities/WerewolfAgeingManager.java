@@ -3,11 +3,12 @@ package com.doctor.vampiricageing.capabilities;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.werewolves.blocks.StoneAltarFireBowlBlock;
-import de.teamlapen.werewolves.util.BiteDamageSource;
+import de.teamlapen.werewolves.core.ModDamageTypes;
 import de.teamlapen.werewolves.util.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -32,7 +33,7 @@ public class WerewolfAgeingManager {
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
-        if(WerewolvesAgeingConfig.devourBasedAgeing.get() && event.getSource().getEntity() instanceof ServerPlayer player && Helper.isWerewolf(event.getSource().getEntity()) && event.getSource() instanceof BiteDamageSource && VampiricAgeingCapabilityManager.canAge(player)) {
+        if(WerewolvesAgeingConfig.devourBasedAgeing.get() && event.getSource().getEntity() instanceof ServerPlayer player && Helper.isWerewolf(event.getSource().getEntity()) && event.getSource().is(ModDamageTypes.BITE) && VampiricAgeingCapabilityManager.canAge(player)) {
             int pointWorth;
             if(event.getEntity().getType().is(EntityTypeTagProvider.pettyDevour)) {
                 pointWorth = WerewolvesAgeingConfig.pettyDevourWorth.get();
@@ -51,7 +52,7 @@ public class WerewolfAgeingManager {
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getEntity();
-        if (Helper.isWerewolf(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof StoneAltarFireBowlBlock && VampiricAgeingCapabilityManager.canAge(player)) {
+        if (Helper.isWerewolf(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof StoneAltarFireBowlBlock && VampiricAgeingCapabilityManager.canAge(player) && event.getHand() == InteractionHand.MAIN_HAND) {
             int age = VampiricAgeingCapabilityManager.getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
             if(WerewolvesAgeingConfig.devourBasedAgeing.get()) {
                 int devourPoints = VampiricAgeingCapabilityManager.getAge(event.getEntity()).map(ageCap -> ageCap.getDevoured()).orElse(0);
@@ -62,7 +63,7 @@ public class WerewolfAgeingManager {
     }
     @SubscribeEvent
     public void onHurt(LivingHurtEvent event) {
-        if(event.getSource() instanceof BiteDamageSource) {
+        if(event.getSource().is(ModDamageTypes.BITE)) {
             if(event.getSource().getEntity() instanceof Player player && Helper.isWerewolf(player) && !player.getCommandSenderWorld().isClientSide) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 player.heal(WerewolvesAgeingConfig.healonBiteAmount.get().get(age));

@@ -6,8 +6,9 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.client.particle.GenericParticle;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -53,7 +54,7 @@ public class CelerityAction extends DefaultVampireAction implements ILastingActi
     public boolean onUpdate(IVampirePlayer vampire) {
         if(!vampire.getRepresentingPlayer().getCommandSenderWorld().isClientSide) {
             Player player = vampire.getRepresentingPlayer();
-            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_4"), 5, 0xd3d3d3, 0.1F), player.getX(), player.getY(), player.getZ(), 3, 0,0, 0, 0);
+            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleOptions(new ResourceLocation("minecraft", "generic_4"), 5, 0xd3d3d3, 0.1F) , player.getX(), player.getY(), player.getZ(), 3, 0,0, 0, 0);
         }
         return false;
     }

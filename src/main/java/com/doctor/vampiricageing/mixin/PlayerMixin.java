@@ -33,7 +33,7 @@ public abstract class PlayerMixin extends LivingEntity {
         if(this.abilities.invulnerable) {
             return;
         }
-        if(this.level.isClientSide) {
+        if(this.level().isClientSide) {
             return;
         }
         if(Helper.isHunter(this) && HunterAgeingConfig.hunterAgeing.get()) {

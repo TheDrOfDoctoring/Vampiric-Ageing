@@ -41,7 +41,7 @@ public class ChangeAgeCommand extends BasicCommand {
                 if (age < 6 && age >= 0 && level > 0) {
                     VampiricAgeingCapabilityManager.getAge(player).ifPresent(ageCap -> ageCap.setAge(age));
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
-                    context.getSource().sendSuccess(Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
+                    context.getSource().sendSuccess(() -> Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
                 } else if(age > 5 || age < 0) {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.age", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.age"));
                 } else if(Helper.isHunter(player) && !HunterAgeingConfig.hunterAgeing.get()) {

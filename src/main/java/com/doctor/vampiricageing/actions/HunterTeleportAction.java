@@ -34,17 +34,17 @@ public class HunterTeleportAction extends DefaultHunterAction {
         double oy = player.getY();
         double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
-            player.playSound(SoundEvents.NOTE_BLOCK_BASS, 1, 1);
+            player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1, 1);
             return false;
         }
 
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
+            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
                 pos = ((BlockHitResult) target).getBlockPos().above();
             }
         } else {
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
+            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
                 pos = ((EntityHitResult) target).getEntity().blockPosition();
             }
         }
@@ -59,7 +59,7 @@ public class HunterTeleportAction extends DefaultHunterAction {
 
         if (pos == null) {
             player.setPos(ox, oy, oz);
-            player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM, 1, 1);
+            player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1, 1);
             return false;
         }
         if (player instanceof ServerPlayer playerMp) {

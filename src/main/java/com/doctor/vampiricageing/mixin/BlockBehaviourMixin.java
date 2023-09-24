@@ -39,6 +39,6 @@ public abstract class BlockBehaviourMixin {
     }
     @Unique
     private boolean vampiricageing$isAbove(Entity entity, VoxelShape shape, BlockPos pos) {
-        return entity.getY() > pos.getY() + shape.max(Direction.Axis.Y) - (entity.isOnGround() ? 8.05/16.0 : 0.0015);
+        return entity.getY() > pos.getY() + shape.max(Direction.Axis.Y) - (entity.onGround() ? 8.05/16.0 : 0.0015);
     }
 }

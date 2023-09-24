@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -65,10 +66,10 @@ public class HunterAgeingManager {
     }
     @SubscribeEvent
     public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
-        if(!(event.getEntity().level.getGameTime() % 20 == 0)) {
+        if(!(event.getEntity().level().getGameTime() % 20 == 0)) {
             return;
         }
-        if(!(event.getEntity() instanceof Player) || event.getEntity().level.isClientSide) {
+        if(!(event.getEntity() instanceof Player) || event.getEntity().level().isClientSide) {
             return;
         }
         Player player = (Player) event.getEntity();
@@ -77,8 +78,8 @@ public class HunterAgeingManager {
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         if(age >= HunterAgeingConfig.fasterRegenerationAge.get()) {
-            Difficulty difficulty = player.level.getDifficulty();
-            boolean flag = player.level.getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
+            Difficulty difficulty = player.level().getDifficulty();
+            boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
             FoodData stats = player.getFoodData();
             if (flag && stats.getSaturationLevel() > 0.0F && player.isHurt() && stats.getFoodLevel() >= 20) {
                 if (((FoodStatsAccessor)stats).getFoodTimer() >= 9) {
@@ -92,7 +93,7 @@ public class HunterAgeingManager {
                     stats.addExhaustion(6.0F);
                 }
             } else if (stats.getFoodLevel() <= 0 && ((FoodStatsAccessor)stats).getFoodTimer() >= 79 && (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL)) {
-                player.hurt(DamageSource.STARVE, 1.0F);
+                player.hurt(player.damageSources().starve(), 1.0F);
             }
         }
 

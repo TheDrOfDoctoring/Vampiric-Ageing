@@ -55,6 +55,7 @@ public class VampiricAgeing
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::processIMC);
+        modEventBus.addListener(ModItems::creativeTabItems);
         ModItems.ITEMS.register(modEventBus);
         ModOils.OILS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
@@ -73,7 +74,8 @@ public class VampiricAgeing
     }
     private void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(generator, MODID, event.getExistingFileHelper());
+
+        EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(generator.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), entityTypeTagProvider);
     }
     private void processIMC(final InterModProcessEvent event) {
