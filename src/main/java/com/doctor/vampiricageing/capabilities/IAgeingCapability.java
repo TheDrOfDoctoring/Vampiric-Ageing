@@ -1,9 +1,9 @@
 package com.doctor.vampiricageing.capabilities;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
+public interface IAgeingCapability extends INBTSerializable<CompoundNBT> {
 
     int getAge();
 
@@ -28,5 +28,9 @@ public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
     void setHunted(int hunted);
 
     int getHunted();
+
+    boolean getUpStep();
+
+    void setUpStep(boolean upStepSetter);
 
 }

@@ -1,10 +1,10 @@
 package com.doctor.vampiricageing.mixin;
 
-import net.minecraft.world.food.FoodData;
+import net.minecraft.util.FoodStats;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin({FoodData.class})
+@Mixin({FoodStats.class})
 public interface FoodStatsAccessor {
     @Accessor("tickTimer")
     int getFoodTimer();

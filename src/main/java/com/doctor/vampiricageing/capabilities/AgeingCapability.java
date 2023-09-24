@@ -1,6 +1,6 @@
 package com.doctor.vampiricageing.capabilities;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.CompoundNBT;
 
 public class AgeingCapability implements IAgeingCapability {
 
@@ -13,6 +13,7 @@ public class AgeingCapability implements IAgeingCapability {
     private int drainedSinceAgeLoss;
     private int devouredSinceAgeLoss;
     private int huntedSinceAgeLoss;
+    private boolean upStepChange;
 
 
     @Override
@@ -25,6 +26,8 @@ public class AgeingCapability implements IAgeingCapability {
         this.timeSinceAgeLoss = 0;
         this.infectedSinceAgeLoss = 0;
         this.drainedSinceAgeLoss = 0;
+        this.devouredSinceAgeLoss = 0;
+        this.huntedSinceAgeLoss = 0;
         this.age = age;
 
     }
@@ -42,6 +45,16 @@ public class AgeingCapability implements IAgeingCapability {
     @Override
     public int getHunted() {
         return huntedSinceAgeLoss;
+    }
+
+    @Override
+    public boolean getUpStep() {
+        return upStepChange;
+    }
+
+    @Override
+    public void setUpStep(boolean upStepSetter) {
+        this.upStepChange = upStepSetter;
     }
 
     @Override
@@ -79,23 +92,25 @@ public class AgeingCapability implements IAgeingCapability {
         this.drainedSinceAgeLoss = drained;
 
     }
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+    public CompoundNBT serializeNBT() {
+        CompoundNBT tag = new CompoundNBT();
         tag.putInt("age", age);
         tag.putInt("time", timeSinceAgeLoss);
         tag.putInt("infected", infectedSinceAgeLoss);
         tag.putInt("drained", drainedSinceAgeLoss);
         tag.putInt("devoured", devouredSinceAgeLoss);
         tag.putInt("hunted", huntedSinceAgeLoss);
+        tag.putBoolean("upstep", upStepChange);
         return tag;
     }
 
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         this.age = nbt.getInt("age");
         this.devouredSinceAgeLoss = nbt.getInt("devoured");
         this.drainedSinceAgeLoss = nbt.getInt("drained");
         this.timeSinceAgeLoss = nbt.getInt("time");
         this.infectedSinceAgeLoss = nbt.getInt("infected");
         this.huntedSinceAgeLoss = nbt.getInt("hunted");
+        this.upStepChange = nbt.getBoolean("upstep");
     }
 }

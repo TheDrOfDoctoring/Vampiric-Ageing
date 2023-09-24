@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "vampirism:vampire",
     "werewolves:werewolf_survivalist"

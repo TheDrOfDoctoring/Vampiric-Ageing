@@ -8,15 +8,15 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+
 
 public class HunterTeleportAction extends DefaultHunterAction {
 
@@ -25,27 +25,27 @@ public class HunterTeleportAction extends DefaultHunterAction {
     }
 
     @Override
-    public boolean activate(@NotNull IHunterPlayer hunter, ActivationContext context) {
+    public boolean activate(IHunterPlayer hunter, ActivationContext context) {
         //This is effectively just a copy of the vampire teleport action, so credit to the developers of vampirism (and credit to them for many other things :P)
-        Player player = hunter.getRepresentingPlayer();
+        PlayerEntity player = hunter.getRepresentingPlayer();
         int dist = HunterAgeingConfig.hunterTeleportActionMaxDistance.get();
-        HitResult target = UtilLib.getPlayerLookingSpot(player, dist);
+        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, dist);
         double ox = player.getX();
         double oy = player.getY();
         double oz = player.getZ();
-        if (target.getType() == HitResult.Type.MISS) {
+        if (target.getType() == RayTraceResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS, 1, 1);
             return false;
         }
 
         BlockPos pos = null;
-        if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
-                pos = ((BlockHitResult) target).getBlockPos().above();
+        if (target.getType() == RayTraceResult.Type.BLOCK) {
+            if (player.getCommandSenderWorld().getBlockState(((BlockRayTraceResult) target).getBlockPos()).getMaterial().blocksMotion()) {
+                pos = ((BlockRayTraceResult) target).getBlockPos().above();
             }
         } else {
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
-                pos = ((EntityHitResult) target).getEntity().blockPosition();
+            if (player.getCommandSenderWorld().getBlockState(((EntityRayTraceResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
+                pos = ((EntityRayTraceResult) target).getEntity().blockPosition();
             }
         }
 
@@ -62,7 +62,8 @@ public class HunterTeleportAction extends DefaultHunterAction {
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM, 1, 1);
             return false;
         }
-        if (player instanceof ServerPlayer playerMp) {
+        if (player instanceof ServerPlayerEntity) {
+            ServerPlayerEntity playerMp = (ServerPlayerEntity) player;
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
@@ -73,19 +74,14 @@ public class HunterTeleportAction extends DefaultHunterAction {
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playLocalSound(ox, oy, oz, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F, false);
-        player.getCommandSenderWorld().playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1, 1, false);
+        player.getCommandSenderWorld().playLocalSound(ox, oy, oz, SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.getCommandSenderWorld().playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IHunterPlayer hunter) {
+    public boolean canBeUsedBy(IHunterPlayer hunter) {
         return VampiricAgeingCapabilityManager.getAge(hunter.getRepresentingPlayer()).orElse(null).getAge() >= HunterAgeingConfig.hunterTeleportActionAge.get();
-    }
-
-    @Override
-    public int getCooldown(@NotNull IHunterPlayer player) {
-        return HunterAgeingConfig.hunterTeleportActionCooldown.get() * 20;
     }
 
     @Override
@@ -93,4 +89,8 @@ public class HunterTeleportAction extends DefaultHunterAction {
         return HunterAgeingConfig.hunterTeleportAction.get();
     }
 
+    @Override
+    public int getCooldown() {
+        return HunterAgeingConfig.hunterTeleportActionCooldown.get() * 20;
+    }
 }

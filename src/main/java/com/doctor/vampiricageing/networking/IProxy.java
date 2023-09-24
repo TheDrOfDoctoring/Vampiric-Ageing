@@ -1,15 +1,15 @@
 package com.doctor.vampiricageing.networking;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 
 public interface IProxy {
     void init();
 
-    Level getClientWorld();
+    World getClientWorld();
 
     Minecraft getMinecraft();
 
-    Player getPlayer();
+    PlayerEntity getPlayer();
 }

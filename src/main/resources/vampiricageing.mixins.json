@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.doctor.vampiricageing.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_8",
   "refmap": "vampiricageing.refmap.json",
   "plugin": "com.doctor.vampiricageing.VampiricAgeingMixinPlugin",
   "mixins": [
@@ -11,7 +11,6 @@
     "HowlActionMixin",
     "InfectActionMixin",
     "PlayerMixin",
-    "PowderSnowBlockMixin",
     "SilverOilMixin",
     "VampirePlayerMixin",
     "VillagerMixin",

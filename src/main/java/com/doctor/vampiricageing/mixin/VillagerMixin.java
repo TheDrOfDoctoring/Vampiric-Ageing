@@ -3,15 +3,16 @@ package com.doctor.vampiricageing.mixin;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerData;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerData;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,19 +20,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Villager.class)
-public abstract class VillagerMixin extends AbstractVillager {
+@Mixin(VillagerEntity.class)
+public abstract class VillagerMixin extends AbstractVillagerEntity {
     @Shadow public abstract VillagerData getVillagerData();
 
-    public VillagerMixin(EntityType<? extends AbstractVillager> p_35267_, Level p_35268_) {
+    public VillagerMixin(EntityType<? extends AbstractVillagerEntity> p_35267_, World p_35268_) {
         super(p_35267_, p_35268_);
     }
 
-    @Inject(method = "updateSpecialPrices", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", shift = At.Shift.BEFORE))
-    private void updateSpecialPrices(Player player, CallbackInfo ci) {
+    @Inject(method = "updateSpecialPrices", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;hasEffect(Lnet/minecraft/potion/Effect;)Z", shift = At.Shift.BEFORE))
+    private void updateSpecialPrices(PlayerEntity player, CallbackInfo ci) {
         if (!Helper.isHunter(player) && CommonConfig.doesAgeAffectPrices.get()) {
-            VillagerProfession profession = this.getVillagerData().getProfession();
-            if(!ForgeRegistries.VILLAGER_PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(profession)) {
+            if(!(getVillagerData().getProfession() instanceof FactionVillagerProfession)) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 for(MerchantOffer merchantoffer1 : this.getOffers()) {
                     double ageMult = CommonConfig.ageAffectTradePrices.get().get(age);

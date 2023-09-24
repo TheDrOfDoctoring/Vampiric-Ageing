@@ -4,9 +4,9 @@ import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.BloodStats;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
+import de.teamlapen.vampirism.player.vampire.BloodStats;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,14 +17,14 @@ public abstract class BloodStatsMixin implements IBloodStats {
 
     //Forcing vampirism to take into account the Age based multiplier for blood exhaustion.
 
-    @Shadow @Final private Player player;
+    @Shadow @Final private PlayerEntity player;
 
     @Shadow private float bloodExhaustionLevel;
 
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lde/teamlapen/vampirism/entity/player/vampire/BloodStats;addExhaustion(FZ)V"), remap = false)
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lde/teamlapen/vampirism/player/vampire/BloodStats;addExhaustion(FZ)V"), remap = false)
     private void addExhaustion(BloodStats bloodStats, float amount, boolean ignoreModifier) {
         if (!ignoreModifier) {
-            AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
+            ModifiableAttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
             amount *= attribute.getValue();
         }
         else if(CommonConfig.shouldAgeAffectExhaustion.get()) {

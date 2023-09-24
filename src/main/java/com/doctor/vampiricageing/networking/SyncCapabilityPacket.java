@@ -5,32 +5,31 @@ import com.doctor.vampiricageing.capabilities.AgeingCapability;
 import com.doctor.vampiricageing.capabilities.IAgeingCapability;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
 
 import java.util.function.Supplier;
 
 public class SyncCapabilityPacket {
 
-    CompoundTag tag;
+    CompoundNBT tag;
 
-    public SyncCapabilityPacket(FriendlyByteBuf buf) {
+    public SyncCapabilityPacket(PacketBuffer buf) {
         tag = buf.readNbt();
     }
-    public SyncCapabilityPacket(CompoundTag famCaps) {
+    public SyncCapabilityPacket(CompoundNBT famCaps) {
         this.tag = famCaps;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         buf.writeNbt(tag);
     }
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Player player = VampiricAgeing.proxy.getPlayer();
+            PlayerEntity player = VampiricAgeing.proxy.getPlayer();
             IAgeingCapability agecap = VampiricAgeingCapabilityManager.getAge(player).orElse(new AgeingCapability());
             if (agecap != null) {
                 agecap.deserializeNBT(tag);

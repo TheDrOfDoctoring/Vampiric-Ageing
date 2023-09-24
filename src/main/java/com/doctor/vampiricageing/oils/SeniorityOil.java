@@ -6,12 +6,12 @@ import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.items.oil.WeaponOil;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
@@ -41,11 +41,11 @@ public class SeniorityOil extends WeaponOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, List<ITextComponent> tooltips) {
         super.getDescription(stack, tooltips);
-        tooltips.add(Component.translatable("text.vampiricageing.useable_by", HunterAgeingConfig.seniorityOilUseAge.get()).withStyle(ChatFormatting.DARK_RED));
-        tooltips.add(Component.translatable("text.vampiricageing.seniority_oil.when_applied").withStyle(ChatFormatting.GRAY));
-        tooltips.add(Component.literal("  ").append(Component.translatable("text.vampiricageing.oil.seniority_oil.more_damage").withStyle(ChatFormatting.DARK_GREEN)));
+        tooltips.add(new TranslationTextComponent("text.vampiricageing.useable_by", HunterAgeingConfig.seniorityOilUseAge.get()).withStyle(TextFormatting.DARK_RED));
+        tooltips.add(new TranslationTextComponent("text.vampiricageing.seniority_oil.when_applied").withStyle(TextFormatting.GRAY));
+        tooltips.add(new StringTextComponent("  ").append(new TranslationTextComponent("text.vampiricageing.oil.seniority_oil.more_damage").withStyle(TextFormatting.DARK_GREEN)));
     }
 
 }

@@ -3,14 +3,14 @@ package com.doctor.vampiricageing.mixin;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.werewolves.api.entities.player.IWerewolfPlayer;
 import de.teamlapen.werewolves.entities.AggressiveWolfEntity;
+import de.teamlapen.werewolves.entities.player.werewolf.IWerewolfPlayer;
 import de.teamlapen.werewolves.entities.player.werewolf.actions.HowlingAction;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,8 +26,8 @@ public class HowlActionMixin {
 
      @Unique
      final UUID SPEED_INCREASE_UUID = UUID.fromString("ee73a62e-8bac-4fe6-9e95-fe0bf16a1305");
-    @Inject(method = "activate(Lde/teamlapen/werewolves/api/entities/player/IWerewolfPlayer;Lde/teamlapen/vampirism/api/entity/player/actions/IAction$ActivationContext;)Z", at = @At(value = "INVOKE", target = "Lde/teamlapen/lib/lib/util/UtilLib;spawnEntityInWorld(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/entity/Entity;ILjava/util/List;Lnet/minecraft/world/entity/MobSpawnType;)Z"), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
-    private void activate(IWerewolfPlayer werewolfPlayer, IAction.ActivationContext context, CallbackInfoReturnable<Boolean> cir, Player player, AABB bb, List entities, Level world, int wolfAmount, int i, AggressiveWolfEntity wolf) {
+    @Inject(method = "*", at = @At(value = "INVOKE", target = "Lde/teamlapen/lib/lib/util/UtilLib;spawnEntityInWorld(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/AxisAlignedBB;Lnet/minecraft/entity/Entity;ILjava/util/List;Lnet/minecraft/entity/SpawnReason;)Z"), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
+    private void activate(IWerewolfPlayer werewolfPlayer, IAction.ActivationContext context, CallbackInfoReturnable<Boolean> cir, PlayerEntity player, AxisAlignedBB bb, List entities, World world, int wolfAmount, int i, AggressiveWolfEntity wolf) {
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         //this thing has caused an unreasonable amount of trouble for how simple it is
         if(WerewolvesAgeingConfig.ageBuffsHowl.get() && age > 0) {

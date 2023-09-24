@@ -2,7 +2,7 @@ package com.doctor.vampiricageing.capabilities;
 
 import com.doctor.vampiricageing.VampiricAgeing;
 import de.teamlapen.werewolves.util.Helper;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.ModList;
 
 public class CapabilityHelper {
