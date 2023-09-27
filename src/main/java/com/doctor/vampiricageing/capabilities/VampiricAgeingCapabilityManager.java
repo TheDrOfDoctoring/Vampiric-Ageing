@@ -57,6 +57,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.List;
 import java.util.UUID;
@@ -137,21 +138,37 @@ public class VampiricAgeingCapabilityManager {
             });
         }
     }
-    public static void onAgeChange(ServerPlayerEntity player) {
+    public static void changeUpStep(PlayerEntity player) {
         int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         boolean upstep = getAge(player).map(ageCap -> ageCap.getUpStep()).orElse(false);
+        if(Helper.isVampire(player)) {
+            if (upstep && age < CommonConfig.stepAssistBonus.get()) {
+                player.maxUpStep = 0.6f;
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(false));
+            }
+            if (age > 0 && age >= CommonConfig.stepAssistBonus.get() && !upstep) {
+                player.maxUpStep = 1f;
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
+            }
+        } else if(Helper.isHunter(player)) {
+            if(upstep && age < HunterAgeingConfig.stepAssistAge.get()) {
+                player.maxUpStep = 0.6f;
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(false));
+            }
+            if(age > 0 && age >= HunterAgeingConfig.stepAssistAge.get() && !upstep) {
+                player.maxUpStep = 1f;
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
+            }
+        }
+    }
+    public static void onAgeChange(ServerPlayerEntity player) {
+        int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         checkSkills(age, player);
+        changeUpStep(player);
         if(Helper.isVampire(player)) {
             removeModifier(player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()), EXHAUSTION_UUID);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), STRENGTH_INCREASE);
-            if(upstep) {
-                player.maxUpStep -= 0.6f;
-            }
-            if(age > 0 && age >= CommonConfig.stepAssistBonus.get() && !upstep) {
-                player.maxUpStep += 0.6f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
-            }
             if(CommonConfig.shouldAgeAffectExhaustion.get()) {
                 player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).addPermanentModifier(new AttributeModifier(EXHAUSTION_UUID, "AGE_EXHAUSTION_CHANGE", CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
@@ -169,13 +186,6 @@ public class VampiricAgeingCapabilityManager {
         } else if(isHunter(player)) {
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), HUNTER_MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_SPEED_INCREASE_UUID);
-            if(upstep) {
-                player.maxUpStep -= 0.6f;
-            }
-            if(age > 0 && age >= HunterAgeingConfig.stepAssistAge.get() && !upstep) {
-                player.maxUpStep += 0.6f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
-            }
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HUNTER_MAX_HEALTH_UUID, "HUNTER_AGE_MAX_HEALTH_INCREASE", HunterAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(HUNTER_SPEED_INCREASE_UUID, "HUNTER_AGE_SPEED_INCREASE", HunterAgeingConfig.movementSpeedBonus.get().get(age), AttributeModifier.Operation.ADDITION));
         }

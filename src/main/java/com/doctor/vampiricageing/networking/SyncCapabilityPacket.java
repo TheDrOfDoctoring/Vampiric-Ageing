@@ -34,6 +34,7 @@ public class SyncCapabilityPacket {
             if (agecap != null) {
                 agecap.deserializeNBT(tag);
             }
+            VampiricAgeingCapabilityManager.changeUpStep(player);
         });
         ctx.get().setPacketHandled(true);
     }
