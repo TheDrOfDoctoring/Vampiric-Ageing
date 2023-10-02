@@ -28,6 +28,16 @@ public interface IAgeingCapability extends INBTSerializable<CompoundNBT> {
     void setHunted(int hunted);
 
     int getHunted();
+    int getTemporaryTaintedAgeBonus();
+
+    void setTemporaryTaintedAgeBonus(int bonus);
+    int getTemporaryTainedTicks();
+
+    void setTemporaryTainedTicks(int ticks);
+
+    boolean getBatMode();
+
+    void setBatMode(boolean batMode);
 
     boolean getUpStep();
 

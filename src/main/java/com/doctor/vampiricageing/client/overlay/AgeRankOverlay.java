@@ -30,6 +30,16 @@ public class AgeRankOverlay {
                     this.mc.font.draw(mStack, text, (float)x, (float)(y + 1), 0);
                     this.mc.font.draw(mStack, text, (float)x, (float)(y - 1), 0);
                     this.mc.font.draw(mStack, text, (float)x, (float)y, 0x8B0000);
+                    if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && age.getTemporaryTaintedAgeBonus() > 0) {
+                        String taintedTextValue = " (" + (age.getAge() + age.getTemporaryTaintedAgeBonus()) + ")";
+                        int x2 = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get() + 5;
+                        int y2 = this.mc.getWindow().getGuiScaledHeight() - (ClientConfig.guiLevelOffsetY.get() - 47) - gui.rightHeight;
+                        this.mc.font.draw(mStack, taintedTextValue, x2 + 1, y2, 0);
+                        this.mc.font.draw(mStack, taintedTextValue, x2 - 1, y2, 0);
+                        this.mc.font.draw(mStack, taintedTextValue, x2, y2 + 1, 0);
+                        this.mc.font.draw(mStack, taintedTextValue, x2, y2 - 1, 0);
+                        this.mc.font.draw(mStack, taintedTextValue, x2, y2, Color.MAGENTA_DARK.getRGB());
+                    }
                 }
             });
         }

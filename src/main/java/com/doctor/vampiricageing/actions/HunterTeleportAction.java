@@ -80,8 +80,8 @@ public class HunterTeleportAction extends DefaultHunterAction {
     }
 
     @Override
-    public boolean canBeUsedBy(IHunterPlayer hunter) {
-        return VampiricAgeingCapabilityManager.getAge(hunter.getRepresentingPlayer()).orElse(null).getAge() >= HunterAgeingConfig.hunterTeleportActionAge.get();
+    public boolean canBeUsedBy(@NotNull IHunterPlayer hunter) {
+        return CapabilityHelper.getCumulativeTaintedAge(hunter.getRepresentingPlayer()) >= HunterAgeingConfig.hunterTeleportActionAge.get();
     }
 
     @Override

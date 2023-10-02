@@ -90,6 +90,18 @@ public class HunterAgeingManager {
                 player.hurt(DamageSource.STARVE, 1.0F);
             }
         }
+        //Tainted Blood
+        if(HunterAgeingConfig.taintedBloodAvailable.get() && age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
+            VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
+                if(hunter.getTemporaryTaintedAgeBonus() > 0) {
+                    hunter.setTemporaryTainedTicks(hunter.getTemporaryTainedTicks() - 20);
+                    if(hunter.getTemporaryTainedTicks() <= 0) {
+                        hunter.setTemporaryTaintedAgeBonus(0);
+                    }
+                    VampiricAgeingCapabilityManager.syncAgeCap(player);
+                }
+            });
+        }
 
     }
     @SubscribeEvent
@@ -99,6 +111,16 @@ public class HunterAgeingManager {
             int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 int huntedPoints = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getHunted()).orElse(0);
                 int huntedForNextAge = HunterAgeingConfig.huntedForNextAge.get().get(age) - huntedPoints;
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_hunted", huntedForNextAge).withStyle(ChatFormatting.DARK_RED));
+            }
+            else if(event.getItemStack().is(ModItems.INJECTION_GARLIC.get()) && CapabilityHelper.getCumulativeTaintedAge(player) > 0) {
+                VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
+                    hunter.setTemporaryTaintedAgeBonus(0);
+                    hunter.setTemporaryTainedTicks(0);
+                });
+                VampiricAgeingCapabilityManager.syncAgeCap(player);
+                event.getItemStack().shrink(1);
+            }
                 player.sendMessage(new TranslationTextComponent("text.vampiricageing.progress_hunted", huntedForNextAge).withStyle(TextFormatting.DARK_RED), Util.NIL_UUID);
         }
     }
@@ -138,5 +160,17 @@ public class HunterAgeingManager {
         int age = VampiricAgeingCapabilityManager.getAge(event.getPlayer()).map(ageCap -> ageCap.getAge()).orElse(0);
         event.setNewSpeed(event.getOriginalSpeed() + HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age));
 
+    }
+    @SubscribeEvent
+    public static void eyeHeight(EntityEvent.Size event) {
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
+            if((event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null)) {
+                Player player = (Player) event.getEntity();
+                if(Helper.isHunter(event.getEntity()) && VampiricAgeingCapabilityManager.getAge(player).map(hunter -> hunter.getBatMode()).orElse(false)) {
+                    event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f));
+                    event.setNewEyeHeight(0.725f);
+                }
+            }
+        }
     }
 }

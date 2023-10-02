@@ -33,9 +33,11 @@ public abstract class VillagerMixin extends AbstractVillagerEntity {
         if (!Helper.isHunter(player) && CommonConfig.doesAgeAffectPrices.get()) {
             if(!(getVillagerData().getProfession() instanceof FactionVillagerProfession)) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                for(MerchantOffer merchantoffer1 : this.getOffers()) {
-                    double ageMult = CommonConfig.ageAffectTradePrices.get().get(age);
-                    double d0 = 1 - ageMult;
+                int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                if(!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
+                    for(MerchantOffer merchantoffer1 : this.getOffers()) {
+                        double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge);
+                        double d0 = 1 - ageMult;
 
                     int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
                     merchantoffer1.addToSpecialPriceDiff(j);

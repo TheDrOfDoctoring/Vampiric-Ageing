@@ -13,7 +13,6 @@ public class AgeingCapability implements IAgeingCapability {
     private int drainedSinceAgeLoss;
     private int devouredSinceAgeLoss;
     private int huntedSinceAgeLoss;
-    private boolean upStepChange;
 
 
     @Override
@@ -26,8 +25,8 @@ public class AgeingCapability implements IAgeingCapability {
         this.timeSinceAgeLoss = 0;
         this.infectedSinceAgeLoss = 0;
         this.drainedSinceAgeLoss = 0;
-        this.devouredSinceAgeLoss = 0;
         this.huntedSinceAgeLoss = 0;
+        this.devouredSinceAgeLoss = 0;
         this.age = age;
 
     }
@@ -45,16 +44,6 @@ public class AgeingCapability implements IAgeingCapability {
     @Override
     public int getHunted() {
         return huntedSinceAgeLoss;
-    }
-
-    @Override
-    public boolean getUpStep() {
-        return upStepChange;
-    }
-
-    @Override
-    public void setUpStep(boolean upStepSetter) {
-        this.upStepChange = upStepSetter;
     }
 
     @Override
@@ -100,7 +89,6 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("drained", drainedSinceAgeLoss);
         tag.putInt("devoured", devouredSinceAgeLoss);
         tag.putInt("hunted", huntedSinceAgeLoss);
-        tag.putBoolean("upstep", upStepChange);
         return tag;
     }
 
@@ -111,6 +99,5 @@ public class AgeingCapability implements IAgeingCapability {
         this.timeSinceAgeLoss = nbt.getInt("time");
         this.infectedSinceAgeLoss = nbt.getInt("infected");
         this.huntedSinceAgeLoss = nbt.getInt("hunted");
-        this.upStepChange = nbt.getBoolean("upstep");
     }
 }

@@ -80,7 +80,9 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID WEREWOLF_STRENGTH_INCREASE = UUID.fromString("a47672d2-88c8-41de-bafe-8683de11f82a");
     public static final UUID HUNTER_MAX_HEALTH_UUID = UUID.fromString("c668f879-d57a-4182-ba82-87d93610e934");
     public static final UUID HUNTER_SPEED_INCREASE_UUID = UUID.fromString("4277f565-237e-4802-9653-203aa2ef92bb");
-
+    public static final UUID HUNTER_TAINTED_DAMAGE_INCREASE_UUID = UUID.fromString("ea65e383-9172-42ab-a685-53a0c1c4fb3f");
+    public static final UUID HUNTER_TAINTED_MAX_HEALTH_INCREASE_UUID = UUID.fromString("128f81c7-27b4-4d0b-a07f-e1a0055ba36a");
+    public static final UUID HUNTER_TAINTED_MOVEMENT_SPEED_INCREASE_UUID = UUID.fromString("3c4cdc94-75e8-4528-9800-90298dc44b8a");
 
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
         if (livingEntity == null) {
@@ -188,6 +190,13 @@ public class VampiricAgeingCapabilityManager {
             removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_SPEED_INCREASE_UUID);
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HUNTER_MAX_HEALTH_UUID, "HUNTER_AGE_MAX_HEALTH_INCREASE", HunterAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(HUNTER_SPEED_INCREASE_UUID, "HUNTER_AGE_SPEED_INCREASE", HunterAgeingConfig.movementSpeedBonus.get().get(age), AttributeModifier.Operation.ADDITION));
+            int cumulativeTaintedBloodAge = CapabilityHelper.getCumulativeTaintedAge(player);
+            removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), HUNTER_TAINTED_DAMAGE_INCREASE_UUID);
+            removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_TAINTED_MOVEMENT_SPEED_INCREASE_UUID);
+            removeModifier(player.getAttribute(Attributes.MAX_HEALTH), HUNTER_TAINTED_MAX_HEALTH_INCREASE_UUID);
+            player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(HUNTER_TAINTED_DAMAGE_INCREASE_UUID, "HUNTER_TAINTED_DAMAGE_INCREASE", HunterAgeingConfig.taintedDamageBonuses.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADDITION));
+            player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HUNTER_TAINTED_MAX_HEALTH_INCREASE_UUID, "HUNTER_TAINTED_MAX_HEALTH_INCREASE", HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADDITION));
+            player.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(HUNTER_TAINTED_MOVEMENT_SPEED_INCREASE_UUID, "HUNTER_TAINTED_MOVEMENT_SPEED_INCREASE", HunterAgeingConfig.taintedBloodMovementSpeedIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADDITION));
         }
     }
     public static void checkSkills(int age, ServerPlayerEntity player) {
@@ -208,11 +217,25 @@ public class VampiricAgeingCapabilityManager {
         }  else if(Helper.isHunter(player)) {
             HunterPlayer.getOpt(player).ifPresent(hunter -> {
                 ISkillHandler<IHunterPlayer> handler = hunter.getSkillHandler();
-                if(age >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
+
+                if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
+                    handler.enableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
+                } else {
+                    handler.disableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
+                }
+                int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                if(cumulativeAge >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
                 }
+
+                if(cumulativeAge >= HunterAgeingConfig.limitedBatModeAge.get()) {
+                    handler.enableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
+                } else {
+                    handler.disableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
+                }
+
             });
         }
     }
