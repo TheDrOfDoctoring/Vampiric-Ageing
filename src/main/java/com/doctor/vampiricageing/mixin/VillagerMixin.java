@@ -1,7 +1,9 @@
 package com.doctor.vampiricageing.mixin;
 
+import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.entity.EntityType;
@@ -29,16 +31,19 @@ public abstract class VillagerMixin extends AbstractVillager {
 
     @Inject(method = "updateSpecialPrices", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", shift = At.Shift.BEFORE))
     private void updateSpecialPrices(Player player, CallbackInfo ci) {
-        if (!Helper.isHunter(player) && CommonConfig.doesAgeAffectPrices.get()) {
+        if (CommonConfig.doesAgeAffectPrices.get()) {
             VillagerProfession profession = this.getVillagerData().getProfession();
             if(!ForgeRegistries.VILLAGER_PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(profession)) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                for(MerchantOffer merchantoffer1 : this.getOffers()) {
-                    double ageMult = CommonConfig.ageAffectTradePrices.get().get(age);
-                    double d0 = 1 - ageMult;
+                int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                if(!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
+                    for(MerchantOffer merchantoffer1 : this.getOffers()) {
+                        double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge);
+                        double d0 = 1 - ageMult;
 
-                    int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
-                    merchantoffer1.addToSpecialPriceDiff(j);
+                        int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
+                        merchantoffer1.addToSpecialPriceDiff(j);
+                    }
                 }
             }
         }

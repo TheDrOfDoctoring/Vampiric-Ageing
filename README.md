@@ -58,17 +58,46 @@ As Hunters age, they learn to use the other factions abilities against them, thi
 
 - Increased damage against enemy faction creatures, scaling with age rank.
 - Increased health, scaling with age rank
-- Increased mining speed, scaling with age rank
 - Increased movement speed, scaling with age rank
 - Step Assist at Age 4
 - Faster regeneration at Age 3
-- Teleport Action at Age 5
 - New "Seniority" Oil that does more damage to werewolves or vampires the higher their age.
 
 However, there are some penalties upon ageing.
 
 - Faster exhaustion (Food Drain), scaling with age rank
 - Decreased XP gain, scaling with age rank
+
+The most powerful abilities is restricted to tainting a hunters blood, however..
+
+### Tainted Blood
+By default, at Age Rank 2 a hunter gains the ability to make Tainted Blood. This can be drunk to give the hunter vampiric abilities based on their cumulative age rank (Tainted Blood Age + Hunter Age Rank)
+
+Tainted Blood can be cleared using a Garlic Injection.
+
+These are the abilities for the different cumulative age ranks. Each rank also includes previous ranks
+#### 0 - 2
+- No difference, impossible on default configs.
+
+#### 3 - 5
+- Increased mining speed, further scales with cumulative rank
+- Increased attack damage, scales with cumulative rank
+- Fire now does more damage, scales with cumulative rank
+
+#### 6 - 7 
+
+- Teleport Action
+- Increased max health, further scaling with cumulative rank
+- Holy water now deals damage to the hunter
+
+#### 8 - 9
+
+- Increased movement speed, further scaling with cumulative rank
+- Worse trade deals with villagers, further scaling with cumulative rank
+
+#### 10 
+
+- Limited Bat Mode
 
 ## Werewolves
 
