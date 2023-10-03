@@ -38,7 +38,9 @@ public interface IAgeingCapability extends INBTSerializable<CompoundNBT> {
     boolean getBatMode();
 
     void setBatMode(boolean batMode);
+    int getTicksInSun();
 
+    void setTicksInSun(int ticks);
     boolean getUpStep();
 
     void setUpStep(boolean upStepSetter);
