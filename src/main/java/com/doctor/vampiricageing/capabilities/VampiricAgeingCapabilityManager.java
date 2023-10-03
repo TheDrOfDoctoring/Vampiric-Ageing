@@ -147,6 +147,9 @@ public class VampiricAgeingCapabilityManager {
                 ModParticles.spawnParticlesServer(player.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
                 }
                 age.setAge(age.getAge() + 1);
+                if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
+                    player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
+                }
                 syncAgeCap(player);
             });
         }
@@ -441,6 +444,10 @@ public class VampiricAgeingCapabilityManager {
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(0);
                 syncAgeCap(event.getPlayer().getPlayer());
+                Player player = event.getPlayer().getPlayer();
+                if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
+                    player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
+                }
             });
         } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
             int sireAge = event.getPlayer().getPlayer().getPersistentData().getInt("AGE");
