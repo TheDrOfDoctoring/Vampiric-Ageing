@@ -6,6 +6,7 @@ public class AgeingCapability implements IAgeingCapability {
 
     private int age = 0;
 
+
     //Lost on either increase of Age or Death
     private int timeSinceAgeLoss;
 
@@ -17,7 +18,7 @@ public class AgeingCapability implements IAgeingCapability {
     private int temporaryTaintedAgeBonus;
     private int temporaryTaintedTicks;
     private boolean batMode;
-
+    private int ticksInSun;
 
     @Override
     public int getAge() {
@@ -34,6 +35,7 @@ public class AgeingCapability implements IAgeingCapability {
         this.temporaryTaintedAgeBonus = 0;
         this.temporaryTaintedTicks = 0;
         this.batMode = false;
+        this.ticksInSun = 0;
         this.age = age;
 
     }
@@ -109,6 +111,16 @@ public class AgeingCapability implements IAgeingCapability {
 
     }
     @Override
+    public int getTicksInSun() {
+        return this.ticksInSun;
+    }
+
+    @Override
+    public void setTicksInSun(int ticks) {
+        this.ticksInSun = ticks;
+
+    }
+    @Override
     public boolean getBatMode() {
         return this.batMode;
     }
@@ -129,6 +141,7 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("hunted", huntedSinceAgeLoss);
         tag.putInt("taintedTicks", temporaryTaintedTicks);
         tag.putInt("taintedBonus", temporaryTaintedAgeBonus);
+        tag.putInt("ticksInSun", ticksInSun);
         tag.putBoolean("batMode", batMode);
         return tag;
     }
@@ -142,6 +155,7 @@ public class AgeingCapability implements IAgeingCapability {
         this.huntedSinceAgeLoss = nbt.getInt("hunted");
         this.temporaryTaintedTicks = nbt.getInt("taintedTicks");
         this.temporaryTaintedAgeBonus = nbt.getInt("taintedBonus");
+        this.ticksInSun = nbt.getInt("ticksInSun");
         this.batMode = nbt.getBoolean("batMode");
     }
 }

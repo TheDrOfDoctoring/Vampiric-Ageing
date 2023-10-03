@@ -94,9 +94,11 @@ These are the abilities for the different cumulative age ranks. Each rank also i
 
 - Increased movement speed, further scaling with cumulative rank
 - Worse trade deals with villagers, further scaling with cumulative rank
+- Sun begins to affect hunter slowly
 
 #### 10 
 
+- Sun affect hunters significantly faster
 - Limited Bat Mode
 
 ## Werewolves

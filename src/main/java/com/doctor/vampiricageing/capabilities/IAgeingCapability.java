@@ -38,5 +38,7 @@ public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
     boolean getBatMode();
 
     void setBatMode(boolean batMode);
+    int getTicksInSun();
 
+    void setTicksInSun(int ticks);
 }
