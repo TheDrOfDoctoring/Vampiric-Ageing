@@ -15,6 +15,8 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.BooleanValue taintedBloodAvailable;
     public static final ForgeConfigSpec.BooleanValue hunterLimitedBatModeAction;
     public static final ForgeConfigSpec.BooleanValue sunAffectLimitedBatMode;
+    public static final ForgeConfigSpec.BooleanValue sunAffectTainted;
+    public static final ForgeConfigSpec.IntValue taintedSunAffectAge;
     public static final ForgeConfigSpec.IntValue pettyHuntWorth;
     public static final ForgeConfigSpec.IntValue commonHuntWorth;
     public static final ForgeConfigSpec.IntValue greaterHuntWorth;
@@ -31,8 +33,15 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.IntValue temporaryTaintedBloodBaseTicks;
     public static final ForgeConfigSpec.IntValue taintedBloodWorseTradeDealsAge;
     public static final ForgeConfigSpec.IntValue taintedBloodHolyWaterAffectedAge;
+    public static final ForgeConfigSpec.IntValue sunWeaknessTicks;
+    public static final ForgeConfigSpec.IntValue sunSlownessTicks;
+    public static final ForgeConfigSpec.IntValue sunSlownessThreeTicks;
+    public static final ForgeConfigSpec.IntValue sunDamageTicks;
+    public static final ForgeConfigSpec.IntValue maxTicksInSun;
+    public static final ForgeConfigSpec.IntValue sunBlindnessTicks;
     public static final ForgeConfigSpec.DoubleValue limitedBatExhaustion;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeSunBadnessMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> xpGainReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> fasterExhaustionAmounts;
@@ -69,7 +78,16 @@ public class HunterAgeingConfig {
 
         COMMON_BUILDER.comment("The next few configs apply to the Tainted Blood mechanic for hunters. When there is a list of values, the first value will refer to a cumulative age (base age rank + tainted age rank) of 0 and the last value 10, which means");
         taintedBloodAvailable = COMMON_BUILDER.comment("Whether tainted blood mechanic is enabled").define("taintedBloodAvailable", true);
+        sunAffectTainted = COMMON_BUILDER.comment("Whether the sun affects tainted blood hunters").define("sunAffectTainted", true);
+        taintedAgeSunBadnessMultiplier = COMMON_BUILDER.comment("The speed at which sun effect negative effects are gained.").defineList("taintedSunAgeBadnessMultiplier", Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4), t -> t instanceof Integer);
+        taintedSunAffectAge = COMMON_BUILDER.comment("At what tainted blood cumulative age is a hunter affected by the sun").defineInRange("taintedSunAffectAge", 9, 0, 10);
+        sunWeaknessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains weakness effect").defineInRange("sunWeaknessTicks", 600, 1, Integer.MAX_VALUE);
+        sunSlownessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness effect").defineInRange("sunSlownessTicks", 2400, 1, Integer.MAX_VALUE);
+        sunSlownessThreeTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness three effect").defineInRange("sunSlownessTwhreeTicks", 3200, 1, Integer.MAX_VALUE);
+        sunDamageTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage begins to take damage").defineInRange("sunDamageTicks", 3600, 1, Integer.MAX_VALUE);
+        sunBlindnessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains blindness effect").defineInRange("sunBlindnessTicks", 6400, 1, Integer.MAX_VALUE);
         temporaryTaintedBloodBaseTicks = COMMON_BUILDER.comment("Base amount of ticks tainted blood bonus lasts for").defineInRange("temporaryTaintedBloodBaseTicks", 3600, 1, Integer.MAX_VALUE);
+        maxTicksInSun = COMMON_BUILDER.comment("Max sun tick").defineInRange("maxTicksInSun", 10000, 1, Integer.MAX_VALUE);
         taintedBloodBottleAge = COMMON_BUILDER.comment("At what age can a hunter use tainted blood").defineInRange("taintedBloodBottleAge", 2, 0, 5);
         taintedBloodHolyWaterAffectedAge = COMMON_BUILDER.comment("At what tainted blood cumulative age is a hunter affected by holy water").defineInRange("taintedBloodHolyWaterAffectedAge", 7, 0, 10);
         taintedBloodWorseTradeDealsAge = COMMON_BUILDER.comment("At what cumulative age does a hunter begin to get worse trade deals").defineInRange("taintedBloodWorseTradeDealsAge", 7, 0, 10);

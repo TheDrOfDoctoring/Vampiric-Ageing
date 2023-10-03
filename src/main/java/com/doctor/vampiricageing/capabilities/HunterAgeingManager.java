@@ -7,6 +7,7 @@ import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -19,6 +20,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
@@ -109,11 +113,49 @@ public class HunterAgeingManager {
                     if(hunter.getTemporaryTainedTicks() <= 0) {
                         hunter.setTemporaryTaintedAgeBonus(0);
                     }
+                    int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                    if(HunterAgeingConfig.sunAffectTainted.get() && cumulativeAge >= HunterAgeingConfig.taintedSunAffectAge.get()) {
+                        int ticksInSun = hunter.getTicksInSun();
+                        if(Helper.gettingSundamge(player, player.getCommandSenderWorld(), player.getCommandSenderWorld().getProfiler()) && ticksInSun <= HunterAgeingConfig.maxTicksInSun.get() ) {
+                            hunter.setTicksInSun(ticksInSun + 20 * HunterAgeingConfig.taintedAgeSunBadnessMultiplier.get().get(cumulativeAge));
+                        } else if(hunter.getTicksInSun() >= 20) {
+                            int reductionAmount = hunter.getTicksInSun() < 400 ? 20 : 400;
+                            hunter.setTicksInSun(ticksInSun - reductionAmount);
+                        }
+                        applySunEffects(player, hunter.getTicksInSun());
+                    }
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
                 }
             });
         }
 
+    }
+    public static void applySunEffects(Player player, int ticksInSun) {
+        //Very simplified sun damage mechanic
+        if(player.getAbilities().instabuild || player.hasEffect(ModEffects.SUNSCREEN.get())) {
+            return;
+        }
+
+        if(ticksInSun >= HunterAgeingConfig.sunWeaknessTicks.get()) {
+            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
+        }
+        if(ticksInSun >= HunterAgeingConfig.sunSlownessTicks.get() && ticksInSun < HunterAgeingConfig.sunSlownessThreeTicks.get()) {
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1));
+        } else if(ticksInSun >= HunterAgeingConfig.sunSlownessThreeTicks.get()) {
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+        }
+        if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get()) {
+            player.hurt(VReference.SUNDAMAGE, 1.5f);
+            if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 2) {
+                player.hurt(VReference.SUNDAMAGE, 1.5f);
+            }
+            if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 3) {
+                player.hurt(VReference.SUNDAMAGE, 2f);
+            }
+        }
+        if(ticksInSun >= HunterAgeingConfig.sunBlindnessTicks.get()) {
+            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0));
+        }
     }
     @SubscribeEvent
     public static void onInteract(PlayerInteractEvent event) {
