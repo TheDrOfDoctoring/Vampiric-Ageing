@@ -75,7 +75,9 @@ By default, at Age Rank 2 a hunter gains the ability to make Tainted Blood. This
 
 Tainted Blood can be cleared using a Garlic Injection.
 
-These are the abilities for the different cumulative age ranks. Each rank also includes previous ranks
+These are the abilities for the different cumulative age ranks. Each rank also includes previous ranks, for example 8-9 will also include the increased max health from 6-7, and 10 will include teleport from 8-9. 
+
+Most abilities will scale will higher cumulative ranks.
 #### 0 - 2
 - No difference, impossible on default configs.
 
@@ -86,12 +88,13 @@ These are the abilities for the different cumulative age ranks. Each rank also i
 
 #### 6 - 7 
 
-- Teleport Action
+
 - Increased max health, further scaling with cumulative rank
 - Holy water now deals damage to the hunter
 
 #### 8 - 9
 
+- Teleport Action
 - Increased movement speed, further scaling with cumulative rank
 - Worse trade deals with villagers, further scaling with cumulative rank
 - Sun begins to affect hunter slowly
