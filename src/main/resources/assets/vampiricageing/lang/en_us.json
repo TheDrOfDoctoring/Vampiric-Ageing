@@ -32,5 +32,6 @@
   "skill.vampiricageing.tainted_blood_skill": "",
   "gui.vampirism.hunter_weapon_table.skill": "Only available to high age rank hunters",
   "text.vampiricageing.tainted_blood_useage": "Only available to hunters of Age Rank %s",
-  "text.vampiricageing.tainted_blood_rank": "Tainted Blood Rank %s"
+  "text.vampiricageing.tainted_blood_rank": "Tainted Blood Rank %s",
+  "effect.vampiricageing.tainted_blood_effect": "Tainted Blood"
 }

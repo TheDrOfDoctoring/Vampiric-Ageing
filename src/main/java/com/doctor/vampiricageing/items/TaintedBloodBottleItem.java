@@ -2,6 +2,7 @@ package com.doctor.vampiricageing.items;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
+import com.doctor.vampiricageing.init.ModEffects;
 import com.doctor.vampiricageing.init.ModItems;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -14,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -79,8 +81,9 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             VampiricAgeingCapabilityManager.getAge(entityLiving).ifPresent(hunter -> {
                 hunter.setTemporaryTainedTicks(HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge());
                 hunter.setTemporaryTaintedAgeBonus(age);
+                entityLiving.addEffect(new MobEffectInstance(ModEffects.TAINTED_BLOOD_EFFECT.get(),HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge(), 0, false, false));
                 VampiricAgeingCapabilityManager.syncAgeCap((Player) entityLiving);
-                //stack.shrink(1);
+                stack.shrink(1);
             });
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);

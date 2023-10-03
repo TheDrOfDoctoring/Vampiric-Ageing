@@ -10,6 +10,7 @@ import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
+import com.doctor.vampiricageing.init.ModEffects;
 import com.doctor.vampiricageing.init.ModItems;
 import com.doctor.vampiricageing.init.ModOils;
 import com.doctor.vampiricageing.networking.ClientProxy;
@@ -56,6 +57,7 @@ public class VampiricAgeing
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::processIMC);
         ModItems.ITEMS.register(modEventBus);
+        ModEffects.EFFECTS.register(modEventBus);
         ModOils.OILS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         ModConfig hunterAgeingConfig = new ModConfig(ModConfig.Type.COMMON, HunterAgeingConfig.HUNTER_AGEING_CONFIG, ModLoadingContext.get().getActiveContainer(), MODID+"-hunterAgeing.toml");

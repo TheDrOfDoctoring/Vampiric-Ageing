@@ -7,6 +7,8 @@ import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
+import com.doctor.vampiricageing.effects.TaintedBloodEffect;
+import com.doctor.vampiricageing.init.ModEffects;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -19,6 +21,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +44,9 @@ public class ChangeAgeCommand extends BasicCommand {
                 if (age < 6 && age >= 0 && level > 0) {
                     VampiricAgeingCapabilityManager.getAge(player).ifPresent(ageCap -> ageCap.setAge(age));
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
+                    if(Helper.isHunter(player) && player.hasEffect(ModEffects.TAINTED_BLOOD_EFFECT.get())) {
+                        player.removeEffect(ModEffects.TAINTED_BLOOD_EFFECT.get());
+                    }
                     context.getSource().sendSuccess(Component.translatable("command.vampiricageing.base.age.success", player.getName(), age), true);
                 } else if(age > 5 || age < 0) {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampiricageing.failed_to_execute.players.age", player.getDisplayName()) : Component.translatable("command.vampiricageing.failed_to_execute.age"));
