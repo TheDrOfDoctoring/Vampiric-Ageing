@@ -80,8 +80,9 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             VampiricAgeingCapabilityManager.getAge(entityLiving).ifPresent(hunter -> {
                 hunter.setTemporaryTainedTicks(HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge());
                 hunter.setTemporaryTaintedAgeBonus(age);
+                entityLiving.addEffect(new EffectInstance(ModEffects.TAINTED_BLOOD_EFFECT.get(),HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge(), 0, false, false));
                 VampiricAgeingCapabilityManager.syncAgeCap((PlayerEntity) entityLiving);
-                //stack.shrink(1);
+                stack.shrink(1);
             });
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
