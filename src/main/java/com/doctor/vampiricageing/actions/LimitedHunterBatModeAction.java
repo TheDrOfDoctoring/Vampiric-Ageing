@@ -79,7 +79,7 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     public void onDeactivated(@NotNull IHunterPlayer hunter) {
         Player player = hunter.getRepresentingPlayer();
         setModifier(player, false);
-        if (!player.isOnGround()) {
+        if (!player.onGround()) {
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 100, false, false));
         }
         updatePlayer((HunterPlayer) hunter, false);

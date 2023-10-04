@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +32,7 @@ public abstract class DamageHandlerMixin {
                 }
                 double amount = (affect * (VampirismConfig.BALANCE.holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? VampirismConfig.BALANCE.holyWaterTierDamageInc.get() : (VampirismConfig.BALANCE.holyWaterTierDamageInc.get() * VampirismConfig.BALANCE.holyWaterTierDamageInc.get()))) + 0.5D);
                 amount = DamageHandler.scaleDamageWithLevel(cumulative, 10, amount * 0.6, amount * 1.15);
-                entity.hurt(VReference.HOLY_WATER, (float) amount);
+                DamageHandler.hurtModded(entity, ModDamageSources::holyWater, (float) amount);
                 if (strength.isStrongerThan(EnumStrength.WEAK)) {
                     entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
                 }

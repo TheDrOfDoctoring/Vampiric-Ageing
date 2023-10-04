@@ -2,8 +2,10 @@ package com.doctor.vampiricageing.init;
 
 import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.items.BloodTesterItem;
+import com.doctor.vampiricageing.items.TaintedBloodBottleItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

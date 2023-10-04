@@ -7,18 +7,26 @@ import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import com.doctor.vampiricageing.mixin.FoodStatsAccessor;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
@@ -98,7 +106,7 @@ public class HunterAgeingManager {
                     stats.addExhaustion(6.0F);
                 }
             } else if (stats.getFoodLevel() <= 0 && ((FoodStatsAccessor)stats).getFoodTimer() >= 79 && (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL)) {
-                player.hurt(DamageSource.STARVE, 1.0F);
+                DamageHandler.hurtVanilla(player, DamageSources::starve, 1.0F);
             }
         }
         //Tainted Blood
@@ -141,12 +149,12 @@ public class HunterAgeingManager {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
         }
         if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get()) {
-            player.hurt(VReference.SUNDAMAGE, 1.5f);
+            DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 1.5f);
             if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 2) {
-                player.hurt(VReference.SUNDAMAGE, 1.5f);
+                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 1.5f);
             }
             if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 3) {
-                player.hurt(VReference.SUNDAMAGE, 2f);
+                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 2f);
             }
         }
         if(ticksInSun >= HunterAgeingConfig.sunBlindnessTicks.get()) {
@@ -202,7 +210,7 @@ public class HunterAgeingManager {
         if(CapabilityHelper.getCumulativeTaintedAge(player) > 0 && !player.getCommandSenderWorld().isClientSide) {
             int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
 
-            if(event.getSource().isFire()) {
+            if(event.getSource().is(DamageTypes.ON_FIRE) || event.getSource().is(DamageTypes.IN_FIRE)) {
                 event.setAmount(event.getAmount() * HunterAgeingConfig.taintedFireDamageMultiplier.get().get(cumulativeAge));
             }
         }

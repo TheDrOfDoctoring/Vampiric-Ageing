@@ -5,7 +5,6 @@ import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.networking.ClientProxy;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -116,7 +115,7 @@ public class ClientRenderHandler extends ExtendedGui {
         }
 
         if (percentages > 0 && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            PoseStack stack = event.getPoseStack();
+            PoseStack stack = event.getGuiGraphics().pose();
             stack.pushPose();
             int w = (this.mc.getWindow().getGuiScaledWidth());
             int h = (this.mc.getWindow().getGuiScaledHeight());
@@ -124,9 +123,9 @@ public class ClientRenderHandler extends ExtendedGui {
             int bh = Math.round(h / (float) 4 * percentages / 100);
             int bw = Math.round(w / (float) 8 * percentages / 100);
 
-            this.fillGradient(stack, 0, 0, w, bh, color, 0x000);
+            this.fillGradient2(stack, 0, 0, w, bh, color, 0x000);
             if (!OptifineHandler.isShaders()) {
-                this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, color);
+                this.fillGradient2(stack, 0, h - bh, w, h, 0x00000000, color);
             }
             this.fillGradient2(stack, 0, 0, bw, h, 0x000000, color);
             this.fillGradient2(stack, w - bw, 0, w, h, color, 0x00);
