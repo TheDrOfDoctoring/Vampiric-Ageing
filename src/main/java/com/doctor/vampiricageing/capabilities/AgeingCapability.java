@@ -13,6 +13,10 @@ public class AgeingCapability implements IAgeingCapability {
     private int drainedSinceAgeLoss;
     private int devouredSinceAgeLoss;
     private int huntedSinceAgeLoss;
+    private int temporaryTaintedAgeBonus;
+    private int temporaryTaintedTicks;
+    private boolean batMode;
+    private boolean upStepChange;
 
 
     @Override
@@ -27,6 +31,9 @@ public class AgeingCapability implements IAgeingCapability {
         this.drainedSinceAgeLoss = 0;
         this.huntedSinceAgeLoss = 0;
         this.devouredSinceAgeLoss = 0;
+        this.temporaryTaintedAgeBonus = 0;
+        this.temporaryTaintedTicks = 0;
+        this.batMode = false;
         this.age = age;
 
     }
@@ -79,8 +86,48 @@ public class AgeingCapability implements IAgeingCapability {
     @Override
     public void setDrained(int drained) {
         this.drainedSinceAgeLoss = drained;
+    }
+    @Override
+    public int getTemporaryTaintedAgeBonus() {
+        return temporaryTaintedAgeBonus;
+    }
+
+    @Override
+    public void setTemporaryTaintedAgeBonus(int bonus) {
+        this.temporaryTaintedAgeBonus = bonus;
+    }
+
+    @Override
+    public int getTemporaryTainedTicks() {
+        return this.temporaryTaintedTicks;
+    }
+
+    @Override
+    public void setTemporaryTainedTicks(int ticks) {
+        this.temporaryTaintedTicks = ticks;
 
     }
+
+    @Override
+    public boolean getBatMode() {
+        return this.batMode;
+    }
+
+    @Override
+    public void setBatMode(boolean batMode) {
+        this.batMode = batMode;
+    }
+
+    @Override
+    public boolean getUpStep() {
+        return upStepChange;
+    }
+
+    @Override
+    public void setUpStep(boolean upStepSetter) {
+        this.upStepChange = upStepSetter;
+    }
+
     public CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
         tag.putInt("age", age);
@@ -89,6 +136,10 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("drained", drainedSinceAgeLoss);
         tag.putInt("devoured", devouredSinceAgeLoss);
         tag.putInt("hunted", huntedSinceAgeLoss);
+        tag.putInt("taintedTicks", temporaryTaintedTicks);
+        tag.putInt("taintedBonus", temporaryTaintedAgeBonus);
+        tag.putBoolean("batMode", batMode);
+        tag.putBoolean("upstep", upStepChange);
         return tag;
     }
 
@@ -99,5 +150,9 @@ public class AgeingCapability implements IAgeingCapability {
         this.timeSinceAgeLoss = nbt.getInt("time");
         this.infectedSinceAgeLoss = nbt.getInt("infected");
         this.huntedSinceAgeLoss = nbt.getInt("hunted");
+        this.temporaryTaintedTicks = nbt.getInt("taintedTicks");
+        this.temporaryTaintedAgeBonus = nbt.getInt("taintedBonus");
+        this.upStepChange = nbt.getBoolean("upstep");
+        this.batMode = nbt.getBoolean("batMode");
     }
 }

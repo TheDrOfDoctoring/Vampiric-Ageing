@@ -2,13 +2,18 @@ package com.doctor.vampiricageing.client.overlay;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.ClientConfig;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.werewolves.util.Helper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 
 public class AgeRankOverlay {
@@ -33,12 +38,12 @@ public class AgeRankOverlay {
                     if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && age.getTemporaryTaintedAgeBonus() > 0) {
                         String taintedTextValue = " (" + (age.getAge() + age.getTemporaryTaintedAgeBonus()) + ")";
                         int x2 = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get() + 5;
-                        int y2 = this.mc.getWindow().getGuiScaledHeight() - (ClientConfig.guiLevelOffsetY.get() - 47) - gui.rightHeight;
+                        int y2 = this.mc.getWindow().getGuiScaledHeight() - (Integer)ClientConfig.guiLevelOffsetY.get();
                         this.mc.font.draw(mStack, taintedTextValue, x2 + 1, y2, 0);
                         this.mc.font.draw(mStack, taintedTextValue, x2 - 1, y2, 0);
                         this.mc.font.draw(mStack, taintedTextValue, x2, y2 + 1, 0);
                         this.mc.font.draw(mStack, taintedTextValue, x2, y2 - 1, 0);
-                        this.mc.font.draw(mStack, taintedTextValue, x2, y2, Color.MAGENTA_DARK.getRGB());
+                        this.mc.font.draw(mStack, taintedTextValue, x2, y2, Color.MAGENTA.darker().darker().getRGB());
                     }
                 }
             });

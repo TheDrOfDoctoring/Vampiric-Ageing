@@ -1,12 +1,12 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "type": "vampirism:nbt",
+    "type": "vampirism:item",
     "count": 1,
     "item": "vampirism:vampire_blood_bottle"
   },
   "input": {
-    "type": "vampirism:nbt",
+    "type": "vampirism:item",
     "count": 1,
     "item": "vampirism:pure_blood_1"
   },

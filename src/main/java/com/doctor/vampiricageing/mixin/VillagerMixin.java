@@ -1,7 +1,9 @@
 package com.doctor.vampiricageing.mixin;
 
+import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.util.Helper;
@@ -22,7 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(VillagerEntity.class)
 public abstract class VillagerMixin extends AbstractVillagerEntity {
-    @Shadow public abstract VillagerData getVillagerData();
+    @Shadow
+    public abstract VillagerData getVillagerData();
 
     public VillagerMixin(EntityType<? extends AbstractVillagerEntity> p_35267_, World p_35268_) {
         super(p_35267_, p_35268_);
@@ -31,16 +34,17 @@ public abstract class VillagerMixin extends AbstractVillagerEntity {
     @Inject(method = "updateSpecialPrices", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;hasEffect(Lnet/minecraft/potion/Effect;)Z", shift = At.Shift.BEFORE))
     private void updateSpecialPrices(PlayerEntity player, CallbackInfo ci) {
         if (!Helper.isHunter(player) && CommonConfig.doesAgeAffectPrices.get()) {
-            if(!(getVillagerData().getProfession() instanceof FactionVillagerProfession)) {
+            if (!(getVillagerData().getProfession() instanceof FactionVillagerProfession)) {
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
-                if(!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
-                    for(MerchantOffer merchantoffer1 : this.getOffers()) {
+                if (!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
+                    for (MerchantOffer merchantoffer1 : this.getOffers()) {
                         double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge);
                         double d0 = 1 - ageMult;
 
-                    int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
-                    merchantoffer1.addToSpecialPriceDiff(j);
+                        int j = d0 != 0 ? (int) Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
+                        merchantoffer1.addToSpecialPriceDiff(j);
+                    }
                 }
             }
         }

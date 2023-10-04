@@ -1,5 +1,6 @@
 package com.doctor.vampiricageing.actions;
 
+import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
@@ -80,7 +81,7 @@ public class HunterTeleportAction extends DefaultHunterAction {
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IHunterPlayer hunter) {
+    public boolean canBeUsedBy(IHunterPlayer hunter) {
         return CapabilityHelper.getCumulativeTaintedAge(hunter.getRepresentingPlayer()) >= HunterAgeingConfig.hunterTeleportActionAge.get();
     }
 

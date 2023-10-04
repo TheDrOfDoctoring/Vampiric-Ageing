@@ -1,5 +1,6 @@
 package com.doctor.vampiricageing.client.init;
 
+import com.doctor.vampiricageing.client.overlay.AgeRankOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;

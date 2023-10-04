@@ -1,6 +1,7 @@
 package com.doctor.vampiricageing.capabilities;
 
 import com.doctor.vampiricageing.VampiricAgeing;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.werewolves.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
