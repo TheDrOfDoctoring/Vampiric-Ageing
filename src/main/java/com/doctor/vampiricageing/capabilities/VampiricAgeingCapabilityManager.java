@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -152,10 +153,10 @@ public class VampiricAgeingCapabilityManager {
         }
     }
     //possibly needs a refactor
-    public static void onAgeChange(ServerPlayer player) {
+    public static void onAgeChange(ServerPlayer player, IPlayableFaction<?> faction) {
         int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         checkSkills(age, player);
-        if(Helper.isVampire(player)) {
+        if(Helper.isVampire(player) || faction == VReference.VAMPIRE_FACTION) {
             removeModifier(player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()), EXHAUSTION_UUID);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
@@ -169,7 +170,7 @@ public class VampiricAgeingCapabilityManager {
 
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
-        } else if(CapabilityHelper.isWerewolfCheckMod(player)) {
+        } else if(CapabilityHelper.isWerewolfCheckMod(player, faction)) {
             removeModifier(player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()), BITE_DAMAGE_MULTIPLIER_UUID);
             removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), WEREWOLF_STRENGTH_INCREASE);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), WEREWOLF_MAX_HEALTH_AGE_UUID);
@@ -177,7 +178,7 @@ public class VampiricAgeingCapabilityManager {
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(WEREWOLF_STRENGTH_INCREASE, "WEREWOLF_AGE_ATTACK_DAMAGE_INCREASE", WerewolvesAgeingConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(WEREWOLF_MAX_HEALTH_AGE_UUID, "WEREWOLF_MAX_HEALTH_AGE_CHANGE", WerewolvesAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()).addPermanentModifier(new AttributeModifier(BITE_DAMAGE_MULTIPLIER_UUID, "AGE_BITE_DAMAGE_INCREASE", WerewolvesAgeingConfig.biteDamageMultiplier.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        } else if(isHunter(player)) {
+        } else if(isHunter(player) || faction == VReference.HUNTER_FACTION) {
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), HUNTER_MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_SPEED_INCREASE_UUID);
             removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
@@ -440,7 +441,8 @@ public class VampiricAgeingCapabilityManager {
         if(event.getNewLevel() == 0 || (event.getCurrentFaction() != event.getOldFaction() && event.getOldFaction() != null)) {
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(0);
-                syncAgeCap(event.getPlayer().getPlayer());
+                IPlayableFaction<?> faction = event.getOldFaction();
+                syncAgeCap(event.getPlayer().getPlayer(), faction);
                 Player player = event.getPlayer().getPlayer();
                 if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
                     player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
@@ -571,7 +573,15 @@ public class VampiricAgeingCapabilityManager {
         CompoundTag tag = cap.serializeNBT();
         if(player instanceof ServerPlayer serverPlayer){
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncCapabilityPacket(tag));
-            onAgeChange(serverPlayer);
+            onAgeChange(serverPlayer, null);
+        }
+    }
+    public static void syncAgeCap(Player player, IPlayableFaction<?> faction) {
+        IAgeingCapability cap = getAge(player).orElse(new AgeingCapability());
+        CompoundTag tag = cap.serializeNBT();
+        if(player instanceof ServerPlayer serverPlayer){
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncCapabilityPacket(tag));
+            onAgeChange(serverPlayer, faction);
         }
     }
 
