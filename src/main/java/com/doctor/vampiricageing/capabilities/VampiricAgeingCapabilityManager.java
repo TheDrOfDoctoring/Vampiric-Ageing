@@ -450,7 +450,7 @@ public class VampiricAgeingCapabilityManager {
             getAge(event.getPlayer().getPlayer()).ifPresent(age -> {
                 age.setAge(0);
                 syncAgeCap(event.getPlayer().getPlayer());
-                Player player = event.getPlayer().getPlayer();
+                PlayerEntity player = event.getPlayer().getPlayer();
                 if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
                     player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
                 }

@@ -5,6 +5,7 @@ import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
+import com.doctor.vampiricageing.init.ModEffects;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;

@@ -4,7 +4,9 @@ import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.mixin.FoodStatsAccessor;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.Entity;
@@ -12,6 +14,8 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.Util;
@@ -118,19 +122,19 @@ public class HunterAgeingManager {
         }
 
     }
-    public static void applySunEffects(Player player, int ticksInSun) {
+    public static void applySunEffects(PlayerEntity player, int ticksInSun) {
         //Very simplified sun damage mechanic
-        if(player.getAbilities().instabuild || player.hasEffect(ModEffects.SUNSCREEN.get())) {
+        if(player.abilities.instabuild || player.hasEffect(ModEffects.SUNSCREEN.get())) {
             return;
         }
 
         if(ticksInSun >= HunterAgeingConfig.sunWeaknessTicks.get()) {
-            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
+            player.addEffect(new EffectInstance(Effects.WEAKNESS, 40, 0));
         }
         if(ticksInSun >= HunterAgeingConfig.sunSlownessTicks.get() && ticksInSun < HunterAgeingConfig.sunSlownessThreeTicks.get()) {
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1));
+            player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 40, 1));
         } else if(ticksInSun >= HunterAgeingConfig.sunSlownessThreeTicks.get()) {
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+            player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 40, 2));
         }
         if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get()) {
             player.hurt(VReference.SUNDAMAGE, 1.5f);
@@ -142,7 +146,7 @@ public class HunterAgeingManager {
             }
         }
         if(ticksInSun >= HunterAgeingConfig.sunBlindnessTicks.get()) {
-            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0));
+            player.addEffect(new EffectInstance(Effects.BLINDNESS, 40, 0));
         }
     }
     @SubscribeEvent

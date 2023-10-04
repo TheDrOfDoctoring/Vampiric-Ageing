@@ -2,6 +2,7 @@ package com.doctor.vampiricageing.items;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
+import com.doctor.vampiricageing.init.ModEffects;
 import com.doctor.vampiricageing.init.ModItems;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;

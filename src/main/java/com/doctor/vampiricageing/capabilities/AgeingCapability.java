@@ -120,6 +120,16 @@ public class AgeingCapability implements IAgeingCapability {
     }
 
     @Override
+    public int getTicksInSun() {
+        return this.ticksInSun;
+    }
+
+    @Override
+    public void setTicksInSun(int ticks) {
+        this.ticksInSun = ticks;
+    }
+
+    @Override
     public boolean getUpStep() {
         return upStepChange;
     }

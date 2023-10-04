@@ -1,7 +1,17 @@
 package com.doctor.vampiricageing.client.init;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
+import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.networking.ClientProxy;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.lib.client.gui.ExtendedGui;
+import de.teamlapen.lib.util.OptifineHandler;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.BatEntity;
@@ -9,14 +19,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 
-public class ClientRenderHandler {
+import javax.annotation.Nullable;
+
+public class ClientRenderHandler extends ExtendedGui {
 
     private BatEntity entityBat;
     private final Minecraft mc;
-
+    private int screenPercentage = 0;
     public ClientRenderHandler(Minecraft mc) {
         this.mc = mc;
     }
@@ -89,7 +104,7 @@ public class ClientRenderHandler {
         });
     }
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderWorldLast(RenderGuiEvent.Pre event) {
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
         int percentages = 0;
         int color = 0;
         if (this.screenPercentage > 0) {
@@ -98,8 +113,15 @@ public class ClientRenderHandler {
         }
 
         if (percentages > 0 && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            PoseStack stack = event.getPoseStack();
+            RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
+            MatrixStack stack = new MatrixStack();
             stack.pushPose();
+            RenderSystem.matrixMode(GL11.GL_PROJECTION);
+            RenderSystem.loadIdentity();
+            RenderSystem.ortho(0.0D, this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 0.0D, 1D, -1D);
+            RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+            RenderSystem.loadIdentity();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
             int w = (this.mc.getWindow().getGuiScaledWidth());
             int h = (this.mc.getWindow().getGuiScaledHeight());
 
@@ -107,12 +129,10 @@ public class ClientRenderHandler {
             int bw = Math.round(w / (float) 8 * percentages / 100);
 
             this.fillGradient(stack, 0, 0, w, bh, color, 0x000);
-            if (!OptifineHandler.isShaders()) {
-                this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, color);
-            }
+            this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, color);
             this.fillGradient2(stack, 0, 0, bw, h, 0x000000, color);
             this.fillGradient2(stack, w - bw, 0, w, h, color, 0x00);
-
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
             stack.popPose();
         }
     }
