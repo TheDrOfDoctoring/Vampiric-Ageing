@@ -6,7 +6,7 @@ import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.werewolves.util.Helper;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
