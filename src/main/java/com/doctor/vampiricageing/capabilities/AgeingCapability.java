@@ -18,6 +18,7 @@ public class AgeingCapability implements IAgeingCapability {
     private boolean batMode;
     private boolean upStepChange;
     private int ticksInSun;
+    private int unlockedSkills;
 
     @Override
     public int getAge() {
@@ -35,6 +36,7 @@ public class AgeingCapability implements IAgeingCapability {
         this.temporaryTaintedTicks = 0;
         this.batMode = false;
         this.ticksInSun = 0;
+        this.unlockedSkills = 0;
         this.age = age;
 
     }
@@ -128,7 +130,13 @@ public class AgeingCapability implements IAgeingCapability {
     public void setTicksInSun(int ticks) {
         this.ticksInSun = ticks;
     }
-
+    @Override
+    public void setAgeSkills(int skills) {
+        this.unlockedSkills = skills;
+    }
+    public int getAgeSkills() {
+        return this.unlockedSkills;
+    }
     @Override
     public boolean getUpStep() {
         return upStepChange;
@@ -150,6 +158,7 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("taintedTicks", temporaryTaintedTicks);
         tag.putInt("taintedBonus", temporaryTaintedAgeBonus);
         tag.putInt("ticksInSun", ticksInSun);
+        tag.putInt("unlockedSkills", unlockedSkills);
         tag.putBoolean("batMode", batMode);
         tag.putBoolean("upstep", upStepChange);
         return tag;
@@ -165,6 +174,7 @@ public class AgeingCapability implements IAgeingCapability {
         this.temporaryTaintedTicks = nbt.getInt("taintedTicks");
         this.temporaryTaintedAgeBonus = nbt.getInt("taintedBonus");
         this.upStepChange = nbt.getBoolean("upstep");
+        this.unlockedSkills = nbt.getInt("unlockedSkills");
         this.ticksInSun = nbt.getInt("ticksInSun");
         this.batMode = nbt.getBoolean("batMode");
     }

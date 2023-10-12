@@ -13,6 +13,7 @@
     "InfectActionMixin",
     "PlayerMixin",
     "SilverOilMixin",
+    "SkillHandlerMixin",
     "VampirePlayerMixin",
     "VillagerMixin",
     "WerewolfFormActionMixin"
