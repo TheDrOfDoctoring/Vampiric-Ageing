@@ -41,4 +41,7 @@ public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
     int getTicksInSun();
 
     void setTicksInSun(int ticks);
+    int getAgeSkills();
+
+    void setAgeSkills(int skills);
 }
