@@ -202,44 +202,55 @@ public class VampiricAgeingCapabilityManager {
         }
     }
     public static void checkSkills(int age, ServerPlayer player) {
+        int unlockedSkills = 0;
         if(Helper.isVampire(player)) {
-            VampirePlayer.getOpt(player).ifPresent(vamp -> {
+            unlockedSkills = VampirePlayer.getOpt(player).map(vamp -> {
                 ISkillHandler<IVampirePlayer> handler = vamp.getSkillHandler();
-                if(age >= CommonConfig.drainBloodActionRank.get()) {
+                int unlockedSkillsCount = 0;
+                if (age >= CommonConfig.drainBloodActionRank.get()) {
                     handler.enableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
+                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
                 }
-                if(age >= CommonConfig.celerityActionRank.get()) {
+                if (age >= CommonConfig.celerityActionRank.get()) {
                     handler.enableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
+                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
                 }
-            });
+                return unlockedSkillsCount;
+            }).orElse(0);
         }  else if(Helper.isHunter(player)) {
-            HunterPlayer.getOpt(player).ifPresent(hunter -> {
+            unlockedSkills = HunterPlayer.getOpt(player).map(hunter -> {
                 ISkillHandler<IHunterPlayer> handler = hunter.getSkillHandler();
-
+                int unlockedSkillsCount = 0;
                 if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
+                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
                 }
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
                 if(cumulativeAge >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
+                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
                 }
 
                 if(cumulativeAge >= HunterAgeingConfig.limitedBatModeAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
+                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
                 }
-
-            });
+                return unlockedSkillsCount;
+            }).orElse(0);
         }
+        int finalUnlockedSkills = unlockedSkills;
+        getAge(player).ifPresent(ageCap -> ageCap.setAgeSkills(finalUnlockedSkills));
+        syncAgeCapNoChange(player);
     }
 
     public static void removeModifier(@NotNull AttributeInstance att, @NotNull UUID uuid) {
@@ -586,6 +597,13 @@ public class VampiricAgeingCapabilityManager {
         if(player instanceof ServerPlayer serverPlayer){
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncCapabilityPacket(tag));
             onAgeChange(serverPlayer, faction);
+        }
+    }
+    public static void syncAgeCapNoChange(Player player) {
+        IAgeingCapability cap = getAge(player).orElse(new AgeingCapability());
+        CompoundTag tag = cap.serializeNBT();
+        if(player instanceof ServerPlayer serverPlayer){
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncCapabilityPacket(tag));
         }
     }
 
