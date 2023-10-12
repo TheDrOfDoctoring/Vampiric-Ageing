@@ -56,7 +56,7 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             return new ActionResult<>(ActionResultType.PASS, stack);
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        if(age > HunterAgeingConfig.taintedBloodBottleAge.get()) {
+        if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
             player.startUsingItem(hand);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
@@ -71,7 +71,7 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             return;
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        if(age > HunterAgeingConfig.taintedBloodBottleAge.get()) {
+        if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
             player.startUsingItem(player.getUsedItemHand());
         }
     }
