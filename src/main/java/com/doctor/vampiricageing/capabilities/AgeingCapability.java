@@ -136,6 +136,8 @@ public class AgeingCapability implements IAgeingCapability {
     public void setAgeSkills(int skills) {
         this.unlockedSkills = skills;
     }
+
+    @Override
     public int getAgeSkills() {
         return this.unlockedSkills;
     }
