@@ -459,7 +459,7 @@ public class VampiricAgeingCapabilityManager {
                 age.setAge(0);
                 syncAgeCap(event.getPlayer().getPlayer(), event.getOldFaction());
                 Player player = event.getPlayer().getPlayer();
-                if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
+                if(event.getOldFaction() == VReference.HUNTER_FACTION && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
                     player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
                 }
             });
