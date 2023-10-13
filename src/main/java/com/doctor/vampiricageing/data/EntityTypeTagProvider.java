@@ -28,6 +28,8 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final ITag.INamedTag<EntityType<?>> commonHunt = vampiricAgeing("common_hunt");
     public static final ITag.INamedTag<EntityType<?>> greaterHunt = vampiricAgeing("greater_hunt");
 
+    public static final ITag.INamedTag<EntityType<?>> infectedBlackList = vampiricAgeing("infected_blacklist");
+
     private static INamedTag<EntityType<?>> vampiricAgeing(String id) {
         return EntityTypeTags.bind(new ResourceLocation(VampiricAgeing.MODID, id).toString());
     }
@@ -43,6 +45,9 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         this.tag(pettyHunt).add(ModEntities.VAMPIRE.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_SURVIVALIST.get());
         this.tag(commonHunt).add(ModEntities.ADVANCED_VAMPIRE.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_BEAST.get());
         this.tag(greaterHunt).add(ModEntities.VAMPIRE_BARON.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get());
+
+        //any entities with this tag wont count towards infected counter
+        this.tag(infectedBlackList).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
     }
 
 }

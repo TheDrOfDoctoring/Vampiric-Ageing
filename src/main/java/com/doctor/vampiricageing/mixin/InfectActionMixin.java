@@ -2,6 +2,7 @@ package com.doctor.vampiricageing.mixin;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.InfectAction;
@@ -23,7 +24,7 @@ public class InfectActionMixin  {
             if(VampiricAgeingCapabilityManager.canAge(player) && CommonConfig.biteBasedIncrease.get() ) {
                 VampiricAgeingCapabilityManager.incrementInfected((ServerPlayerEntity) player);
             }
-            if(creature instanceof PlayerEntity && CommonConfig.sireingMechanic.get()) {
+            if(creature instanceof PlayerEntity && CommonConfig.sireingMechanic.get() && !creature.getType().is(EntityTypeTagProvider.infectedBlackList)) {
                 VampiricAgeingCapabilityManager.getAge(player).ifPresent(vampireAge -> {
                     if (vampireAge.getAge() > 1) {
                         creature.getPersistentData().remove("AGE");
