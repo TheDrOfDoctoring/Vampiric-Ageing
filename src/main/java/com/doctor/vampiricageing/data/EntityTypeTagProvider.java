@@ -32,6 +32,8 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> pettyHunt = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "petty_hunt"));
     public static final TagKey<EntityType<?>> commonHunt = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "common_hunt"));
     public static final TagKey<EntityType<?>> greaterHunt = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "greater_hunt"));
+
+    public static final TagKey<EntityType<?>> infectedBlacklist = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "infected_blacklist"));
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
         this.tag(countsForDrained).add(EntityType.VILLAGER);
@@ -44,6 +46,9 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         this.tag(pettyHunt).add(ModEntities.VAMPIRE.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_SURVIVALIST.get());
         this.tag(commonHunt).add(ModEntities.ADVANCED_VAMPIRE.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_BEAST.get());
         this.tag(greaterHunt).add(ModEntities.VAMPIRE_BARON.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get());
+
+        //entities that dont count towards infected counter
+        this.tag(infectedBlacklist).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
     }
 
 }

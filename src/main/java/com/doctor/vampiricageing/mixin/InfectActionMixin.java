@@ -2,6 +2,7 @@ package com.doctor.vampiricageing.mixin;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
+import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.InfectAction;
@@ -20,7 +21,7 @@ public class InfectActionMixin  {
     @Inject(method = "activate(Lde/teamlapen/vampirism/api/entity/player/vampire/IVampirePlayer;Lde/teamlapen/vampirism/api/entity/player/actions/IAction$ActivationContext;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/resources/ResourceLocation;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void activate(IVampirePlayer vampire, IAction.ActivationContext context, CallbackInfoReturnable<Boolean> cir, Player player, Entity creature) {
         if(!player.getCommandSenderWorld().isClientSide) {
-            if(VampiricAgeingCapabilityManager.canAge(player) && CommonConfig.biteBasedIncrease.get() ) {
+            if(VampiricAgeingCapabilityManager.canAge(player) && CommonConfig.biteBasedIncrease.get() && !creature.getType().is(EntityTypeTagProvider.infectedBlacklist)) {
                 VampiricAgeingCapabilityManager.incrementInfected((ServerPlayer) player);
             }
             if(creature instanceof Player && CommonConfig.sireingMechanic.get()) {
