@@ -21,10 +21,10 @@ public class InfectActionMixin  {
     @Inject(method = "activate(Lde/teamlapen/vampirism/api/entity/player/vampire/IVampirePlayer;Lde/teamlapen/vampirism/api/entity/player/actions/IAction$ActivationContext;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;awardStat(Lnet/minecraft/util/ResourceLocation;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void activate(IVampirePlayer vampire, IAction.ActivationContext context, CallbackInfoReturnable<Boolean> cir, PlayerEntity player, Entity creature) {
         if(!player.getCommandSenderWorld().isClientSide) {
-            if(VampiricAgeingCapabilityManager.canAge(player) && CommonConfig.biteBasedIncrease.get() ) {
+            if(VampiricAgeingCapabilityManager.canAge(player) && CommonConfig.biteBasedIncrease.get() && !creature.getType().is(EntityTypeTagProvider.infectedBlackList)) {
                 VampiricAgeingCapabilityManager.incrementInfected((ServerPlayerEntity) player);
             }
-            if(creature instanceof PlayerEntity && CommonConfig.sireingMechanic.get() && !creature.getType().is(EntityTypeTagProvider.infectedBlackList)) {
+            if(creature instanceof PlayerEntity && CommonConfig.sireingMechanic.get()) {
                 VampiricAgeingCapabilityManager.getAge(player).ifPresent(vampireAge -> {
                     if (vampireAge.getAge() > 1) {
                         creature.getPersistentData().remove("AGE");
