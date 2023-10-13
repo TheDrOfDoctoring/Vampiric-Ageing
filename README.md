@@ -26,7 +26,6 @@ By default, the player gains access to a number of benefits from ranking up:
 However, some penalties also come with increasing age:
 
 - Increased vulnerability to Fire, Garlic and Holy Water scaling with Age Rank
-- Rare chance to randomly gain the Bad Omen effect 
 - Harsher prices with villagers
 - Hunter Mobs deal more damage
 
