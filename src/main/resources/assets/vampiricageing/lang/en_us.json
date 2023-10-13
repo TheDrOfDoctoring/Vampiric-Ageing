@@ -5,7 +5,6 @@
   "text.vampiricageing.progress_drained": "You must completely drain %s more creatures to increase your age rank",
   "text.vampiricageing.progress_hunted": "You must acquire %s more hunt points to increase your skill in hunting",
   "text.vampiricageing.blood_rank": "Age Rank: ",
-  "text.vampiricageing.bad_omen": "Your notoriety as a vampire has lead to some unwanted attention",
   "text.vampiricageing.vampire_blood_rank": "The vampire has Age Rank %s",
   "text.vampiricageing.blood_tester_usage": "Attack a Vampire using this to learn their Age Rank",
   "item.vampiricageing.blood_tester": "Blood Tester",
