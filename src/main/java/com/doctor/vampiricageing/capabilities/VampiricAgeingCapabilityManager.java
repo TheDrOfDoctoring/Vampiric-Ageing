@@ -420,10 +420,6 @@ public class VampiricAgeingCapabilityManager {
                 });
             }
         }
-        if(event.player.isAlive() && !event.player.getCommandSenderWorld().isClientSide && event.player.getRandom().nextFloat() <= 0.25 && event.player.level.getGameTime() % 18000 == 0 && getAge(event.player).orElse(null).getAge() > 3 && CommonConfig.highAgeBadOmen.get()) {
-            event.player.sendMessage(new TranslationTextComponent("text.vampiricageing.bad_omen"), Util.NIL_UUID);
-            event.player.addEffect(new EffectInstance(ModEffects.BAD_OMEN_HUNTER.get(), 1, 36000));
-        }
     }
 
     @SubscribeEvent
