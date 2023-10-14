@@ -3,7 +3,7 @@ package com.doctor.vampiricageing.capabilities;
 import com.doctor.vampiricageing.VampiricAgeing;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.werewolves.util.Helper;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.werewolves.util.WReference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,14 +15,14 @@ public class CapabilityHelper {
         if(!ModList.get().isLoaded(VampiricAgeing.WEREWOLVES_MODID)) {
             return false;
         } else {
-            return Helper.isWerewolf(entity);
+            return de.teamlapen.werewolves.util.Helper.isWerewolf(entity);
         }
     }
     public static boolean isWerewolfCheckMod(Entity entity, IPlayableFaction<?> faction) {
         if(!ModList.get().isLoaded(VampiricAgeing.WEREWOLVES_MODID)) {
             return false;
         } else {
-            return Helper.isWerewolf(entity) || faction == WReference.WEREWOLF_FACTION;
+            return de.teamlapen.werewolves.util.Helper.isWerewolf(entity) || faction == WReference.WEREWOLF_FACTION;
         }
     }
     public static int getCumulativeTaintedAge(PlayerEntity player) {
