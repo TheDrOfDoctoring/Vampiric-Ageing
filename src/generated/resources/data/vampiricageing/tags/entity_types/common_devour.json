@@ -9,6 +9,8 @@
     "minecraft:guardian",
     "vampirism:hunter",
     "vampirism:vampire",
+    "vampirism:hunter_imob",
+    "vampirism:vampire_imob",
     "werewolves:werewolf_survivalist",
     "werewolves:alpha_werewolf"
   ]

@@ -40,9 +40,9 @@ public class WerewolfAgeingManager {
             } else if(event.getEntity().getType().is(EntityTypeTagProvider.commonDevour)) {
                 pointWorth = WerewolvesAgeingConfig.commonDevourWorth.get();
             } else if(event.getEntity().getType().is(EntityTypeTagProvider.greaterDevour)) {
-                pointWorth = WerewolvesAgeingConfig.pettyDevourWorth.get();
+                pointWorth = WerewolvesAgeingConfig.greaterDevourWorth.get();
             } else if(event.getEntity().getType().is(EntityTypeTagProvider.exquisiteDevour)) {
-                pointWorth = WerewolvesAgeingConfig.pettyDevourWorth.get();
+                pointWorth = WerewolvesAgeingConfig.exquisiteDevourWorth.get();
             } else {
                 pointWorth = 0;
             }

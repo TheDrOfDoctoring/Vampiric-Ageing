@@ -1,6 +1,8 @@
 {
   "values": [
     "vampirism:advanced_hunter",
-    "vampirism:advanced_vampire"
+    "vampirism:advanced_vampire",
+    "vampirism:advanced_hunter_imob",
+    "vampirism:advanced_vampire_imob"
   ]
 }
