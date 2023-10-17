@@ -43,9 +43,9 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         this.tag(greaterDevour).add(ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_HUNTER_IMOB.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
         this.tag(exquisiteDevour).add(ModEntities.VAMPIRE_BARON.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get(), EntityType.ELDER_GUARDIAN);
 
-        this.tag(pettyHunt).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_SURVIVALIST.get());
-        this.tag(commonHunt).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_BEAST.get());
-        this.tag(greaterHunt).add(ModEntities.VAMPIRE_BARON.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get());
+        this.tag(pettyHunt).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get());
+        this.tag(commonHunt).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
+        this.tag(greaterHunt).add(ModEntities.VAMPIRE_BARON.get());
 
         //entities that dont count towards infected counter
         this.tag(infectedBlacklist).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
