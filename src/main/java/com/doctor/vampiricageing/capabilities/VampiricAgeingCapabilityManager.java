@@ -310,7 +310,7 @@ public class VampiricAgeingCapabilityManager {
     }
 
     @SubscribeEvent
-    public static void onCoffinInteract(PlayerInteractEvent event) {
+    public static void onCoffinInteract(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
         if(Helper.isVampire(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && canAge(player)) {
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);

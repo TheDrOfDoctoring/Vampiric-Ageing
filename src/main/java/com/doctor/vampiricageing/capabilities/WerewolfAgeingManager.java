@@ -53,7 +53,7 @@ public class WerewolfAgeingManager {
         }
     }
     @SubscribeEvent
-    public void onInteract(PlayerInteractEvent event) {
+    public void onInteract(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
         if (event.getHand() == Hand.MAIN_HAND && Helper.isWerewolf(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof StoneAltarFireBowlBlock && VampiricAgeingCapabilityManager.canAge(player)) {
             int age = VampiricAgeingCapabilityManager.getAge(event.getPlayer()).map(ageCap -> ageCap.getAge()).orElse(0);
