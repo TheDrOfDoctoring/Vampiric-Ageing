@@ -158,7 +158,7 @@ public class HunterAgeingManager {
         }
     }
     @SubscribeEvent
-    public static void onInteract(PlayerInteractEvent event) {
+    public static void onInteractBlock(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();
         if (event.getHand() == InteractionHand.MAIN_HAND && Helper.isHunter(player) && !player.getCommandSenderWorld().isClientSide) {
             if(player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof MedChairBlock && VampiricAgeingCapabilityManager.canAge(player)) {
@@ -167,14 +167,19 @@ public class HunterAgeingManager {
                 int huntedForNextAge = HunterAgeingConfig.huntedForNextAge.get().get(age) - huntedPoints;
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_hunted", huntedForNextAge).withStyle(ChatFormatting.DARK_RED));
             }
-            else if(event.getItemStack().is(ModItems.INJECTION_GARLIC.get()) && CapabilityHelper.getCumulativeTaintedAge(player) > 0) {
-                VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
-                    hunter.setTemporaryTaintedAgeBonus(0);
-                    hunter.setTemporaryTainedTicks(0);
-                });
-                VampiricAgeingCapabilityManager.syncAgeCap(player);
-                event.getItemStack().shrink(1);
-            }
+
+        }
+    }
+    @SubscribeEvent
+    public static void onInteract(PlayerInteractEvent event) {
+        Player player = event.getEntity();
+        if(event.getItemStack().is(ModItems.INJECTION_GARLIC.get()) && CapabilityHelper.getCumulativeTaintedAge(player) > 0) {
+            VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
+                hunter.setTemporaryTaintedAgeBonus(0);
+                hunter.setTemporaryTainedTicks(0);
+            });
+            VampiricAgeingCapabilityManager.syncAgeCap(player);
+            event.getItemStack().shrink(1);
         }
     }
     @SubscribeEvent
