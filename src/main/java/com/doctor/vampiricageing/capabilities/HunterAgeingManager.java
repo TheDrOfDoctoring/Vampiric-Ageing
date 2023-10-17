@@ -58,7 +58,7 @@ public class HunterAgeingManager {
             } else if(event.getEntity().getType().is(EntityTypeTagProvider.commonHunt)) {
                 pointWorth = HunterAgeingConfig.commonHuntWorth.get();
             } else if(event.getEntity().getType().is(EntityTypeTagProvider.greaterHunt)) {
-                pointWorth = HunterAgeingConfig.pettyHuntWorth.get();
+                pointWorth = HunterAgeingConfig.greaterHuntWorth.get();
             } else {
                 return;
             }
