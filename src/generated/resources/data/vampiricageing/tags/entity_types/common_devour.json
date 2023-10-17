@@ -8,6 +8,8 @@
     "minecraft:enderman",
     "minecraft:guardian",
     "vampirism:hunter",
+    "vampirism:vampire_imob",
+    "vampirism:hunter_imob",
     "vampirism:vampire",
     "werewolves:werewolf_survivalist",
     "werewolves:alpha_werewolf"
