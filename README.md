@@ -4,7 +4,7 @@
 
 ## Vampires
 
-By default, Ageing begins at Vampire Level 14 and to increase their Age Rank the player must infect a number of entities, the progress of which can be checked by interacting with a Coffin. The Age Rank can be seen above the player's blood bar.
+By default, Ageing begins at Vampire Level 14 and to increase their Age Rank the player must drain a significant amount of blood, the progress of which can be checked by interacting with a Coffin. The Age Rank can be seen above the player's blood bar.
 
 Ageing goes up to a max rank of 5 with each rank further increasing the player's abilities, unlocking new ones, and potentially harshening the existing vulnerabilities of the vampire. 
 
