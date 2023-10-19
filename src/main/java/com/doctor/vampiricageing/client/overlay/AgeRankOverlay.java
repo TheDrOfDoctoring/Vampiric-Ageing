@@ -21,7 +21,7 @@ public class AgeRankOverlay implements IGuiOverlay {
         if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui && !this.mc.player.isInWater()) {
             gui.setupOverlayRenderState(true, false);
             VampiricAgeingCapabilityManager.getAge(this.mc.player).ifPresent(age -> {
-                if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && age.getAge() > 0) {
+                if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && (age.getAge() > 0 || age.isTransformed())) {
                     String text = String.valueOf(age.getAge());
                     int x = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get();
                     int y = this.mc.getWindow().getGuiScaledHeight() - (ClientConfig.guiLevelOffsetY.get() - 47) - gui.rightHeight;
@@ -30,9 +30,9 @@ public class AgeRankOverlay implements IGuiOverlay {
                     graphics.drawString(this.mc.font, text, x, y + 1, 0, false);
                     graphics.drawString(this.mc.font, text, x, y - 1, 0, false);
                     graphics.drawString(this.mc.font, text, x, y, 0x8B0000, false);
-                    if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && age.getTemporaryTaintedAgeBonus() > 0) {
-                        String taintedTextValue = " (" + (age.getAge() + age.getTemporaryTaintedAgeBonus()) + ")";
-
+                    if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && (age.getTemporaryTaintedAgeBonus() > 0 || age.isTransformed())) {
+                        int displayBonus = age.isTransformed() ? 6 : age.getTemporaryTaintedAgeBonus();
+                        String taintedTextValue = " (" + (age.getAge() + displayBonus) + ")";
                         int x2 = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get() + 5;
                         int y2 = this.mc.getWindow().getGuiScaledHeight() - (ClientConfig.guiLevelOffsetY.get() - 47) - gui.rightHeight;
                         graphics.drawString(this.mc.font, taintedTextValue, x2 + 1, y2, 0, false);

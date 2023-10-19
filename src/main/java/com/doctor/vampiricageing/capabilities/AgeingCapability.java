@@ -20,6 +20,7 @@ public class AgeingCapability implements IAgeingCapability {
     private boolean batMode;
     private int ticksInSun;
     private int unlockedSkills;
+    private boolean transformed;
 
     @Override
     public int getAge() {
@@ -141,6 +142,16 @@ public class AgeingCapability implements IAgeingCapability {
         return this.unlockedSkills;
     }
 
+    @Override
+    public boolean isTransformed() {
+        return this.transformed;
+    }
+
+    @Override
+    public void setTransformed(boolean transformed) {
+        this.transformed = transformed;
+    }
+
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("age", age);
@@ -154,6 +165,7 @@ public class AgeingCapability implements IAgeingCapability {
         tag.putInt("ticksInSun", ticksInSun);
         tag.putInt("unlockedSkills", unlockedSkills);
         tag.putBoolean("batMode", batMode);
+        tag.putBoolean("transformed", transformed);
         return tag;
     }
 
@@ -169,5 +181,6 @@ public class AgeingCapability implements IAgeingCapability {
         this.ticksInSun = nbt.getInt("ticksInSun");
         this.unlockedSkills = nbt.getInt("unlockedSkills");
         this.batMode = nbt.getBoolean("batMode");
+        this.transformed = nbt.getBoolean("transformed");
     }
 }

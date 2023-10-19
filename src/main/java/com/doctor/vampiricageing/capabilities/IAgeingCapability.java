@@ -44,4 +44,7 @@ public interface IAgeingCapability extends INBTSerializable<CompoundTag> {
     int getAgeSkills();
 
     void setAgeSkills(int skills);
+    boolean isTransformed();
+
+    void setTransformed(boolean transformed);
 }

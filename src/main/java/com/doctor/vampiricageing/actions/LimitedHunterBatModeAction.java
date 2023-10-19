@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityDimensions;
@@ -49,6 +50,9 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     }
     @Override
     public int getDuration(IHunterPlayer hunter) {
+        if(VampiricAgeingCapabilityManager.getAge(hunter.getRepresentingPlayer()).map(ageCap -> ageCap.isTransformed()).orElse(false)) {
+            return Mth.clamp(HunterAgeingConfig.limitedBatModeDurationTransformed.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        }
         return HunterAgeingConfig.limitedBatModeDuration.get() * 20;
     }
     @Override
@@ -147,11 +151,11 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     }
     private void updatePlayer(@NotNull HunterPlayer hunter, boolean bat) {
         Player player = hunter.getRepresentingPlayer();
-        VampiricAgeingCapabilityManager.getAge(player).ifPresent(hntr -> hntr.setBatMode(bat
-        ));
+        VampiricAgeingCapabilityManager.getAge(player).ifPresent(hntr -> hntr.setBatMode(bat));
         VampiricAgeingCapabilityManager.syncAgeCap(player);
-        player.setForcedPose(bat ? Pose.STANDING : null);
         player.refreshDimensions();
+        player.setPose(Pose.CROUCHING);
+        player.setForcedPose(bat ? null : Pose.STANDING);
         if (bat) {
             player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
         }
