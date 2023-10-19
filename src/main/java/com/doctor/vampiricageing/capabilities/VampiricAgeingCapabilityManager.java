@@ -345,6 +345,11 @@ public class VampiricAgeingCapabilityManager {
                 int drainedForNextAge = CommonConfig.drainedBloodForNextAge.get().get(age) - drained;
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_drained", drainedForNextAge).withStyle(ChatFormatting.DARK_RED));
             }
+            if(CommonConfig.huntingBasedIncrease.get()) {
+                int hunted = getAge(event.getEntity()).map(ageCap -> ageCap.getHunted()).orElse(0);
+                int huntedForNextAge = CommonConfig.huntedForNextAge.get().get(age) - hunted;
+                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_hunted_vampire", huntedForNextAge).withStyle(ChatFormatting.DARK_RED));
+            }
         }
     }
     @SubscribeEvent
