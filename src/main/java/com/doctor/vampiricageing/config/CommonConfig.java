@@ -53,7 +53,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedBloodForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
 
@@ -61,8 +61,8 @@ public class CommonConfig {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
         sireingMechanic = COMMON_BUILDER.comment("Intended to be a replacement for other forms of ageing, though will work with them. Overrides the mechanic to always begin at Level 1. Ranks can be gained by drinking blood of more powerful vampires. Highly recommended to turn off Death Reset and to make sure Advanced Vampire Age is turned on. More information on GitHub Readme or Curseforge Page").define("sireingMechanic", false);
-        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
-        drainBasedIncrease = COMMON_BUILDER.comment("Whether to use fully draining villagers of blood to increase Age. Enable only one option").define("drainBasedIncrease", false);
+        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", false);
+        drainBasedIncrease = COMMON_BUILDER.comment("Whether to use draining blood to increase Age. Enable only one option").define("drainBasedIncrease", true);
         timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive  to increase Age. Enable only one option").define("timeBasedIncrease", false);
         huntingBasedIncrease = COMMON_BUILDER.comment("Whether to use Hunted Entities to increase Age, this is effectively the same as the hunter form of ageing. Enable only one option").define("huntingBasedIncrease", false);
         pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires or hunters").defineInRange("pettyHuntWorth", 1, 0, 99);
@@ -94,7 +94,7 @@ public class CommonConfig {
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> it instanceof Integer);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> it instanceof Integer);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 1D, 2D, 3D, 5D, 6D), it -> it instanceof Double);
-        drainedForNextAge = COMMON_BUILDER.comment("How much blood drained for next Age Rank. Count is reset on Rank Up").defineList("drainedForNextAge", Arrays.asList(150, 300, 600, 900, 1250), it -> it instanceof Integer);
+        drainedBloodForNextAge = COMMON_BUILDER.comment("How much blood drained for next Age Rank. Count is reset on Rank Up").defineList("drainedBloodForNextAge", Arrays.asList(150, 300, 600, 900, 1250), it -> it instanceof Integer);
         stepAssistBonus = COMMON_BUILDER.comment("The Age Rank at which a vampire gains step assist. Set to 0 to disable. ").defineInRange("stepAssistLevel", 2, 0, 5);
         shouldAgeAffectExhaustion = COMMON_BUILDER.comment("Whether Age affects Blood Exhaustion").define("ageAffectsBloodExhaustion", true);
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> it instanceof Double);
