@@ -271,9 +271,9 @@ public class VampiricAgeingCapabilityManager {
             }
         });
     }
-    public static void incrementDrained(ServerPlayerEntity player) {
+    public static void increaseDrainedBlood(ServerPlayerEntity player, int amount) {
         getAge(player).ifPresent(age -> {
-            age.setDrained(age.getDrained() + 1);
+            age.setDrained(age.getDrained() + amount);
             syncAgeCap(player);
             if(shouldIncreaseRankDrained(player)) {
                 increaseAge(player);

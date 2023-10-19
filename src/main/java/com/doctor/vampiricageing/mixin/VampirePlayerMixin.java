@@ -12,6 +12,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -23,11 +24,11 @@ public abstract class VampirePlayerMixin extends VampirismPlayer<IVampirePlayer>
     }
     //used to check against fully drained entities for incrementing drained, since the no blood damage source doesnt give information on the drainer
 
-    @Inject(method = "biteFeed", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false )
-    private void biteFeed(LivingEntity entity, CallbackInfoReturnable<Boolean> cir, int blood) {
-        if(cir.getReturnValue() && CommonConfig.drainBasedIncrease.get() && !player.getCommandSenderWorld().isClientSide) {
-            if(VampiricAgeingCapabilityManager.canAge(player) && entity.getType().is(EntityTypeTagProvider.countsForDrained) && blood < 2) {
-                VampiricAgeingCapabilityManager.incrementDrained((ServerPlayerEntity) player);
+    @Inject(method = "drinkBlood", at = @At("HEAD"),remap = false )
+    private void drinkBlood(int amt, float saturationMod, boolean useRemaining, CallbackInfo ci) {
+        if(CommonConfig.drainBasedIncrease.get() && !player.getCommandSenderWorld().isClientSide) {
+            if(VampiricAgeingCapabilityManager.canAge(player)) {
+                VampiricAgeingCapabilityManager.increaseDrainedBlood((ServerPlayerEntity) player, amt);
             }
         }
 
