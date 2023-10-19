@@ -40,6 +40,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -162,9 +163,11 @@ public class VampiricAgeingCapabilityManager {
         if(canAge(player)) {
             getAge(player).ifPresent(age -> {
                 if(Helper.isVampire(player)) {
-                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
-                ModParticles.spawnParticlesServer(player.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
+                } else {
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1, 1);
                 }
+                ModParticles.spawnParticlesServer(player.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
                 age.setAge(age.getAge() + 1);
                 if(Helper.isHunter(player) && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
                     player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
