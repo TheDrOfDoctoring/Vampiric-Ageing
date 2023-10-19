@@ -4,6 +4,7 @@
   "text.vampiricageing.progress_devour": "You must acquire %s more devour points to increase your age rank",
   "text.vampiricageing.progress_drained": "You must drain %s more points of blood to increase your age rank",
   "text.vampiricageing.progress_hunted": "You must acquire %s more hunt points to increase your skill in hunting",
+  "text.vampiricageing.progress_hunted_vampire": "You must acquire %s more hunt points to increase your age rank",
   "text.vampiricageing.blood_rank": "Age Rank: ",
   "text.vampiricageing.vampire_blood_rank": "The vampire has Age Rank %s",
   "text.vampiricageing.blood_tester_usage": "Attack a Vampire using this to learn their Age Rank",
