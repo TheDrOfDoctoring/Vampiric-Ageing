@@ -1,0 +1,20 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "vampirism:pure_blood_4"
+  },
+  "input": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "vampiricageing:tainted_blood_bottle",
+    "nbt": "{Damage:5}"
+  },
+  "result": {
+    "item": "vampiricageing:tainted_concentrate"
+  },
+  "skill": [
+    "vampiricageing:tainted_blood_skill"
+  ]
+}

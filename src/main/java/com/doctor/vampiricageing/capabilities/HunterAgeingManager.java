@@ -1,6 +1,7 @@
 package com.doctor.vampiricageing.capabilities;
 
 import com.doctor.vampiricageing.VampiricAgeing;
+import com.doctor.vampiricageing.actions.LimitedHunterBatModeAction;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
@@ -16,9 +17,12 @@ import de.teamlapen.vampirism.util.Helper;
 import com.doctor.vampiricageing.mixin.FoodStatsAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -27,23 +31,28 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = VampiricAgeing.MODID)
 public class HunterAgeingManager {
-
-
-
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
@@ -60,6 +69,14 @@ public class HunterAgeingManager {
             }
             CapabilityHelper.increasePoints(player, pointWorth);
         }
+        if(HunterAgeingConfig.permanentTransformationDeathReset.get()) {
+            if(Helper.isHunter(event.getEntity()) && event.getEntity() instanceof ServerPlayer) {
+              VampiricAgeingCapabilityManager.getAge(event.getEntity()).ifPresent(hunter -> hunter.setTransformed(false));
+            }
+        }
+    }
+    public static boolean isBat(Player player) {
+        return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getBatMode()).orElse(false);
     }
     @SubscribeEvent
     public static void onPlayerTick(LivingEvent.LivingTickEvent event) {
@@ -98,21 +115,26 @@ public class HunterAgeingManager {
         //Tainted Blood
         if(HunterAgeingConfig.taintedBloodAvailable.get() && age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
             VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
-                if(hunter.getTemporaryTaintedAgeBonus() > 0) {
-                    hunter.setTemporaryTainedTicks(hunter.getTemporaryTainedTicks() - 20);
-                    if(hunter.getTemporaryTainedTicks() <= 0) {
-                        hunter.setTemporaryTaintedAgeBonus(0);
+                if(hunter.getTemporaryTaintedAgeBonus() > 0 || hunter.isTransformed()) {
+                    if(!hunter.isTransformed()) {
+                        hunter.setTemporaryTainedTicks(hunter.getTemporaryTainedTicks() - 20);
+                        if(hunter.getTemporaryTainedTicks() <= 0) {
+                            hunter.setTemporaryTaintedAgeBonus(0);
+                        }
                     }
                     int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
                     if(HunterAgeingConfig.sunAffectTainted.get() && cumulativeAge >= HunterAgeingConfig.taintedSunAffectAge.get()) {
                         int ticksInSun = hunter.getTicksInSun();
                         if(Helper.gettingSundamge(player, player.getCommandSenderWorld(), player.getCommandSenderWorld().getProfiler()) && ticksInSun <= HunterAgeingConfig.maxTicksInSun.get() ) {
                             hunter.setTicksInSun(ticksInSun + 20 * HunterAgeingConfig.taintedAgeSunBadnessMultiplier.get().get(cumulativeAge));
-                        } else if(hunter.getTicksInSun() >= 20) {
-                            int reductionAmount = hunter.getTicksInSun() < 400 ? 20 : 400;
-                            hunter.setTicksInSun(ticksInSun - reductionAmount);
+                        } else if(hunter.getTicksInSun() >= 100) {
+                            int reductionAmount = hunter.getTicksInSun() < 1000 ? 100 : 1000;
+                            hunter.setTicksInSun(Math.max(0, ticksInSun - reductionAmount));
                         }
                         applySunEffects(player, hunter.getTicksInSun());
+                    }
+                    if(cumulativeAge >= HunterAgeingConfig.underwaterBreathingTaintedAge.get()) {
+                        player.setAirSupply(300);
                     }
                     VampiricAgeingCapabilityManager.syncAgeCap(player);
                 }
@@ -167,6 +189,7 @@ public class HunterAgeingManager {
             VampiricAgeingCapabilityManager.getAge(player).ifPresent(hunter -> {
                 hunter.setTemporaryTaintedAgeBonus(0);
                 hunter.setTemporaryTainedTicks(0);
+                hunter.setTransformed(false);
             });
             VampiricAgeingCapabilityManager.syncAgeCap(player);
             event.getItemStack().shrink(1);
@@ -207,6 +230,7 @@ public class HunterAgeingManager {
         }
 
     }
+
     @SubscribeEvent
     public static void onXpGain(PlayerXpEvent.XpChange event) {
         Player player = event.getEntity();
@@ -225,6 +249,9 @@ public class HunterAgeingManager {
         if(!Helper.isHunter(event.getEntity())) {
             return;
         }
+        if(isBat(event.getEntity())) {
+            event.setCanceled(true);
+        }
         int age = VampiricAgeingCapabilityManager.getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
         event.setNewSpeed(event.getOriginalSpeed() * HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age));
 
@@ -234,11 +261,80 @@ public class HunterAgeingManager {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if((event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null)) {
                 Player player = (Player) event.getEntity();
-                if(Helper.isHunter(event.getEntity()) && VampiricAgeingCapabilityManager.getAge(player).map(hunter -> hunter.getBatMode()).orElse(false)) {
-                    event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f));
-                    event.setNewEyeHeight(0.725f);
+                if(VampiricAgeingCapabilityManager.getAge(player).map(hunter -> hunter.getBatMode()).orElse(false)) {
+                    event.setNewSize(LimitedHunterBatModeAction.BAT_SIZE);
+                    event.setNewEyeHeight(LimitedHunterBatModeAction.BAT_EYE_HEIGHT);
                 }
             }
+        }
+    }
+
+    //Limited Bat Mode removals
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onAttackEntity(AttackEntityEvent event) {
+        Player player = event.getEntity();
+        if (player.isAlive()) {
+            if (isBat(player)) {
+                event.setCanceled(true);
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onTryMount(EntityMountEvent event) {
+        if (event.getEntity() instanceof Player && isBat((Player) event.getEntity())) {
+            event.setCanceled(true);
+        }
+    }
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
+        if (isBat(event.getEntity())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onItemUse(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (isBat(player)) {
+                event.setCanceled(true);
+            }
+        }
+
+    }
+    @SubscribeEvent
+    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+
+        if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
+            if (isBat(event.getEntity())) {
+                event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+                event.setCanceled(true);
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+        if (!(event.getEntity() instanceof Player) || !event.getEntity().isAlive()) return;
+        if (event.getPlacedBlock().isAir()) return;
+        try {
+            if (isBat((Player) event.getEntity())) {
+                event.setCanceled(true);
+                if (event.getPlacedBlock().hasBlockEntity()) {
+                    BlockEntity t = event.getLevel().getBlockEntity(event.getPos());
+                    if (t instanceof Container) {
+                        ((Container) t).clearContent();
+                    }
+                }
+
+                if (event.getEntity() instanceof ServerPlayer) { //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
+                    MinecraftServer server = event.getEntity().level.getServer();
+                    if (server != null) {
+                        server.getPlayerList().sendAllPlayerInfo((ServerPlayer) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
+                    }
+                }
+            }
+        } catch (Exception e) {
         }
     }
 }

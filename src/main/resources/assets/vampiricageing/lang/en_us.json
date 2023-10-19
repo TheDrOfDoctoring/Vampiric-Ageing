@@ -10,6 +10,8 @@
   "text.vampiricageing.blood_tester_usage": "Attack a Vampire using this to learn their Age Rank",
   "item.vampiricageing.blood_tester": "Blood Tester",
   "item.vampiricageing.tainted_blood_bottle": "Tainted Blood Bottle",
+  "item.vampiricageing.tainted_elixir": "Tainted Elixir",
+  "item.vampiricageing.tainted_concentrate": "Tainted Concentrate",
   "text.vampiricageing.seniority_oil.when_applied": "When Applied: ",
   "text.vampiricageing.oil.seniority_oil.more_damage": "Vampires or Werewolves receive more damage the higher age they are.",
   "command.vampiricageing.failed_to_execute.age": "Failed to execute command. Age selected should be within values of 0-5",

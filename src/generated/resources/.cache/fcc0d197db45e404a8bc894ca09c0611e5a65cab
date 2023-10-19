@@ -1,0 +1,10 @@
+// 1.19.2	2023-10-17T18:07:55.981739339	Tags for minecraft:entity_type
+d63a88dccd39a63f5d3d2fc53924a83054e64bd1 data/vampiricageing/tags/entity_types/common_devour.json
+e877a2b23acd6efff1a2a128d6ca9ea3c78bc0c2 data/vampiricageing/tags/entity_types/common_hunt.json
+7754a96cede9347fc94df7e45ade8602278c3cf6 data/vampiricageing/tags/entity_types/exquisite_devour.json
+5d8b42c7a71f3585158c51285fd3e0b6ae6681c4 data/vampiricageing/tags/entity_types/greater_devour.json
+8a5342facca60cf488eac752fde96e4c2dfcc737 data/vampiricageing/tags/entity_types/greater_hunt.json
+a5579bf5a58ec90c6884f844dab4697e920396d5 data/vampiricageing/tags/entity_types/infected_blacklist.json
+a5579bf5a58ec90c6884f844dab4697e920396d5 data/vampiricageing/tags/entity_types/petty_devour.json
+9163a9fcff3683f54d8eb1d83909bbfeff3cb15a data/vampiricageing/tags/entity_types/petty_hunt.json
+01c3f5cebabec10bf259b13ce1d6ce40be8bda20 data/vampiricageing/tags/entity_types/valid_for_draining.json

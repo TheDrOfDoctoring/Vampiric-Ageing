@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "vampiricageing:tainted_concentrate"
+    },
+    "Y": {
+      "item": "vampiricageing:tainted_blood_bottle"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX"
+  ],
+  "result": {
+    "item": "vampiricageing:tainted_elixir"
+  },
+  "show_notification": true
+}
