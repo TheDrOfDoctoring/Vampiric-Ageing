@@ -49,6 +49,12 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     public int getCooldown() {
         return HunterAgeingConfig.limitedBatModeCooldown.get() * 20;
     }
+
+    @Override
+    public int getDuration(int i) {
+        return HunterAgeingConfig.limitedBatModeDuration.get() * 20;
+    }
+
     @Override
     public int getDuration(IFactionPlayer player) {
         if(VampiricAgeingCapabilityManager.getAge(player.getRepresentingPlayer()).map(ageCap -> ageCap.isTransformed()).orElse(false)) {
