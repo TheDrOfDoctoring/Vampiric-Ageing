@@ -5,6 +5,7 @@ import com.doctor.vampiricageing.actions.VampiricAgeingActions;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
+import com.doctor.vampiricageing.data.EntityTypeTagProvider;
 import com.doctor.vampiricageing.networking.Networking;
 import com.doctor.vampiricageing.networking.SyncCapabilityPacket;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
@@ -303,6 +304,22 @@ public class VampiricAgeingCapabilityManager {
                     syncAgeCap(event.getEntity());
                 });
         event.getOriginal().invalidateCaps();
+    }
+    @SubscribeEvent
+    public static void onEntityDeath(LivingDeathEvent event) {
+        if(event.getSource().getEntity() instanceof ServerPlayer player && Helper.isVampire(player) && VampiricAgeingCapabilityManager.canAge(player)) {
+            int pointWorth;
+            if(event.getEntity().getType().is(EntityTypeTagProvider.pettyHunt)) {
+                pointWorth = CommonConfig.pettyHuntWorth.get();
+            } else if(event.getEntity().getType().is(EntityTypeTagProvider.commonHunt)) {
+                pointWorth = CommonConfig.commonHuntWorth.get();
+            } else if(event.getEntity().getType().is(EntityTypeTagProvider.greaterHunt)) {
+                pointWorth = CommonConfig.greaterHuntWorth.get();
+            } else {
+                return;
+            }
+            CapabilityHelper.increasePoints(player, pointWorth);
+        }
     }
 
     @SubscribeEvent
