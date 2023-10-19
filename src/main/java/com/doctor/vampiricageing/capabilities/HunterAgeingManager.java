@@ -67,7 +67,7 @@ public class HunterAgeingManager {
         }
         if(HunterAgeingConfig.permanentTransformationDeathReset.get()) {
             if(Helper.isHunter(event.getEntity()) && event.getEntity() instanceof ServerPlayerEntity) {
-                VampiricAgeingCapabilityManager.getAge(event.getEntity()).ifPresent(hunter -> hunter.setTransformed(false));
+                VampiricAgeingCapabilityManager.getAge((LivingEntity) event.getEntity()).ifPresent(hunter -> hunter.setTransformed(false));
             }
         }
     }
