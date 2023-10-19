@@ -33,6 +33,10 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> commonHunt = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "common_hunt"));
     public static final TagKey<EntityType<?>> greaterHunt = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "greater_hunt"));
 
+
+    public static final TagKey<EntityType<?>> pettyHuntVampire = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "petty_hunt_vampire"));
+    public static final TagKey<EntityType<?>> commonHuntVampire = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "common_hunt_vampire"));
+    public static final TagKey<EntityType<?>> greaterHuntVampire = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "greater_hunt_vampire"));
     public static final TagKey<EntityType<?>> infectedBlacklist = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "infected_blacklist"));
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
@@ -46,6 +50,10 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         this.tag(pettyHunt).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get());
         this.tag(commonHunt).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
         this.tag(greaterHunt).add(ModEntities.VAMPIRE_BARON.get());
+
+        this.tag(pettyHuntVampire).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get());
+        this.tag(commonHuntVampire).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
+        this.tag(greaterHuntVampire).add(ModEntities.VAMPIRE_BARON.get());
 
         //entities that dont count towards infected counter
         this.tag(infectedBlacklist).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);

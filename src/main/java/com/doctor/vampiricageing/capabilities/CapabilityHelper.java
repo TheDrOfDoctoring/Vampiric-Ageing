@@ -5,6 +5,7 @@ import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.werewolves.api.WReference;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
@@ -33,4 +34,18 @@ public class CapabilityHelper {
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         return age == 0 ? 0 : tainted + age;
     }
+    public static void increasePoints(ServerPlayer player, int points) {
+        VampiricAgeingCapabilityManager.getAge(player).ifPresent(age -> {
+            age.setHunted(age.getHunted() + points);
+            VampiricAgeingCapabilityManager.syncAgeCap(player);
+            if(shouldIncreaseRankHunted(player)) {
+                VampiricAgeingCapabilityManager.increaseAge(player);
+            }
+
+        });
+    }
+    public static boolean shouldIncreaseRankHunted(Player player) {
+        return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= HunterAgeingConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);
+    }
+
 }
