@@ -30,9 +30,14 @@ public class CapabilityHelper {
         if(!Helper.isHunter(player) || !HunterAgeingConfig.taintedBloodAvailable.get()) {
             return 0;
         }
+        boolean transformed = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.isTransformed()).orElse(false);
         int tainted = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getTemporaryTaintedAgeBonus()).orElse(0);
+        int bonus = transformed ? 6 : tainted;
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        return age == 0 ? 0 : tainted + age;
+        if(age == 0 && !transformed) {
+            return 0;
+        }
+        return age + bonus;
     }
     public static boolean shouldIncreaseRankHunted(PlayerEntity player) {
         return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= HunterAgeingConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);

@@ -8,6 +8,8 @@
   "text.vampiricageing.blood_rank": "Age Rank: ",
   "text.vampiricageing.vampire_blood_rank": "The vampire has Age Rank %s",
   "text.vampiricageing.blood_tester_usage": "Attack a Vampire using this to learn their Age Rank",
+  "item.vampiricageing.tainted_elixir": "Tainted Elixir",
+  "item.vampiricageing.tainted_concentrate": "Tainted Concentrate",
   "item.vampiricageing.blood_tester": "Blood Tester",
   "item.vampiricageing.tainted_blood_bottle": "Tainted Blood Bottle",
   "text.vampiricageing.seniority_oil.when_applied": "When Applied: ",

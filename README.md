@@ -103,6 +103,17 @@ Most abilities will scale will higher cumulative ranks.
 - Sun affect hunters significantly faster
 - Limited Bat Mode
 
+Additionally, a hunter can undergo a permanent transformation which allows them to permanently have a Tainted Age of 6. This allows them to go to Cumulative Age 11 at max Age Rank
+
+#### 11
+
+- Infinite duration bat mode
+- All previous benefits further improved
+- Infinite breath underwater
+
+- Harsher weaknesses
+
+
 ## Werewolves
 
 

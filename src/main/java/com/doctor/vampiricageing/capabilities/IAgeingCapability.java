@@ -48,5 +48,8 @@ public interface IAgeingCapability extends INBTSerializable<CompoundNBT> {
     int getAgeSkills();
 
     void setAgeSkills(int skills);
+    boolean isTransformed();
+
+    void setTransformed(boolean transformed);
 
 }

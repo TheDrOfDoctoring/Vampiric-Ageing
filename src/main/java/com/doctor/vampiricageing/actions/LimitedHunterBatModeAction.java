@@ -3,6 +3,7 @@ package com.doctor.vampiricageing.actions;
 import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -18,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -48,9 +50,13 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
         return HunterAgeingConfig.limitedBatModeCooldown.get() * 20;
     }
     @Override
-    public int getDuration(int i) {
+    public int getDuration(IFactionPlayer player) {
+        if(VampiricAgeingCapabilityManager.getAge(player.getRepresentingPlayer()).map(ageCap -> ageCap.isTransformed()).orElse(false)) {
+            return MathHelper.clamp(HunterAgeingConfig.limitedBatModeDurationTransformed.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        }
         return HunterAgeingConfig.limitedBatModeDuration.get() * 20;
     }
+
     @Override
     public boolean isEnabled() {
         return HunterAgeingConfig.hunterLimitedBatModeAction.get();
@@ -147,11 +153,11 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     }
     private void updatePlayer(HunterPlayer hunter, boolean bat) {
         PlayerEntity player = hunter.getRepresentingPlayer();
-        VampiricAgeingCapabilityManager.getAge(player).ifPresent(hntr -> hntr.setBatMode(bat
-        ));
+        VampiricAgeingCapabilityManager.getAge(player).ifPresent(hntr -> hntr.setBatMode(bat));
         VampiricAgeingCapabilityManager.syncAgeCap(player);
-        player.setForcedPose(bat ? Pose.STANDING : null);
         player.refreshDimensions();
+        player.setPose(Pose.CROUCHING);
+        player.setForcedPose(bat ? null : Pose.STANDING);
         if (bat) {
             player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
         }

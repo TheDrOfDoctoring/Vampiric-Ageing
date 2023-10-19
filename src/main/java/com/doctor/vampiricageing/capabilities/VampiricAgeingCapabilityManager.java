@@ -484,9 +484,13 @@ public class VampiricAgeingCapabilityManager {
                 IPlayableFaction<?> faction = event.getOldFaction();
                 syncAgeCap(event.getPlayer().getPlayer(), faction);
                 PlayerEntity player = event.getPlayer().getPlayer();
-                if(faction == VReference.HUNTER_FACTION && player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
-                    player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
+                if(faction == VReference.HUNTER_FACTION) {
+                    if(player.hasEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get())) {
+                        player.removeEffect(com.doctor.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT.get());
+                    }
+                    age.setTransformed(false);
                 }
+                syncAgeCap(player, faction);
             });
         } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
             int sireAge = event.getPlayer().getPlayer().getPersistentData().getInt("AGE");

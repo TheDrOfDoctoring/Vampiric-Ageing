@@ -2,37 +2,27 @@ package com.doctor.vampiricageing.items;
 
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
-import com.doctor.vampiricageing.init.ModEffects;
-import com.doctor.vampiricageing.init.ModItems;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
-public class TaintedBloodBottleItem extends Item implements IFactionExclusiveItem {
-    public TaintedBloodBottleItem(Properties props) {
+public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
+    public TaintedElixirItem(Properties props) {
         super(props);
     }
 
@@ -45,19 +35,17 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
     public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
-
     @Override
     public ActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if(!HunterAgeingConfig.taintedBloodAvailable.get()) {
+        if(!HunterAgeingConfig.permanentTransformationAvailable.get()) {
             return new ActionResult<>(ActionResultType.PASS, stack);
         }
         if(!Helper.isHunter(player)) {
             return new ActionResult<>(ActionResultType.PASS, stack);
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        boolean transformed = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.isTransformed()).orElse(false);
-        if(age >= HunterAgeingConfig.taintedBloodBottleAge.get() && !transformed) {
+        if(age >= 5) {
             player.startUsingItem(hand);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
@@ -67,23 +55,25 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
         if(player instanceof IHunterPlayer) return;
-        if(!player.isAlive() || !HunterAgeingConfig.taintedBloodAvailable.get()) {
+        if(!player.isAlive() || !HunterAgeingConfig.permanentTransformationAvailable.get()) {
             player.releaseUsingItem();
             return;
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
+        if(age >= 5) {
             player.startUsingItem(player.getUsedItemHand());
         }
     }
     @Override
     public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if(entityLiving instanceof PlayerEntity && Helper.isHunter(entityLiving)) {
-            int age = stack.getDamageValue();
+            PlayerEntity player = (PlayerEntity) entityLiving;
             VampiricAgeingCapabilityManager.getAge(entityLiving).ifPresent(hunter -> {
-                hunter.setTemporaryTainedTicks(HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge());
-                hunter.setTemporaryTaintedAgeBonus(age);
-                entityLiving.addEffect(new EffectInstance(ModEffects.TAINTED_BLOOD_EFFECT.get(),HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge(), 0, false, false));
+                hunter.setTransformed(true);
+                player.addEffect(new EffectInstance(Effects.BLINDNESS, 60, 1));
+                player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 60, 1));
+                player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 1, 1);
+                ModParticles.spawnParticlesServer(player.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
                 VampiricAgeingCapabilityManager.syncAgeCap((PlayerEntity) entityLiving);
                 stack.shrink(1);
             });
@@ -94,16 +84,6 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
     public int getUseDuration(ItemStack stack) {
         return 45;
     }
-    @Override
-    public boolean showDurabilityBar(ItemStack stack) {
-        return false;
-    }
 
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> components, ITooltipFlag tf) {
-        components.add(new TranslationTextComponent("text.vampiricageing.tainted_blood_useage", HunterAgeingConfig.taintedBloodBottleAge.get()).withStyle(TextFormatting.GRAY));
-        components.add(new TranslationTextComponent("text.vampiricageing.tainted_blood_rank", stack.getDamageValue()).withStyle(TextFormatting.RED));
-        super.appendHoverText(stack, world, components, tf);
-    }
 }
