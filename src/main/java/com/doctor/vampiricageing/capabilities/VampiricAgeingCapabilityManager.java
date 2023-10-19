@@ -155,7 +155,7 @@ public class VampiricAgeingCapabilityManager {
         return getAge(player).map(age -> age.getInfected() >= CommonConfig.infectedForNextAge.get().get(age.getAge())).orElse(false);
     }
     public static boolean shouldIncreaseRankDrained(Player player) {
-        return getAge(player).map(age -> age.getDrained() >= CommonConfig.drainedForNextAge.get().get(age.getAge())).orElse(false);
+        return getAge(player).map(age -> age.getDrained() >= CommonConfig.drainedBloodForNextAge.get().get(age.getAge())).orElse(false);
     }
 
     public static void increaseAge(ServerPlayer player) {
@@ -284,9 +284,9 @@ public class VampiricAgeingCapabilityManager {
             }
         });
     }
-    public static void incrementDrained(ServerPlayer player) {
+    public static void increaseDrainedBlood(ServerPlayer player, int amount) {
         getAge(player).ifPresent(age -> {
-            age.setDrained(age.getDrained() + 1);
+            age.setDrained(age.getDrained() + amount);
             syncAgeCap(player);
             if(shouldIncreaseRankDrained(player)) {
                 increaseAge(player);
@@ -342,7 +342,7 @@ public class VampiricAgeingCapabilityManager {
             }
             if(CommonConfig.drainBasedIncrease.get()) {
                 int drained = getAge(event.getEntity()).map(ageCap -> ageCap.getDrained()).orElse(0);
-                int drainedForNextAge = CommonConfig.drainedForNextAge.get().get(age) - drained;
+                int drainedForNextAge = CommonConfig.drainedBloodForNextAge.get().get(age) - drained;
                 player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_drained", drainedForNextAge).withStyle(ChatFormatting.DARK_RED));
             }
         }

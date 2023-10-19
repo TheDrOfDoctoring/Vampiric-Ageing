@@ -6,6 +6,7 @@
   "plugin": "com.doctor.vampiricageing.VampiricAgeingMixinPlugin",
   "mixins": [
     "BlockBehaviourMixin",
+    "BloodStatsInvoker",
     "BloodStatsMixin",
     "DamageHandlerMixin",
     "FoodStatsAccessor",
@@ -16,6 +17,7 @@
     "SilverOilMixin",
     "SkillHandlerMixin",
     "VampirePlayerMixin",
+    "VampirismItemBloodFoodItemMixin",
     "VillagerMixin",
     "WerewolfFormActionMixin"
   ],
