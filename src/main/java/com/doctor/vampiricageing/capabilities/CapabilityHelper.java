@@ -34,7 +34,6 @@ public class CapabilityHelper {
         int tainted = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getTemporaryTaintedAgeBonus()).orElse(0);
         int bonus = transformed ? 6 : tainted;
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        return age == 0 ? 0 : tainted + age;
         if(age == 0 && !transformed) {
             return 0;
         }
