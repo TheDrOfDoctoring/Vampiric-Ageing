@@ -15,6 +15,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue deathReset;
     public static final ForgeConfigSpec.BooleanValue advancedVampireAge;
     public static final ForgeConfigSpec.BooleanValue drainBloodAction;
+    public static final ForgeConfigSpec.BooleanValue huntingBasedIncrease;
     public static final ForgeConfigSpec.BooleanValue celerityAction;
     public static final ForgeConfigSpec.BooleanValue doesAgeAffectPrices;
     public static final ForgeConfigSpec.BooleanValue harsherOutOfBlood;
@@ -34,6 +35,9 @@ public class CommonConfig {
     public static final ForgeConfigSpec.IntValue celerityActionDuration;
     public static final ForgeConfigSpec.IntValue celerityActionCooldown;
     public static final ForgeConfigSpec.IntValue celerityActionRank;
+    public static final ForgeConfigSpec.IntValue pettyHuntWorth;
+    public static final ForgeConfigSpec.IntValue commonHuntWorth;
+    public static final ForgeConfigSpec.IntValue greaterHuntWorth;
     public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
 
 
@@ -51,11 +55,20 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
         sireingMechanic = COMMON_BUILDER.comment("Intended to be a replacement for other forms of ageing, though will work with them. Overrides the mechanic to always begin at Level 1. Ranks can be gained by drinking blood of more powerful vampires. Highly recommended to turn off Death Reset and to make sure Advanced Vampire Age is turned on. More information on GitHub Readme or Curseforge Page").define("sireingMechanic", false);
+        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
+        drainBasedIncrease = COMMON_BUILDER.comment("Whether to use fully draining villagers of blood to increase Age. Enable only one option").define("drainBasedIncrease", false);
+        timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive  to increase Age. Enable only one option").define("timeBasedIncrease", false);
+        huntingBasedIncrease = COMMON_BUILDER.comment("Whether to use Hunted Entities to increase Age, this is effectively the same as the hunter form of ageing. Enable only one option").define("huntingBasedIncrease", false);
+        pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires or hunters").defineInRange("pettyHuntWorth", 1, 0, 99);
+        commonHuntWorth = COMMON_BUILDER.comment("How much a common hunt is worth. These are things like advanced vampires or advanced hunters").defineInRange("commonHuntWorth", 3, 0, 99);
+        greaterHuntWorth = COMMON_BUILDER.comment("How much a greater hunt is worth. These are things like vampire barons ").defineInRange("greaterHuntWorth", 5, 0, 99);
+        huntedForNextAge = COMMON_BUILDER.comment("How many points worth of hunted entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("huntedforNextAge", Arrays.asList(20, 40, 80, 160, 250), it -> it instanceof Integer);
         vampirePowderedSnowImmunity = COMMON_BUILDER.comment("Whether vampires should be immune to the effects of Powdered Snow. Applies to ALL vampires").define("powderedSnowImmunity", true);
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
@@ -78,9 +91,6 @@ public class CommonConfig {
         rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle", true);
         genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1D, 1D, 0.95D, 0.9D, 0.75D, 0.5D), it -> it instanceof Double);
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1D, 1.5D, 2D, 3D, 4D, 5D), it -> it instanceof Double);
-        biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", true);
-        drainBasedIncrease = COMMON_BUILDER.comment("Whether to use fully draining villagers of blood to increase Age. Enable only one option").define("drainBasedIncrease", false);
-        timeBasedIncrease = COMMON_BUILDER.comment("Whether to use Time Alive  to increase Age. Enable only one option").define("timeBasedIncrease", false);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> it instanceof Integer);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> it instanceof Integer);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 1D, 2D, 3D, 5D, 6D), it -> it instanceof Double);

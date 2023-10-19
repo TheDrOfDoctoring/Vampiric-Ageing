@@ -36,19 +36,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = VampiricAgeing.MODID)
 public class HunterAgeingManager {
 
-    public static boolean shouldIncreaseRankHunted(PlayerEntity player) {
-        return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= HunterAgeingConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);
-    }
 
-    public static void increasePoints(ServerPlayerEntity player, int points) {
-        VampiricAgeingCapabilityManager.getAge(player).ifPresent(age -> {
-            age.setHunted(age.getHunted() + points);
-            VampiricAgeingCapabilityManager.syncAgeCap(player);
-            if (shouldIncreaseRankHunted(player)) {
-                VampiricAgeingCapabilityManager.increaseAge(player);
-            }
-        });
-    }
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
@@ -63,7 +51,7 @@ public class HunterAgeingManager {
             } else {
                 return;
             }
-            increasePoints((ServerPlayerEntity) event.getSource().getEntity(), pointWorth);
+            CapabilityHelper.increasePoints((ServerPlayerEntity) event.getSource().getEntity(), pointWorth);
         }
     }
 
