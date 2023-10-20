@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -17,9 +18,14 @@ import net.minecraft.item.UseAction;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
     public TaintedElixirItem(Properties props) {
@@ -83,6 +89,12 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
 
     public int getUseDuration(ItemStack stack) {
         return 45;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> components, ITooltipFlag tf) {
+        components.add(new TranslationTextComponent("text.vampiricageing.tainted_elixir_useage", 5).withStyle(TextFormatting.RED));
+        super.appendHoverText(stack, world, components, tf);
     }
 
 
