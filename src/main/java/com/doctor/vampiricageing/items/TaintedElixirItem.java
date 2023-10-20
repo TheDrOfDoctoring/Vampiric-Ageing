@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,10 +24,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
     public TaintedElixirItem(Properties props) {
@@ -87,6 +92,11 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
             });
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
+    }
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag tf) {
+        components.add(Component.translatable("text.vampiricageing.tainted_elixir_useage", 5).withStyle(ChatFormatting.RED));
+        super.appendHoverText(stack, level, components, tf);
     }
 
     public int getUseDuration(@NotNull ItemStack stack) {
