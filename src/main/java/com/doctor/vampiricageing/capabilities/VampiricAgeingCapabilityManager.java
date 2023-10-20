@@ -176,7 +176,8 @@ public class VampiricAgeingCapabilityManager {
 
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
-        } else if(CapabilityHelper.isWerewolfCheckMod(player, faction)) {
+        }
+        if(CapabilityHelper.isWerewolfCheckMod(player, faction)) {
             removeModifier(player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()), BITE_DAMAGE_MULTIPLIER_UUID);
             removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), WEREWOLF_STRENGTH_INCREASE);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), WEREWOLF_MAX_HEALTH_AGE_UUID);
@@ -184,7 +185,8 @@ public class VampiricAgeingCapabilityManager {
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(WEREWOLF_STRENGTH_INCREASE, "WEREWOLF_AGE_ATTACK_DAMAGE_INCREASE", WerewolvesAgeingConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(WEREWOLF_MAX_HEALTH_AGE_UUID, "WEREWOLF_MAX_HEALTH_AGE_CHANGE", WerewolvesAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()).addPermanentModifier(new AttributeModifier(BITE_DAMAGE_MULTIPLIER_UUID, "AGE_BITE_DAMAGE_INCREASE", WerewolvesAgeingConfig.biteDamageMultiplier.get().get(age), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        } else if(isHunter(player) || faction == VReference.HUNTER_FACTION) {
+        }
+        if(isHunter(player) || faction == VReference.HUNTER_FACTION) {
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), HUNTER_MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), HUNTER_SPEED_INCREASE_UUID);
             removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
