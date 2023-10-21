@@ -446,6 +446,18 @@ public class VampiricAgeingCapabilityManager {
                 });
             }
         }
+        if(event.player.tickCount % 20 == 0 && CommonConfig.deadlySourcesFastDrainExhaustion.get()) {
+            if(!event.player.hasEffect(ModEffects.GARLIC.get())) {
+                return;
+            }
+            if(!Helper.isVampire(event.player)) {
+                return;
+            }
+            int age = getAge(event.player).map(ageCap -> ageCap.getAge()).orElse(0);
+            VampirePlayer.getOpt(event.player).ifPresent(vamp -> {
+                vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
+            });
+        }
     }
 
     @SubscribeEvent
@@ -514,6 +526,12 @@ public class VampiricAgeingCapabilityManager {
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
                 if(event.getEntityLiving() instanceof PlayerEntity&& CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt((PlayerEntity) event.getEntityLiving()).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
                     return;
+                }
+
+                if(event.getSource() != VReference.HOLY_WATER && CommonConfig.deadlySourcesFastDrainExhaustion.get()) {
+                    VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(vamp -> {
+                        vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
+                    });
                 }
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
             } else if(event.getSource() == DamageSource.STARVE && CommonConfig.harsherOutOfBlood.get() && age > 0) {
