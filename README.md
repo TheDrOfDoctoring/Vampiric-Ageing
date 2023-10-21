@@ -21,13 +21,18 @@ By default, the player gains access to a number of benefits from ranking up:
 - Vampires are now mostly unaffected by Powdered Snow
 - Celerity (Speed Increase) Action at Rank 1
 - Increased Damage, scaling with Age Rank
+- Faster resurrection from DBNO 
+- Reduced neonatal duration
+
 - Enhanced Regeneration, scaling with Age Rank (Disabled by default)
+- Optional stronger immortality (Disabled by default)
 
 However, some penalties also come with increasing age:
 
 - Increased vulnerability to Fire, Garlic and Holy Water scaling with Age Rank
 - Harsher prices with villagers
 - Hunter Mobs deal more damage
+- Fast blood drain from garlic and fire
 
 ### Sire Mechanic
 
