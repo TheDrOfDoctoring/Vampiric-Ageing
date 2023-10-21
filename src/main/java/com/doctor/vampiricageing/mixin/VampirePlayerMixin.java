@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(VampirePlayer.class)
 public abstract class VampirePlayerMixin extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
@@ -37,6 +38,12 @@ public abstract class VampirePlayerMixin extends FactionBasePlayer<IVampirePlaye
             }
         }
 
+    }
+    @Inject(method = "getDbnoDuration", at = @At("RETURN"), remap = false, cancellable = true)
+    private void getDbnoDuration(CallbackInfoReturnable<Integer> cir) {
+        int age = VampiricAgeingCapabilityManager.getAge(this.getRepresentingPlayer()).map(vamp -> vamp.getAge()).orElse(0);
+        int duration = Math.max(1, (int) (cir.getReturnValue() * CommonConfig.DBNOTimeMultiplier.get().get(age)));
+        cir.setReturnValue(duration);
     }
 
 }

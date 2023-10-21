@@ -52,6 +52,8 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> DBNOTimeMultiplier;
+
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
@@ -104,6 +106,7 @@ public class CommonConfig {
         ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> it instanceof Float);
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
         damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> it instanceof Float);
+        DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1f, 1f, 1f, 0.8f, 0.5f, 0.25f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
