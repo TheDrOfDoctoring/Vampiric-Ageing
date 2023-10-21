@@ -26,7 +26,9 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectExhaustion;
     public static final ForgeConfigSpec.BooleanValue rageModeWeaknessToggle;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectHealing;
+    public static final ForgeConfigSpec.BooleanValue shouldOnlyDieFromKillingSources;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
+    public static final ForgeConfigSpec.IntValue shouldOnlyDieFromKillingSourcesAgeRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.IntValue stepAssistBonus;
     public static final ForgeConfigSpec.IntValue drainBloodActionDuration;
@@ -109,6 +111,8 @@ public class CommonConfig {
         damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> it instanceof Float);
         DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1f, 1f, 1f, 0.8f, 0.5f, 0.25f), it -> it instanceof Float);
         neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1f, 1f, 1f, 1f, 0.75f, 0.5f), it -> it instanceof Float);
+        shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
+        shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
