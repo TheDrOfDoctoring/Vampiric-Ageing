@@ -27,6 +27,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue rageModeWeaknessToggle;
     public static final ForgeConfigSpec.BooleanValue shouldAgeAffectHealing;
     public static final ForgeConfigSpec.BooleanValue shouldOnlyDieFromKillingSources;
+    public static final ForgeConfigSpec.BooleanValue deadlySourcesFastDrainExhaustion;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
     public static final ForgeConfigSpec.IntValue shouldOnlyDieFromKillingSourcesAgeRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
@@ -56,6 +57,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> DBNOTimeMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> neonatalTimeMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> amountExhaustionDrainFromSources;
 
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
@@ -113,6 +115,8 @@ public class CommonConfig {
         neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1f, 1f, 1f, 1f, 0.75f, 0.5f), it -> it instanceof Float);
         shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
+        deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
+        amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0f, 0f, 0f, 0.08f, 0.16f, 0.3f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
