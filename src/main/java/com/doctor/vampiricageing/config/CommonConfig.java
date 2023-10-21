@@ -41,6 +41,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
 
 
+
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> genericVampireWeaknessReduction;
@@ -52,11 +53,13 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> DBNOTimeMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> neonatalTimeMultiplier;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedBloodForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
+
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -105,6 +108,7 @@ public class CommonConfig {
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
         damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> it instanceof Float);
         DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1f, 1f, 1f, 0.8f, 0.5f, 0.25f), it -> it instanceof Float);
+        neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1f, 1f, 1f, 1f, 0.75f, 0.5f), it -> it instanceof Float);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }

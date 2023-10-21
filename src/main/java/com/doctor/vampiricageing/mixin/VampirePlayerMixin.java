@@ -9,9 +9,11 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -38,5 +40,13 @@ public abstract class VampirePlayerMixin extends VampirismPlayer<IVampirePlayer>
         int age = VampiricAgeingCapabilityManager.getAge(this.getRepresentingPlayer()).map(vamp -> vamp.getAge()).orElse(0);
         int duration = Math.max(1, (int) (cir.getReturnValue() * CommonConfig.DBNOTimeMultiplier.get().get(age)));
         cir.setReturnValue(duration);
+    }
+    @Redirect(method = "tryResurrect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addEffect(Lnet/minecraft/potion/EffectInstance;)Z"))
+    private boolean addEffect(PlayerEntity instance, EffectInstance effectInstance) {
+        int age = VampiricAgeingCapabilityManager.getAge(instance).map(vamp -> vamp.getAge()).orElse(0);
+        int duration = Math.max(20, (int) (effectInstance.getDuration() * CommonConfig.neonatalTimeMultiplier.get().get(age)));
+        EffectInstance effect = new EffectInstance(effectInstance.getEffect(), duration);
+        player.addEffect(effect);
+        return true;
     }
 }
