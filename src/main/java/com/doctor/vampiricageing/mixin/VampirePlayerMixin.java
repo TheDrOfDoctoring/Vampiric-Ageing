@@ -33,4 +33,10 @@ public abstract class VampirePlayerMixin extends VampirismPlayer<IVampirePlayer>
         }
 
     }
+    @Inject(method = "getDbnoDuration", at = @At("RETURN"), remap = false, cancellable = true)
+    private void getDbnoDuration(CallbackInfoReturnable<Integer> cir) {
+        int age = VampiricAgeingCapabilityManager.getAge(this.getRepresentingPlayer()).map(vamp -> vamp.getAge()).orElse(0);
+        int duration = Math.max(1, (int) (cir.getReturnValue() * CommonConfig.DBNOTimeMultiplier.get().get(age)));
+        cir.setReturnValue(duration);
+    }
 }
