@@ -517,6 +517,10 @@ public class VampiricAgeingCapabilityManager {
                 event.setAmount(event.getAmount() * age);
             } else if(event.getSource().getEntity() != null && event.getSource().getEntity().getType().is(ModTags.Entities.HUNTER) && CommonConfig.shouldAgeIncreaseHunterMobDamage.get()) {
                 event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age));
+            } else if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
+                //anyone remember witchery
+                event.getEntity().setHealth(1);
+                event.setCanceled(true);
             }
 
         }
