@@ -517,14 +517,13 @@ public class VampiricAgeingCapabilityManager {
     public static void onDamage(LivingDamageEvent event) {
         if(Helper.isVampire(event.getEntity())) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-
             if(event.getSource().is(ModDamageTypes.SUN_DAMAGE)) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource().is(ModDamageTypes.VAMPIRE_IN_FIRE) || event.getSource().is(ModDamageTypes.VAMPIRE_ON_FIRE)  || event.getSource().is(ModDamageTypes.HOLY_WATER) ) {
                 if(event.getEntity() instanceof Player player && CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
                     return;
                 }
-                if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get()) {
+                if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof Player) {
                     VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vamp -> {
                         vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
                     });
