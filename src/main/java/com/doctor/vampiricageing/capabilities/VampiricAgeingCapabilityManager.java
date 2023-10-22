@@ -523,7 +523,7 @@ public class VampiricAgeingCapabilityManager {
                     return;
                 }
 
-                if(event.getSource() != VReference.HOLY_WATER && CommonConfig.deadlySourcesFastDrainExhaustion.get()) {
+                if(event.getSource() != VReference.HOLY_WATER && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof Player) {
                     VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vamp -> {
                         vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
                     });
