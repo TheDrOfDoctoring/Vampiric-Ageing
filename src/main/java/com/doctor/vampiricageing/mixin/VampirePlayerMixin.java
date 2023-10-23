@@ -54,6 +54,9 @@ public abstract class VampirePlayerMixin extends FactionBasePlayer<IVampirePlaye
         int duration = Math.max(20, (int) (mobEffectInstance.getDuration() * CommonConfig.neonatalTimeMultiplier.get().get(age)));
         MobEffectInstance effect = new MobEffectInstance(mobEffectInstance.getEffect(), duration);
         player.addEffect(effect, player);
+        if(CommonConfig.ageLossDBNO.get() > 0) {
+            VampiricAgeingCapabilityManager.getAge(instance).ifPresent(vamp -> vamp.setAge(Math.max(0, age - CommonConfig.ageLossDBNO.get())));
+        }
         return true;
     }
 }
