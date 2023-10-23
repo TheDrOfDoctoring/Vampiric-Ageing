@@ -94,6 +94,8 @@ Most abilities will scale will higher cumulative ranks.
 
 
 - Increased max health, further scaling with cumulative rank
+- Human Hearts can be eaten with no ill effects
+- Regular food will begin to become less filling, becoming even less filling with each age rank after.
 - Holy water now deals damage to the hunter
 
 #### 8 - 9

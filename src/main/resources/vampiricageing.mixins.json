@@ -9,6 +9,7 @@
     "BloodStatsInvoker",
     "BloodStatsMixin",
     "DamageHandlerMixin",
+    "FoodDataMixin",
     "FoodStatsAccessor",
     "HowlActionMixin",
     "InfectActionMixin",
