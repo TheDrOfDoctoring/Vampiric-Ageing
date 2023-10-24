@@ -1,7 +1,6 @@
 package com.doctor.vampiricageing;
 
 import com.doctor.vampiricageing.actions.VampiricAgeingActions;
-import com.doctor.vampiricageing.capabilities.HunterAgeingManager;
 import com.doctor.vampiricageing.capabilities.WerewolfAgeingManager;
 import com.doctor.vampiricageing.client.init.ClientRegistryHandler;
 import com.doctor.vampiricageing.command.VampiricAgeingCommands;
@@ -9,7 +8,9 @@ import com.doctor.vampiricageing.config.ClientConfig;
 import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
+import com.doctor.vampiricageing.data.AgeingBlockTagsProvider;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
+import com.doctor.vampiricageing.data.ItemTagProvider;
 import com.doctor.vampiricageing.init.ModEffects;
 import com.doctor.vampiricageing.init.ModItems;
 import com.doctor.vampiricageing.init.ModOils;
@@ -19,9 +20,13 @@ import com.doctor.vampiricageing.networking.Networking;
 import com.doctor.vampiricageing.networking.ServerProxy;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.BlockTagsProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -35,6 +40,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
 
 @Mod(VampiricAgeing.MODID)
 public class VampiricAgeing
@@ -76,8 +83,15 @@ public class VampiricAgeing
     }
     private void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(generator.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper());
+        EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
+        AgeingBlockTagsProvider provider = new AgeingBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        ItemTagProvider itemTagProvider = new ItemTagProvider(packOutput, lookupProvider, provider, existingFileHelper);
+        generator.addProvider(event.includeServer(), provider);
+        generator.addProvider(event.includeServer(), itemTagProvider);
         generator.addProvider(event.includeServer(), entityTypeTagProvider);
     }
     private void processIMC(final InterModProcessEvent event) {
