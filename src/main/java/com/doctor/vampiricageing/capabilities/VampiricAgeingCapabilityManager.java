@@ -147,33 +147,34 @@ public class VampiricAgeingCapabilityManager {
             });
         }
     }
-    public static void changeUpStep(PlayerEntity player) {
+    public static void changeUpStep(PlayerEntity player, IPlayableFaction<?> faction) {
         int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        boolean upstep = getAge(player).map(ageCap -> ageCap.getUpStep()).orElse(false);
-        if(Helper.isVampire(player)) {
-            if (upstep && age < CommonConfig.stepAssistBonus.get()) {
+        if(Helper.isVampire(player) || faction == VReference.VAMPIRE_FACTION) {
+            if (age < CommonConfig.stepAssistBonus.get()) {
                 player.maxUpStep = 0.6f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(false));
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(0.6f));
             }
-            if (age > 0 && age >= CommonConfig.stepAssistBonus.get() && !upstep) {
+            if (age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
                 player.maxUpStep = 1f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(1f));
             }
-        } else if(Helper.isHunter(player)) {
-            if(upstep && age < HunterAgeingConfig.stepAssistAge.get()) {
+        } if(Helper.isHunter(player) || faction == VReference.HUNTER_FACTION) {
+            if(age < HunterAgeingConfig.stepAssistAge.get()) {
                 player.maxUpStep = 0.6f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(false));
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(0.6f));
             }
-            if(age > 0 && age >= HunterAgeingConfig.stepAssistAge.get() && !upstep) {
+            if(age > 0 && age >= HunterAgeingConfig.stepAssistAge.get()) {
                 player.maxUpStep = 1f;
-                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(true));
+                getAge(player).ifPresent(ageCap -> ageCap.setUpStep(1f));
             }
         }
+        syncAgeCapNoChange(player);
     }
+
     public static void onAgeChange(ServerPlayerEntity player, IPlayableFaction<?> faction) {
         int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         checkSkills(age, player);
-        changeUpStep(player);
+        changeUpStep(player, faction);
         if(Helper.isVampire(player) || faction == VReference.VAMPIRE_FACTION) {
             removeModifier(player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()), EXHAUSTION_UUID);
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
@@ -464,6 +465,8 @@ public class VampiricAgeingCapabilityManager {
     public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayerEntity) {
             syncAgeCap((PlayerEntity) event.getEntity());
+        } else {
+            changeUpStep(event.getPlayer(), null);
         }
     }
 

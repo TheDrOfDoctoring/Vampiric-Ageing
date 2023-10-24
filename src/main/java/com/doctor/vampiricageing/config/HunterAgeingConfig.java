@@ -18,6 +18,7 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.BooleanValue permanentTransformationDeathReset;
     public static final ForgeConfigSpec.BooleanValue sunAffectLimitedBatMode;
     public static final ForgeConfigSpec.BooleanValue sunAffectTainted;
+    public static final ForgeConfigSpec.BooleanValue reducedBenefitFromNormalFoods;
     public static final ForgeConfigSpec.IntValue taintedSunAffectAge;
     public static final ForgeConfigSpec.IntValue pettyHuntWorth;
     public static final ForgeConfigSpec.IntValue commonHuntWorth;
@@ -44,9 +45,11 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.IntValue sunDamageTicks;
     public static final ForgeConfigSpec.IntValue maxTicksInSun;
     public static final ForgeConfigSpec.IntValue sunBlindnessTicks;
+    public static final ForgeConfigSpec.IntValue noNegativeEffectsFromBadFoodAge;
     public static final ForgeConfigSpec.DoubleValue limitedBatExhaustion;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeSunBadnessMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeNutritionReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> xpGainReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> fasterExhaustionAmounts;
@@ -58,6 +61,7 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedFireDamageMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodTradeDealPricesMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodMaxHealthIncreases;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedAgeSaturationReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodMovementSpeedIncreases;
 
 
@@ -116,6 +120,10 @@ public class HunterAgeingConfig {
         permanentTransformationAvailable = COMMON_BUILDER.comment("Whether permanent tainted transformation is available").define("permanentTaintedTransformation", true);
         permanentTransformationDeathReset = COMMON_BUILDER.comment("Whether the permanent tainted transformation is reset on death").define("permanentTransformationDeathReset", false);
         underwaterBreathingTaintedAge = COMMON_BUILDER.comment("At what age can a hunter breath forever underwater").defineInRange("underwaterBraethingTaintedAge", 11, 0, 11);
+        reducedBenefitFromNormalFoods = COMMON_BUILDER.comment("Whether tainted blood can reduce nutrition from regular food").define("reducedBenefitFromNormalFoods", true);
+        taintedAgeNutritionReduction = COMMON_BUILDER.comment("How much nutrition from food is reduced by at each tainted age").defineList("taintedAgeNutritionReduction", Arrays.asList(0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 4, 5), t -> t instanceof Integer);
+        taintedAgeSaturationReduction = COMMON_BUILDER.comment("How much saturation from food is reduced at each tainted age").defineList("taintedAgeSaturationReduction", Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.025f, 0.05f, 0.1f, 0.15f, 0.2f), t -> t instanceof Float);
+        noNegativeEffectsFromBadFoodAge = COMMON_BUILDER.comment("At what cumulative tainted age does a hunter not have negative effects from eating human hearts").defineInRange("noNegativeEffectsFromBadFoodAge", 6, 0, 11);
         HUNTER_AGEING_CONFIG = COMMON_BUILDER.build();
     }
 

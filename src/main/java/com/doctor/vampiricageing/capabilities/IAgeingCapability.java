@@ -41,9 +41,9 @@ public interface IAgeingCapability extends INBTSerializable<CompoundNBT> {
     int getTicksInSun();
 
     void setTicksInSun(int ticks);
-    boolean getUpStep();
+    float getUpStep();
 
-    void setUpStep(boolean upStepSetter);
+    void setUpStep(float upStepStep);
 
     int getAgeSkills();
 

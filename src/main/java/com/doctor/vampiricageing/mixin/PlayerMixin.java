@@ -1,19 +1,30 @@
 package com.doctor.vampiricageing.mixin;
 
+import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
+import com.doctor.vampiricageing.data.ItemTagProvider;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Food;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerMixin extends LivingEntity {
@@ -41,6 +52,25 @@ public abstract class PlayerMixin extends LivingEntity {
             this.foodData.addExhaustion(amount * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age));
         } else {
             this.foodData.addExhaustion(amount);
+        }
+    }
+    @Inject(method = "eat", at = @At(value = "HEAD"), cancellable = true)
+    private void eat(World world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+        if(!stack.getItem().is(ItemTagProvider.taintedFood) && HunterAgeingConfig.reducedBenefitFromNormalFoods.get()) {
+            PlayerEntity player = (PlayerEntity) (Object) this;
+            if(Helper.isHunter(player)) {
+                Food food = stack.getItem().getFoodProperties();
+                int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                FoodStats stats = player.getFoodData();
+                stats.eat(food.getNutrition() - HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge), food.getSaturationModifier() - HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge));
+                player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                world.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+                if (player instanceof ServerPlayerEntity) {
+                    CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)player, stack
+                    );
+                }
+                cir.setReturnValue(super.eat(world, stack));
+            }
         }
     }
 }
