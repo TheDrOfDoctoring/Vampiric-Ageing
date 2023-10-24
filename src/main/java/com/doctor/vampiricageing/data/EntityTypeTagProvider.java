@@ -23,7 +23,6 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         super(output, lookupProvider, VampiricAgeing.MODID, existingFileHelper);
     }
 
-    public static final TagKey<EntityType<?>> countsForDrained = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "valid_for_draining"));
     public static final TagKey<EntityType<?>> pettyDevour = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "petty_devour"));
     public static final TagKey<EntityType<?>> commonDevour = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "common_devour"));
     public static final TagKey<EntityType<?>> greaterDevour = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "greater_devour"));
@@ -40,8 +39,6 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> infectedBlacklist = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(VampiricAgeing.MODID, "infected_blacklist"));
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
-        this.tag(countsForDrained).add(EntityType.VILLAGER);
-
         this.tag(pettyDevour).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
         this.tag(commonDevour).add(EntityType.SPIDER, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.GHAST, EntityType.BLAZE, EntityType.ENDERMAN, EntityType.GUARDIAN, ModEntities.HUNTER.get(), ModEntities.VAMPIRE.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.VAMPIRE_IMOB.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_SURVIVALIST.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get());
         this.tag(greaterDevour).add(ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_HUNTER_IMOB.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
