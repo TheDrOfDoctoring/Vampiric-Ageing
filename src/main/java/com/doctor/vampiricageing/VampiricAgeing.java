@@ -59,6 +59,7 @@ public class VampiricAgeing
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_CONFIG);
         VampiricAgeingActions.register(modEventBus);
         VampiricAgeingSkills.register(modEventBus);
+        ModItems.CREATIVE_MODE_TABS.register(modEventBus);
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::gatherData);

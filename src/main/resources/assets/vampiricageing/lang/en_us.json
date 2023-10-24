@@ -36,5 +36,6 @@
   "text.vampiricageing.tainted_blood_useage": "Only available to hunters of Age Rank %s",
   "text.vampiricageing.tainted_elixir_useage": "Only available to hunters of Age Rank %s",
   "text.vampiricageing.tainted_blood_rank": "Tainted Blood Rank %s",
-  "effect.vampiricageing.tainted_blood_effect": "Tainted Blood"
+  "effect.vampiricageing.tainted_blood_effect": "Tainted Blood",
+  "itemGroup.vampiricageing": "Vampiric Ageing"
 }
