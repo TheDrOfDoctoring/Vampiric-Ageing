@@ -47,6 +47,9 @@ public abstract class VampirePlayerMixin extends VampirismPlayer<IVampirePlayer>
         int duration = Math.max(20, (int) (effectInstance.getDuration() * CommonConfig.neonatalTimeMultiplier.get().get(age)));
         EffectInstance effect = new EffectInstance(effectInstance.getEffect(), duration);
         player.addEffect(effect);
+        if(CommonConfig.ageLossDBNO.get() > 0) {
+            VampiricAgeingCapabilityManager.getAge(instance).ifPresent(vamp -> vamp.setAge(Math.max(0, age - CommonConfig.ageLossDBNO.get())));
+        }
         return true;
     }
 }
