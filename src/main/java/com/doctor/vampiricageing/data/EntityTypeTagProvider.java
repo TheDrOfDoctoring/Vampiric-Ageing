@@ -18,7 +18,6 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         super(gen, modId, existingFileHelper);
     }
 
-    public static final ITag.INamedTag<EntityType<?>> countsForDrained = vampiricAgeing("valid_for_draining");
     public static final ITag.INamedTag<EntityType<?>> pettyDevour = vampiricAgeing("petty_devour");
     public static final ITag.INamedTag<EntityType<?>> commonDevour = vampiricAgeing("common_devour");
     public static final ITag.INamedTag<EntityType<?>> greaterDevour = vampiricAgeing("greater_devour");
@@ -38,7 +37,6 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     }
     @Override
     protected void addTags() {
-        this.tag(countsForDrained).add(EntityType.VILLAGER);
 
         this.tag(pettyDevour).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
         this.tag(commonDevour).add(EntityType.SPIDER, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.GHAST, EntityType.BLAZE, EntityType.ENDERMAN, EntityType.GUARDIAN, ModEntities.HUNTER.get(), ModEntities.VAMPIRE.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.VAMPIRE_IMOB.get(), de.teamlapen.werewolves.core.ModEntities.WEREWOLF_SURVIVALIST.get(), de.teamlapen.werewolves.core.ModEntities.ALPHA_WEREWOLF.get());
