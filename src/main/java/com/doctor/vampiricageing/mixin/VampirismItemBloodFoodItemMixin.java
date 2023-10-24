@@ -40,6 +40,7 @@ public class VampirismItemBloodFoodItemMixin {
             if(cumulativeAge > 0 && cumulativeAge >= HunterAgeingConfig.noNegativeEffectsFromBadFoodAge.get()) {
                 FoodData foodData = player.getFoodData();
                 foodData.eat(this.vampireFood.getNutrition(), this.vampireFood.getSaturationModifier());
+                stack.shrink(1);
                 cir.setReturnValue(stack);
             }
         }
