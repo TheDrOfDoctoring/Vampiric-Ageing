@@ -41,6 +41,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.IntValue celerityActionCooldown;
     public static final ForgeConfigSpec.IntValue celerityActionRank;
     public static final ForgeConfigSpec.IntValue shouldOnlyDieFromKillingSourcesAgeRank;
+    public static final ForgeConfigSpec.IntValue ageLossDBNO;
     public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
 
 
@@ -115,6 +116,7 @@ public class CommonConfig {
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0f, 0f, 0f, 0.08f, 0.16f, 0.3f), it -> it instanceof Float);
+        ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }
