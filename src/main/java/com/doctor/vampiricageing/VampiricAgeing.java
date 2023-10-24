@@ -10,6 +10,7 @@ import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.config.WerewolvesAgeingConfig;
 import com.doctor.vampiricageing.data.EntityTypeTagProvider;
+import com.doctor.vampiricageing.data.ItemTagProvider;
 import com.doctor.vampiricageing.init.ModEffects;
 import com.doctor.vampiricageing.init.ModItems;
 import com.doctor.vampiricageing.init.ModOils;
@@ -20,6 +21,7 @@ import com.doctor.vampiricageing.networking.ServerProxy;
 import com.doctor.vampiricageing.skills.VampiricAgeingSkills;
 import com.mojang.logging.LogUtils;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -77,6 +79,7 @@ public class VampiricAgeing
         DataGenerator generator = event.getGenerator();
         EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(generator, MODID, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), entityTypeTagProvider);
+        generator.addProvider(event.includeServer(), new ItemTagProvider(generator, new BlockTagsProvider(generator, MODID, event.getExistingFileHelper()), MODID, event.getExistingFileHelper()));
     }
     private void processIMC(final InterModProcessEvent event) {
         if(ModList.get().isLoaded(WEREWOLVES_MODID)) {
