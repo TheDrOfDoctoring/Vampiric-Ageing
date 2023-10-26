@@ -150,7 +150,7 @@ public class VampiricAgeingCapabilityManager {
     public static void changeUpStep(PlayerEntity player, IPlayableFaction<?> faction) {
         int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
         if(Helper.isVampire(player) || faction == VReference.VAMPIRE_FACTION) {
-            if (age < CommonConfig.stepAssistBonus.get()) {
+            if (age == 0 || age < CommonConfig.stepAssistBonus.get()) {
                 player.maxUpStep = 0.6f;
                 getAge(player).ifPresent(ageCap -> ageCap.setUpStep(0.6f));
             }
@@ -159,7 +159,7 @@ public class VampiricAgeingCapabilityManager {
                 getAge(player).ifPresent(ageCap -> ageCap.setUpStep(1f));
             }
         } if(Helper.isHunter(player) || faction == VReference.HUNTER_FACTION) {
-            if(age < HunterAgeingConfig.stepAssistAge.get()) {
+            if(age == 0 || age < HunterAgeingConfig.stepAssistAge.get()) {
                 player.maxUpStep = 0.6f;
                 getAge(player).ifPresent(ageCap -> ageCap.setUpStep(0.6f));
             }

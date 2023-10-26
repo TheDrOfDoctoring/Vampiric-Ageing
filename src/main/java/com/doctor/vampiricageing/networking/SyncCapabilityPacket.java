@@ -33,7 +33,10 @@ public class SyncCapabilityPacket {
             IAgeingCapability agecap = VampiricAgeingCapabilityManager.getAge(player).orElse(new AgeingCapability());
             if (agecap != null) {
                 agecap.deserializeNBT(tag);
-                player.maxUpStep = agecap.getUpStep();
+                if(agecap.getUpStep() > 0.5f) {
+                    player.maxUpStep = agecap.getUpStep();
+                }
+
             }
 
         });
