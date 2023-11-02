@@ -44,6 +44,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -402,8 +404,13 @@ public class VampiricAgeingCapabilityManager {
             dead.getPersistentData().remove("AGE");
         }
     }
-    @SubscribeEvent
+        @OnlyIn(Dist.CLIENT)
+        @SubscribeEvent
         public static void tooltipEvent(ItemTooltipEvent event) {
+        if(!event.getPlayer().level.isClientSide) {
+            return;
+        }
+
         ItemStack stack = event.getItemStack();
         if(stack.getItem() == ModItems.BLOOD_BOTTLE.get() && CommonConfig.sireingMechanic.get()) {
             if(stack.getOrCreateTag().contains("AGE")) {
