@@ -407,6 +407,9 @@ public class VampiricAgeingCapabilityManager {
         @OnlyIn(Dist.CLIENT)
         @SubscribeEvent
         public static void tooltipEvent(ItemTooltipEvent event) {
+        if(event.getPlayer() == null) {
+            return;
+        }
         if(!event.getPlayer().level.isClientSide) {
             return;
         }
