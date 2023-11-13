@@ -3,7 +3,7 @@ package com.doctor.vampiricageing.mixin;
 import com.doctor.vampiricageing.capabilities.CapabilityHelper;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import com.doctor.vampiricageing.data.ItemTagProvider;
-import de.teamlapen.werewolves.util.Helper;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
