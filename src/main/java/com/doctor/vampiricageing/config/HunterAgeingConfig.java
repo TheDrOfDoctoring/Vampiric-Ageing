@@ -54,14 +54,14 @@ public class HunterAgeingConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> xpGainReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> fasterExhaustionAmounts;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageEnemyFactionDamageIncrease;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> movementSpeedBonus;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> movementSpeedBonus;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> hunterMiningSpeedBonus;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> seniorityOilDamageBonus;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedDamageBonuses;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> taintedDamageBonuses;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedFireDamageMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodTradeDealPricesMultiplier;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodMaxHealthIncreases;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedBloodMovementSpeedIncreases;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> taintedBloodMaxHealthIncreases;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> taintedBloodMovementSpeedIncreases;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> taintedAgeSaturationReduction;
 
 
@@ -78,7 +78,7 @@ public class HunterAgeingConfig {
         greaterHuntWorth = COMMON_BUILDER.comment("How much a greater hunt is worth. These are things like vampire barons").defineInRange("greaterHuntWorth", 5, 0, 99);
         huntedForNextAge = COMMON_BUILDER.comment("How many points worth of hunted entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("huntedforNextAge", Arrays.asList(20, 40, 80, 160, 250), it -> true);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 1D, 1D, 2D, 2D, 4D), t -> true);
-        movementSpeedBonus = COMMON_BUILDER.comment("How much faster a hunter is at each age rank. This is additive, not a multiplier").defineList("movementSpeedBonus", Arrays.asList(0f, 0.0125f, 0.015f, 0.02f, 0.025f, 0.035f), t -> true);
+        movementSpeedBonus = COMMON_BUILDER.comment("How much faster a hunter is at each age rank. This is additive, not a multiplier").defineList("movementSpeedBonus", Arrays.asList(0d, 0.0125d, 0.015d, 0.02d, 0.025d, 0.035d), t -> true);
         xpGainReduction = COMMON_BUILDER.comment("How much XP gain is divided by based on age rank. Decimal numbers can be used to instead make it an XP multiplier").defineList("xpGainReduction", Arrays.asList(1f, 1f, 1.25f, 1.5f, 1.75f, 2f), t -> true);
         fasterExhaustionAmounts = COMMON_BUILDER.comment("How much food exhaustion is multiplied by based on age").defineList("fasterExhaustionMultiplier", Arrays.asList(1f, 1f, 1.25f, 1.5f, 2f, 2.5f), t -> true);
 
@@ -100,10 +100,10 @@ public class HunterAgeingConfig {
         taintedBloodBottleAge = COMMON_BUILDER.comment("At what age can a hunter use tainted blood").defineInRange("taintedBloodBottleAge", 2, 0, 5);
         taintedBloodHolyWaterAffectedAge = COMMON_BUILDER.comment("At what tainted blood cumulative age is a hunter affected by holy water").defineInRange("taintedBloodHolyWaterAffectedAge", 6, 0, 11);
         taintedBloodWorseTradeDealsAge = COMMON_BUILDER.comment("At what cumulative age does a hunter begin to get worse trade deals").defineInRange("taintedBloodWorseTradeDealsAge", 7, 0, 11);
-        taintedDamageBonuses = COMMON_BUILDER.comment("Damage bonus at each cumulative   age rank").defineList("taintedDamageBonus", Arrays.asList(0f, 0f, 0f, 1f, 1.5f, 1.75f, 2f, 2.5f, 2.5f, 3f, 4f, 5f), t -> true);
+        taintedDamageBonuses = COMMON_BUILDER.comment("Damage bonus at each cumulative   age rank").defineList("taintedDamageBonus", Arrays.asList(0d, 0d, 0d, 1d, 1.5d, 1.75d, 2d, 2.5d, 2.5d, 3d, 4d, 5d), t -> true);
         taintedFireDamageMultiplier = COMMON_BUILDER.comment("How much damage from fire is multiplied by ").defineList("taintedFireDamageMultiplier", Arrays.asList(1f, 1f, 1f, 1.2f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 2.25f, 2.5f, 3f), t -> true);
-        taintedBloodMaxHealthIncreases = COMMON_BUILDER.comment("Max health bonus at each age rank").defineList("taintedMaxHealthBonus", Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 1f, 1f, 2f, 2f, 2f, 4f), t -> true);
-        taintedBloodMovementSpeedIncreases = COMMON_BUILDER.comment("Movement speed bonuses at each age rank").defineList("taintedMovementSpeedIncreases", Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.02f, 0.03f, 0.04f, 0.06f), t -> true);
+        taintedBloodMaxHealthIncreases = COMMON_BUILDER.comment("Max health bonus at each age rank").defineList("taintedMaxHealthBonus", Arrays.asList(0d, 0d, 0d, 0d, 0d, 0d, 1d, 1d, 2d, 2d, 2d, 4d), t -> true);
+        taintedBloodMovementSpeedIncreases = COMMON_BUILDER.comment("Movement speed bonuses at each age rank").defineList("taintedMovementSpeedIncreases", Arrays.asList(0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0.02d, 0.03d, 0.04d, 0.06d), t -> true);
         taintedBloodTradeDealPricesMultiplier = COMMON_BUILDER.comment("How the price of villager trades are multiplied by baesd on tainted blood age").defineList("taintedBloodtradeDealPricesMultiplier", Arrays.asList(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1.25f, 1.5f, 1.75f, 2f, 2.5f), t -> true);
         hunterMiningSpeedBonus = COMMON_BUILDER.comment("How much mining speed is increased based on age. This is a multiplier of total mining speed. Set all to 0 to completely disable").defineList("hunterMiningSpeedBonus", Arrays.asList(1f, 1f, 1f, 1.05f, 1.1f, 1.15f, 1.2f, 1.25f, 1.3f, 1.325f, 1.35f, 1.5f), t -> true);
         hunterTeleportAction = COMMON_BUILDER.comment("Whether teleport action is enabled / disabled").define("hunterTeleportAction", true);
