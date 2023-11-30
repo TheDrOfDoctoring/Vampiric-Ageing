@@ -249,7 +249,7 @@ public class HunterAgeingManager {
         }
 
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        event.setAmount(Math.round((float)event.getAmount() / HunterAgeingConfig.xpGainReduction.get().get(age)));
+        event.setAmount(Math.round((float) event.getAmount() / HunterAgeingConfig.xpGainReduction.get().get(age)));
     }
     @SubscribeEvent
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
