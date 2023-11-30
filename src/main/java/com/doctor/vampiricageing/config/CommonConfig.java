@@ -57,8 +57,8 @@ public class CommonConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> DBNOTimeMultiplier;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> neonatalTimeMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> DBNOTimeMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> neonatalTimeMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> amountExhaustionDrainFromSources;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
@@ -113,8 +113,8 @@ public class CommonConfig {
         ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> true);
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
         damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> true);
-        DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1f, 1f, 1f, 0.8f, 0.5f, 0.25f), it -> true);
-        neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1f, 1f, 1f, 1f, 0.75f, 0.5f), it -> true);
+        DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1d, 1d, 1d, 0.8d, 0.5d, 0.25d), it -> true);
+        neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 0.75d, 0.5d), it -> true);
         shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
