@@ -38,7 +38,7 @@ public abstract class PlayerMixin extends LivingEntity {
         }
         if(Helper.isHunter(this) && HunterAgeingConfig.hunterAgeing.get()) {
             int age = VampiricAgeingCapabilityManager.getAge(this).map(ageCap -> ageCap.getAge()).orElse(0);
-            this.foodData.addExhaustion(amount * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age));
+            this.foodData.addExhaustion(amount * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age).floatValue());
         } else {
             this.foodData.addExhaustion(amount);
         }
