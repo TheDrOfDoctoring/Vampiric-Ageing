@@ -70,7 +70,7 @@ public class WerewolfAgeingManager {
             if(event.getSource().getEntity() instanceof PlayerEntity && Helper.isWerewolf(event.getSource().getEntity()) && !event.getEntity().getCommandSenderWorld().isClientSide) {
                 PlayerEntity player = (PlayerEntity) event.getSource().getEntity();
                 int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                player.heal(WerewolvesAgeingConfig.healonBiteAmount.get().get(age));
+                player.heal(WerewolvesAgeingConfig.healonBiteAmount.get().get(age).floatValue());
                 if(WerewolvesAgeingConfig.bitingGivesFood.get() && age >= WerewolvesAgeingConfig.rankForBiteFood.get()) {
                     FoodStats foodData = player.getFoodData();
                     foodData.eat(WerewolvesAgeingConfig.biteNutrition.get(), WerewolvesAgeingConfig.biteSaturation.get().floatValue());

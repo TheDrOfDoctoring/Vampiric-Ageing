@@ -19,7 +19,7 @@ public class SilverOilMixin {
     private void onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source, CallbackInfoReturnable<Float> cir) {
         if(Helper.isWerewolf(target)) {
             int age = VampiricAgeingCapabilityManager.getAge(target).map(ageCap -> ageCap.getAge()).orElse(0);
-            cir.setReturnValue(cir.getReturnValue() * WerewolvesAgeingConfig.silverOilDamageMultiplier.get().get(age));
+            cir.setReturnValue(cir.getReturnValue() * WerewolvesAgeingConfig.silverOilDamageMultiplier.get().get(age).floatValue());
         }
     }
 }

@@ -49,7 +49,7 @@ public abstract class PlayerMixin extends LivingEntity {
         }
         if(Helper.isHunter(this) && HunterAgeingConfig.hunterAgeing.get()) {
             int age = VampiricAgeingCapabilityManager.getAge(this).map(ageCap -> ageCap.getAge()).orElse(0);
-            this.foodData.addExhaustion(amount * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age));
+            this.foodData.addExhaustion(amount * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age).floatValue());
         } else {
             this.foodData.addExhaustion(amount);
         }
@@ -62,7 +62,7 @@ public abstract class PlayerMixin extends LivingEntity {
                 Food food = stack.getItem().getFoodProperties();
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
                 FoodStats stats = player.getFoodData();
-                stats.eat(food.getNutrition() - HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge), food.getSaturationModifier() - HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge));
+                stats.eat(food.getNutrition() - HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge), food.getSaturationModifier() - HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge).floatValue());
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 world.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
                 if (player instanceof ServerPlayerEntity) {

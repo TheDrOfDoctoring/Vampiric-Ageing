@@ -34,7 +34,7 @@ public class SeniorityOil extends WeaponOil {
         }
         if(Helper.isVampire(target) || CapabilityHelper.isWerewolfCheckMod(target)) {
             int targetAge = VampiricAgeingCapabilityManager.getAge(target).map(ageCap -> ageCap.getAge()).orElse(0);
-            float bonusDamage = HunterAgeingConfig.seniorityOilDamageBonus.get().get(targetAge);
+            float bonusDamage = HunterAgeingConfig.seniorityOilDamageBonus.get().get(targetAge).floatValue();
             return amount + bonusDamage;
         }
         return amount;

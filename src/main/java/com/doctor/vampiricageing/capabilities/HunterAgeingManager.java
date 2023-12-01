@@ -209,7 +209,7 @@ public class HunterAgeingManager {
         if(!attributes.get(Attributes.ATTACK_DAMAGE).isEmpty() && (Helper.isVampire(event.getEntity()) || CapabilityHelper.isWerewolfCheckMod(event.getEntity()))) {
             PlayerEntity hunterSource = (PlayerEntity) sourceEntity;
             int age = VampiricAgeingCapabilityManager.getAge(hunterSource).map(ageCap -> ageCap.getAge()).orElse(0);
-            event.setAmount(event.getAmount() + HunterAgeingConfig.ageEnemyFactionDamageIncrease.get().get(age));
+            event.setAmount(event.getAmount() + HunterAgeingConfig.ageEnemyFactionDamageIncrease.get().get(age).floatValue());
 
         }
     }
@@ -220,7 +220,7 @@ public class HunterAgeingManager {
             return;
         }
         int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-        event.setAmount(Math.round((float)event.getAmount() / HunterAgeingConfig.xpGainReduction.get().get(age)));
+        event.setAmount(Math.round((float)event.getAmount() / HunterAgeingConfig.xpGainReduction.get().get(age).floatValue()));
     }
     @SubscribeEvent
     public static void breakSpeed(PlayerEvent.BreakSpeed event) {
@@ -234,7 +234,7 @@ public class HunterAgeingManager {
             event.setCanceled(true);
         }
         int age = VampiricAgeingCapabilityManager.getAge(event.getPlayer()).map(ageCap -> ageCap.getAge()).orElse(0);
-        event.setNewSpeed(event.getOriginalSpeed() + HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age));
+        event.setNewSpeed(event.getOriginalSpeed() + HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age).floatValue());
 
     }
     @SubscribeEvent

@@ -39,7 +39,7 @@ public abstract class VillagerMixin extends AbstractVillagerEntity {
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
                 if (!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
                     for (MerchantOffer merchantoffer1 : this.getOffers()) {
-                        double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge);
+                        double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge).floatValue();
                         double d0 = 1 - ageMult;
 
                         int j = d0 != 0 ? (int) Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;

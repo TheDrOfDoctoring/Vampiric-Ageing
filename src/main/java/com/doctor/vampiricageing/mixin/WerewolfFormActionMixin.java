@@ -18,7 +18,7 @@ public class WerewolfFormActionMixin {
         PlayerEntity player = werewolf.getRepresentingPlayer();
         if(WerewolvesAgeingConfig.werewolfAgeing.get()) {
             int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-            cir.setReturnValue(Math.round((float)cir.getReturnValue() * WerewolvesAgeingConfig.formTimeMultiplier.get().get(age)));
+            cir.setReturnValue(Math.round((float)cir.getReturnValue() * WerewolvesAgeingConfig.formTimeMultiplier.get().get(age).floatValue()));
         }
     }
 }
