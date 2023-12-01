@@ -45,19 +45,19 @@ public class CommonConfig {
     public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
 
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> sunDamageReduction;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> genericVampireWeaknessReduction;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> genericVampireWeaknessReduction;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageExhaustionEffect;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageAffectTradePrices;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> ageHealingMultiplier;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> damageMultiplierFromHunters;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> ageHealingMultiplier;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> damageMultiplierFromHunters;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> DBNOTimeMultiplier;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> neonatalTimeMultiplier;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends Float>> amountExhaustionDrainFromSources;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> amountExhaustionDrainFromSources;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> ticksForNextAge;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> drainedBloodForNextAge;
@@ -96,8 +96,8 @@ public class CommonConfig {
         harsherOutOfBlood = COMMON_BUILDER.comment("Makes running out of blood harsher on vampire, scaling with age").define("harsherOutOfBlood", false);
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").defineList("ageAffectTradePrices", Arrays.asList(1D, 1.1D, 1.25D, 1.5D, 1.75D, 2D), t -> true);
         rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle", true);
-        genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1f, 1f, 0.95f, 0.9f, 0.75f, 0.5f), it -> true);
-        sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1f, 1.5f, 2f, 3f, 4f, 5f), it -> true);
+        genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1d, 1d, 0.95d, 0.9d, 0.75d, 0.5d), it -> true);
+        sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1d, 1.5d, 2d, 3d, 4d, 5d), it -> true);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> true);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> true);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 1D, 2D, 3D, 5D, 5.5D), it -> true);
@@ -107,15 +107,15 @@ public class CommonConfig {
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(0.0D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D), it -> true);
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         shouldAgeAffectHealing = COMMON_BUILDER.comment("Whether Age Rank affects healing").define("ageHealingAffect", false);
-        ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> true);
+        ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1d, 1d, 1d, 1.5d, 1.75d, 2d), it -> true);
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
-        damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1f, 1f, 1f, 1.5f, 1.75f, 2f), it -> true);
+        damageMultiplierFromHunters = COMMON_BUILDER.comment("How much each rank multiplies damage from hunters, this only affects damage from hunter mobs, not players").defineList("damageMultiplierFromHunters", Arrays.asList(1d, 1d, 1d, 1.5d, 1.75d, 2d), it -> true);
         DBNOTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the time spent in DBNO. Decimal values decrease the time spent in DBNO ").defineList("DBNOTimeMultiplier", Arrays.asList(1d, 1d, 1d, 0.8d, 0.5d, 0.25d), it -> true);
         neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 0.75d, 0.5d), it -> true);
         shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
-        amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0f, 0f, 0f, 0.08f, 0.16f, 0.3f), it -> true);
+        amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }

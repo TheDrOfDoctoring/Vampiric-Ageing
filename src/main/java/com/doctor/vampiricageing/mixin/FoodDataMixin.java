@@ -28,7 +28,7 @@ public abstract class FoodDataMixin {
             if(Helper.isHunter(entity) && entity instanceof Player) {
                 FoodProperties foodproperties = stack.getFoodProperties(entity);
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge((Player) entity);
-                this.eat(foodproperties.getNutrition() - HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge), foodproperties.getSaturationModifier() - HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge));
+                this.eat(foodproperties.getNutrition() - HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge), foodproperties.getSaturationModifier() - HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge).floatValue());
                 ci.cancel();
             }
         }

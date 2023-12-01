@@ -451,7 +451,7 @@ public class VampiricAgeingCapabilityManager {
             }
             int age = getAge(event.player).map(ageCap -> ageCap.getAge()).orElse(0);
             VampirePlayer.getOpt(event.player).ifPresent(vamp -> {
-                vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
+                vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
             });
         }
     }
@@ -525,14 +525,14 @@ public class VampiricAgeingCapabilityManager {
                 }
                 if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof Player) {
                     VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vamp -> {
-                        vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age));
+                        vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
                     });
                 }
                 event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
             } else if(event.getSource().is(DamageTypes.STARVE) && CommonConfig.harsherOutOfBlood.get() && age > 0) {
                 event.setAmount(event.getAmount() * age);
             } else if(event.getSource().getEntity() != null && event.getSource().getEntity().getType().is(ModTags.Entities.HUNTER) && CommonConfig.shouldAgeIncreaseHunterMobDamage.get()) {
-                event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age));
+                event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age).floatValue());
             } else if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
                 //anyone remember witchery
                 event.getEntity().setHealth(1);
@@ -545,7 +545,7 @@ public class VampiricAgeingCapabilityManager {
     public static void onHeal(LivingHealEvent event) {
         if(CommonConfig.shouldAgeAffectHealing.get() && Helper.isVampire(event.getEntity())) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-            event.setAmount(event.getAmount() * CommonConfig.ageHealingMultiplier.get().get(age));
+            event.setAmount(event.getAmount() * CommonConfig.ageHealingMultiplier.get().get(age).floatValue());
         }
 
     }
