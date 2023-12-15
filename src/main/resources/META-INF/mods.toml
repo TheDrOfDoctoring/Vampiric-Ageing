@@ -67,12 +67,12 @@ This mod adds a Vampiric Ageing system other than the existing systems in Vampir
 [[dependencies.vampiricageing]]
     modId="vampirism"
     mandatory=true
-    versionRange="[1.9.0, )"
+    versionRange="[1.10.0-beta.4, )"
     ordering="NONE"
     side="BOTH"
 [[dependencies.vampiricageing]]
 modId="werewolves"
 mandatory=false
-versionRange="[1.1.0.0, )"
+versionRange="[1.2.0.0-beta.2, )"
 ordering="NONE"
 side="BOTH"

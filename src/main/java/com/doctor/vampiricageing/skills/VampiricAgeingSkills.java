@@ -15,11 +15,11 @@ import net.minecraftforge.registries.RegistryObject;
 public class VampiricAgeingSkills {
 
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, VampiricAgeing.MODID);
-    public static final RegistryObject<ISkill<IVampirePlayer>> CELERTIY_ACTION = SKILLS.register("celerity_skill", () -> new ActionSkill<>(VampiricAgeingActions.CELERITY_ACTION, false));
-    public static final RegistryObject<ISkill<IVampirePlayer>> BLOOD_DRAIN_SKILL = SKILLS.register("blood_drain_skill", () -> new ActionSkill<>(VampiricAgeingActions.DRAIN_BLOOD_ACTION, false));
-    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_TELEPORT_SKILL = SKILLS.register("hunter_teleport_skill", () -> new ActionSkill<>(VampiricAgeingActions.HUNTER_TELEPORT_ACTION, false));
-    public static final RegistryObject<ISkill<IHunterPlayer>> LIMITED_BAT_MODE_SKILL = SKILLS.register("limited_bat_mode_skill", () -> new ActionSkill<>(VampiricAgeingActions.LIMITED_HUNTER_BATMODE_ACTION, false));
-    public static final RegistryObject<ISkill<IHunterPlayer>> TAINTED_BLOOD_SKILL = SKILLS.register("tainted_blood_skill", () -> new VampirismSkill.SimpleHunterSkill(false));
+    public static final RegistryObject<ISkill<IVampirePlayer>> CELERTIY_ACTION = SKILLS.register("celerity_skill", () -> new ActionSkill<>(VampiricAgeingActions.CELERITY_ACTION, 0, false));
+    public static final RegistryObject<ISkill<IVampirePlayer>> BLOOD_DRAIN_SKILL = SKILLS.register("blood_drain_skill", () -> new ActionSkill<>(VampiricAgeingActions.DRAIN_BLOOD_ACTION, 0, false));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_TELEPORT_SKILL = SKILLS.register("hunter_teleport_skill", () -> new ActionSkill<>(VampiricAgeingActions.HUNTER_TELEPORT_ACTION, 0, false));
+    public static final RegistryObject<ISkill<IHunterPlayer>> LIMITED_BAT_MODE_SKILL = SKILLS.register("limited_bat_mode_skill", () -> new ActionSkill<>(VampiricAgeingActions.LIMITED_HUNTER_BATMODE_ACTION, 0, false));
+    public static final RegistryObject<ISkill<IHunterPlayer>> TAINTED_BLOOD_SKILL = SKILLS.register("tainted_blood_skill", () -> new VampirismSkill.SimpleHunterSkill(0, false));
 
     public static void register(IEventBus bus) {
         SKILLS.register(bus);

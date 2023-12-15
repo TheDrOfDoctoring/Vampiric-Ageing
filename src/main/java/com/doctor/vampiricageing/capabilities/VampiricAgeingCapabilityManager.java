@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.*;
@@ -31,6 +32,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.ModDamageSources;
@@ -101,6 +103,8 @@ public class VampiricAgeingCapabilityManager {
     public static final UUID HUNTER_TAINTED_DAMAGE_INCREASE_UUID = UUID.fromString("ea65e383-9172-42ab-a685-53a0c1c4fb3f");
     public static final UUID HUNTER_TAINTED_MAX_HEALTH_INCREASE_UUID = UUID.fromString("128f81c7-27b4-4d0b-a07f-e1a0055ba36a");
     public static final UUID HUNTER_TAINTED_MOVEMENT_SPEED_INCREASE_UUID = UUID.fromString("3c4cdc94-75e8-4528-9800-90298dc44b8a");
+    public static final UUID NEONATAL_ATTRIBUTE_AGEING = UUID.fromString("7cb20371-0642-44bd-92ef-5fa5100677c6");
+    public static final UUID DBNO_ATTRIBUTE_AGEING = UUID.fromString("47fc2a0c-f517-4920-8f1f-a02539971269");
     public static LazyOptional<IAgeingCapability> getAge(LivingEntity livingEntity) {
         if (livingEntity == null) {
             return LazyOptional.empty();
@@ -185,6 +189,8 @@ public class VampiricAgeingCapabilityManager {
             removeModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
             removeModifier(player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()), STEP_ASSIST_UUID);
             removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), STRENGTH_INCREASE);
+            removeModifier(player.getAttribute(ModAttributes.NEONATAL_DURATION.get()), NEONATAL_ATTRIBUTE_AGEING);
+            removeModifier(player.getAttribute(ModAttributes.DBNO_DURATION.get()), DBNO_ATTRIBUTE_AGEING);
             if(age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
                 player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).addPermanentModifier(new AttributeModifier(STEP_ASSIST_UUID, "AGE_STEP_ASSIST_CHANGE", 0.5, AttributeModifier.Operation.ADDITION));
             }
@@ -194,6 +200,8 @@ public class VampiricAgeingCapabilityManager {
 
             player.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(STRENGTH_INCREASE, "AGE_ATTACK_DAMAGE_INCREASE", CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
             player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "MAX_HEALTH_AGE_CHANGE", CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADDITION));
+            player.getAttribute(ModAttributes.DBNO_DURATION.get()).addPermanentModifier(new AttributeModifier(DBNO_ATTRIBUTE_AGEING, "AGE_DBNO_DURATION_CHANGe", CommonConfig.DBNOTimeMultiplier.get().get(age) - 1, AttributeModifier.Operation.MULTIPLY_BASE));
+            player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).addPermanentModifier(new AttributeModifier(NEONATAL_ATTRIBUTE_AGEING, "AGE_NEONATAL_DURATION_CHANGe", CommonConfig.neonatalTimeMultiplier.get().get(age) - 1, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         if(CapabilityHelper.isWerewolfCheckMod(player, faction) ) {
             removeModifier(player.getAttribute(de.teamlapen.werewolves.core.ModAttributes.BITE_DAMAGE.get()), BITE_DAMAGE_MULTIPLIER_UUID);
@@ -225,52 +233,41 @@ public class VampiricAgeingCapabilityManager {
     public static void checkSkills(int age, ServerPlayer player) {
         int unlockedSkills = 0;
         if(Helper.isVampire(player)) {
-            unlockedSkills = VampirePlayer.getOpt(player).map(vamp -> {
+            VampirePlayer.getOpt(player).ifPresent(vamp -> {
                 ISkillHandler<IVampirePlayer> handler = vamp.getSkillHandler();
-                int unlockedSkillsCount = 0;
                 if (age >= CommonConfig.drainBloodActionRank.get()) {
                     handler.enableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
-                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
                 }
                 if (age >= CommonConfig.celerityActionRank.get()) {
                     handler.enableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
-                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
                 }
-                return unlockedSkillsCount;
-            }).orElse(0);
+            });
         }  else if(Helper.isHunter(player)) {
-            unlockedSkills = HunterPlayer.getOpt(player).map(hunter -> {
+            HunterPlayer.getOpt(player).ifPresent(hunter -> {
                 ISkillHandler<IHunterPlayer> handler = hunter.getSkillHandler();
-                int unlockedSkillsCount = 0;
                 if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
-                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
                 }
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
                 if(cumulativeAge >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
-                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
                 }
 
                 if(cumulativeAge >= HunterAgeingConfig.limitedBatModeAge.get()) {
                     handler.enableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
-                    unlockedSkillsCount++;
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
                 }
-                return unlockedSkillsCount;
-            }).orElse(0);
+            });
         }
-        int finalUnlockedSkills = unlockedSkills;
-        getAge(player).ifPresent(ageCap -> ageCap.setAgeSkills(finalUnlockedSkills));
         syncAgeCapNoChange(player);
     }
 
@@ -562,10 +559,10 @@ public class VampiricAgeingCapabilityManager {
                     if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_PLAYER) {
                         blood = VampirePlayer.getOpt((Player) target).map(v -> v.onBite(vamp)).orElse(0);
                         saturationMod = VampirePlayer.getOpt((Player) target).map(VampirePlayer::getBloodSaturation).orElse(0f);
-                        vamp.drinkBlood(blood, saturationMod);
+                        vamp.drinkBlood(blood, saturationMod, new DrinkBloodContext(target));
                     } else if (biteType == IVampirePlayer.BITE_TYPE.HUNTER_CREATURE && target instanceof Player targetPlayer) {
                         targetPlayer.getFoodData().addExhaustion(1f);
-                        vamp.drinkBlood(1, 0.1f);
+                        vamp.drinkBlood(1, 0.1f, new DrinkBloodContext(target));
 
                     } else if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_CREATURE) {
                         LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(target);
@@ -574,7 +571,7 @@ public class VampiricAgeingCapabilityManager {
                         }).orElse(0);
                         saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0.0F);
 
-                        vamp.drinkBlood(blood, saturationMod);
+                        vamp.drinkBlood(blood, saturationMod, new DrinkBloodContext(target));
                     }
                 }
             });
@@ -591,6 +588,17 @@ public class VampiricAgeingCapabilityManager {
                     player.getPersistentData().putInt("AGE", vampireAge.getAge() - 1);
                 }
             });
+        }
+    }
+    @SubscribeEvent
+    public static void vampireDrinkBlood(BloodDrinkEvent.PlayerDrinkBloodEvent event) {
+        if(event.getBloodSource().getEntity().isPresent()) {
+            Player player = (Player) event.getVampire().getRepresentingEntity();
+            if(CommonConfig.drainBasedIncrease.get() && !player.getCommandSenderWorld().isClientSide) {
+                if(VampiricAgeingCapabilityManager.canAge(player)) {
+                    VampiricAgeingCapabilityManager.increaseDrainedBlood((ServerPlayer) player, event.getAmount());
+                }
+            }
         }
     }
 

@@ -23,11 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class VampirismItemBloodFoodItemMixin {
     @Shadow @Final private FoodProperties vampireFood;
 
-    @Redirect(method = "lambda$finishUsingItem$0", at = @At(value = "INVOKE", target = "Lde/teamlapen/vampirism/entity/player/vampire/VampirePlayer;drinkBlood(IF)V"), remap = false)
-    private void drinkBlood(VampirePlayer instance, int i, float v) {
-        BloodStats stats = (BloodStats) instance.getBloodStats();
-        int blood = ((BloodStatsInvoker)stats).increaseBlood(i, v);
-    }
 
     @Inject(method = "finishUsingItem", at = @At(value = "HEAD"), remap = false, cancellable = true)
     private void finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving, CallbackInfoReturnable<ItemStack> cir) {
