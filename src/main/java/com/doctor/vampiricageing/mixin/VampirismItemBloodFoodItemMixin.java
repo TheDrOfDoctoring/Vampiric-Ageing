@@ -28,7 +28,7 @@ public class VampirismItemBloodFoodItemMixin {
         BloodStats stats = (BloodStats) instance.getBloodStats();
         int blood = ((BloodStatsInvoker)stats).increaseBlood(i, v);
     }
-    @Inject(method = "finishUsingItem", at = @At(value = "HEAD"), remap = false, cancellable = true)
+    @Inject(method = "finishUsingItem", at = @At(value = "HEAD"), cancellable = true)
     private void finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving, CallbackInfoReturnable<ItemStack> cir) {
         if(entityLiving instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityLiving;
