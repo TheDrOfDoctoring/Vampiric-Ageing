@@ -1,0 +1,21 @@
+{
+  "type": "vampirism:alchemical_table",
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampiricageing:seniority_oil"
+    }
+  },
+  "ingredient": {
+    "type": "vampirism:item",
+    "item": "vampirism:oil_bottle",
+    "count": 1,
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "item": "minecraft:gold_ingot"
+  },
+  "skill": []
+}
