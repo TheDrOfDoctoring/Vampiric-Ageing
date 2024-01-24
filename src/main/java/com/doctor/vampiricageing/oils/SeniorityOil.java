@@ -25,19 +25,20 @@ public class SeniorityOil extends WeaponOil {
 
     @Override
     public float onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source) {
+        float bonusDamage = 0;
         if(!Helper.isHunter(source)) {
-            return amount;
+            return bonusDamage;
         }
         int sourceAge = VampiricAgeingCapabilityManager.getAge(source).map(ageCap -> ageCap.getAge()).orElse(0);
         if(sourceAge < HunterAgeingConfig.seniorityOilUseAge.get()) {
-            return amount;
+            return bonusDamage;
         }
         if(Helper.isVampire(target) || CapabilityHelper.isWerewolfCheckMod(target)) {
             int targetAge = VampiricAgeingCapabilityManager.getAge(target).map(ageCap -> ageCap.getAge()).orElse(0);
-            float bonusDamage = HunterAgeingConfig.seniorityOilDamageBonus.get().get(targetAge).floatValue();
-            return amount + bonusDamage;
+            bonusDamage = HunterAgeingConfig.seniorityOilDamageBonus.get().get(targetAge).floatValue();
+            return amount * bonusDamage;
         }
-        return amount;
+        return bonusDamage;
     }
 
     @Override
