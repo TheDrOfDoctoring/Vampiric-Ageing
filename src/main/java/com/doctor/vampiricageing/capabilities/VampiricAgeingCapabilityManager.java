@@ -512,16 +512,16 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onDamage(LivingDamageEvent event) {
-        if(Helper.isVampire(event.getEntity())) {
+        if(event.getEntity() instanceof Player player && Helper.isVampire(event.getEntity())) {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
             if(event.getSource().is(ModDamageTypes.SUN_DAMAGE)) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource().is(ModDamageTypes.VAMPIRE_IN_FIRE) || event.getSource().is(ModDamageTypes.VAMPIRE_ON_FIRE)  || event.getSource().is(ModDamageTypes.HOLY_WATER) ) {
-                if(event.getEntity() instanceof Player player && CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
+                if(CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
                     return;
                 }
                 if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof Player) {
-                    VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vamp -> {
+                    VampirePlayer.getOpt(player).ifPresent(vamp -> {
                         vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
                     });
                 }
@@ -532,7 +532,7 @@ public class VampiricAgeingCapabilityManager {
                 event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age).floatValue());
             } else if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
                 //anyone remember witchery
-                event.getEntity().setHealth(1);
+                player.setHealth(1);
                 event.setCanceled(true);
             }
 
