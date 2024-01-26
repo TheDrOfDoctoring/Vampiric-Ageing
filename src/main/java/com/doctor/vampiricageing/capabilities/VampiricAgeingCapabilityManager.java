@@ -531,18 +531,19 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onDamage(LivingDamageEvent event) {
-        if(Helper.isVampire(event.getEntityLiving())) {
+        if(Helper.isVampire(event.getEntityLiving()) && event.getEntityLiving() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             int age = getAge(event.getEntityLiving()).map(ageCap -> ageCap.getAge()).orElse(0);
 
             if(event.getSource() == VReference.SUNDAMAGE) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource() == VReference.VAMPIRE_IN_FIRE || event.getSource() == VReference.VAMPIRE_ON_FIRE || event.getSource() == VReference.HOLY_WATER) {
-                if(event.getEntityLiving() instanceof PlayerEntity&& CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt((PlayerEntity) event.getEntityLiving()).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
+                if(CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
                     return;
                 }
 
                 if(event.getSource() != VReference.HOLY_WATER && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof PlayerEntity) {
-                    VampirePlayer.getOpt((PlayerEntity) event.getEntity()).ifPresent(vamp -> {
+                    VampirePlayer.getOpt(player).ifPresent(vamp -> {
                         vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
                     });
                 }
