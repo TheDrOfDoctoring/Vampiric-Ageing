@@ -618,6 +618,10 @@ public class VampiricAgeingCapabilityManager {
                     vampireAge.setAge(0);
                     return;
                 }
+                removeModifier(vamp.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
+                removeModifier(vamp.getAttribute(Attributes.ATTACK_DAMAGE), ATTACK_DAMAGE_UUID);
+                removeModifier(vamp.getAttribute(Attributes.KNOCKBACK_RESISTANCE), KNOCKBACK_RESISTANCE_UUID);
+                removeModifier(vamp.getAttribute(Attributes.MOVEMENT_SPEED), AGE_ADVANCED_SPEED_INCREASE);
                 float ageMultiplier = Math.min(1, (float) vampireAge.getAge() / 2);
                 vamp.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "AGE_VAMPIRE_HEALTH_INCREASE", ageMultiplier, AttributeModifier.Operation.MULTIPLY_BASE));
                 vamp.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(ATTACK_DAMAGE_UUID, "AGE_VAMPIRE_DAMAGE_INCREASE", ageMultiplier, AttributeModifier.Operation.MULTIPLY_BASE));
