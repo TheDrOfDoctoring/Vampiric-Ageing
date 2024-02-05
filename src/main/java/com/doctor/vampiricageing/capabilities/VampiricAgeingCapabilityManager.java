@@ -346,7 +346,7 @@ public class VampiricAgeingCapabilityManager {
     }
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if (event.getSource().getEntity() instanceof ServerPlayerEntity && Helper.isVampire(event.getSource().getEntity()) && VampiricAgeingCapabilityManager.canAge((LivingEntity) event.getSource().getEntity())) {
+        if (CommonConfig.huntingBasedIncrease.get() && event.getSource().getEntity() instanceof ServerPlayerEntity && Helper.isVampire(event.getSource().getEntity()) && VampiricAgeingCapabilityManager.canAge((LivingEntity) event.getSource().getEntity())) {
             int pointWorth;
             if (event.getEntity().getType().is(EntityTypeTagProvider.pettyHuntVampire)) {
                 pointWorth = CommonConfig.pettyHuntWorth.get();
@@ -445,7 +445,7 @@ public class VampiricAgeingCapabilityManager {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
-        if(event.player.level.getGameTime() % 100 == 0 && event.player instanceof ServerPlayerEntity && CommonConfig.timeBasedIncrease.get()) {
+        if(event.player.level.getGameTime() % 100 == 0 && event.player instanceof ServerPlayerEntity && CommonConfig.timeBasedIncrease.get() && event.phase == TickEvent.Phase.END) {
             ServerPlayerEntity player = (ServerPlayerEntity) event.player;
             if(canAge(player) && Helper.isVampire(player)) {
                 getAge(player).ifPresent(age -> {
