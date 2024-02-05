@@ -1,6 +1,7 @@
 package com.doctor.vampiricageing.capabilities;
 
 import com.doctor.vampiricageing.VampiricAgeing;
+import com.doctor.vampiricageing.config.CommonConfig;
 import com.doctor.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.werewolves.api.WReference;
@@ -46,11 +47,14 @@ public class CapabilityHelper {
             if(shouldIncreaseRankHunted(player)) {
                 VampiricAgeingCapabilityManager.increaseAge(player);
             }
-
         });
     }
     public static boolean shouldIncreaseRankHunted(Player player) {
-        return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= HunterAgeingConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);
+        if(Helper.isVampire(player)) {
+            return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= CommonConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);
+        } else {
+            return VampiricAgeingCapabilityManager.getAge(player).map(age -> age.getHunted() >= HunterAgeingConfig.huntedForNextAge.get().get(age.getAge())).orElse(false);
+        }
     }
 
 }

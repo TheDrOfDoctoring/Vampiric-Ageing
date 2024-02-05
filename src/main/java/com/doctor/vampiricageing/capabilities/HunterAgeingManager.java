@@ -219,7 +219,6 @@ public class HunterAgeingManager {
             Player hunterSource = (Player) sourceEntity;
             int age = VampiricAgeingCapabilityManager.getAge(hunterSource).map(ageCap -> ageCap.getAge()).orElse(0);
             event.setAmount(event.getAmount() + HunterAgeingConfig.ageEnemyFactionDamageIncrease.get().get(age).floatValue());
-
         }
     }
 
