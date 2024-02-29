@@ -105,7 +105,7 @@ public class VampiricAgeingCapabilityManager {
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
 
-            } else if(CapabilityHelper.isWerewolfCheckMod(player)) {
+            } else if(CapabilityHelper.isWerewolfCheckMod(player) && WerewolvesAgeingConfig.werewolfAgeing.get()) {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(WReference.WEREWOLF_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
                 return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
