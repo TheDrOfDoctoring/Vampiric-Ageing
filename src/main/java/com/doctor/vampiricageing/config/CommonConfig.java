@@ -28,6 +28,7 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue huntingBasedIncrease;
     public static final ForgeConfigSpec.BooleanValue shouldOnlyDieFromKillingSources;
     public static final ForgeConfigSpec.BooleanValue deadlySourcesFastDrainExhaustion;
+    public static final ForgeConfigSpec.BooleanValue immortalBloodLoss;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.IntValue stepAssistBonus;
@@ -114,6 +115,7 @@ public class CommonConfig {
         neonatalTimeMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the duration of the neonatal effect. Decimal values decrease the time spent in neonatal").defineList("neonatalTimeMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 0.75d, 0.5d), it -> true);
         shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
+        immortalBloodLoss = COMMON_BUILDER.comment("If this and should only die from killing sources is enabled, the player will lose some blood when taking damage. If they have no blood left they will no longer be immortal").define("immortalityBloodRequirement", false);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
