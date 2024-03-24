@@ -21,8 +21,9 @@ public abstract class VampirePlayerMixin extends FactionBasePlayer<IVampirePlaye
     }
     @Inject(method = "tryResurrect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
     private void addEffect(CallbackInfo ci) {
-        if(CommonConfig.ageLossDBNO.get() > 0) {
-            VampiricAgeingCapabilityManager.getAge(this.getRepresentingPlayer()).ifPresent(vamp -> vamp.setAge(Math.max(0, vamp.getAge() - CommonConfig.ageLossDBNO.get())));
+        if(CommonConfig.ageLossDBNO.get() > 0 && !player.getCommandSenderWorld().isClientSide) {
+            VampiricAgeingCapabilityManager.getAge(player).ifPresent(vamp -> vamp.setAge(Math.max(0, vamp.getAge() - CommonConfig.ageLossDBNO.get())));
+            VampiricAgeingCapabilityManager.syncAgeCap(player);
         }
     }
 }
