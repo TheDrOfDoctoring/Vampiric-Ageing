@@ -531,19 +531,15 @@ public class VampiricAgeingCapabilityManager {
             } else if(event.getSource().getEntity() != null && event.getSource().getEntity().getType().is(ModTags.Entities.HUNTER) && CommonConfig.shouldAgeIncreaseHunterMobDamage.get()) {
                 event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age).floatValue());
             } else if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
-                float relativeDamage = player.getMaxHealth() / event.getAmount();
-                int bloodLoss = 0;
-                if(relativeDamage > 0.5f) {
-                    bloodLoss = 6;
-                } else if(relativeDamage > 0.2) {
-                    bloodLoss = 4;
-                } else if(relativeDamage > 0.05) {
-                    bloodLoss = 2;
+                if(event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
+                    int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getAmount(), CommonConfig.bloodlossDamageCap.get().floatValue()));
+                    VampirePlayer.getOpt(player).ifPresent(vp -> vp.useBlood(bloodLoss, false));
                 }
-                int finalBloodLoss = bloodLoss;
-                VampirePlayer.getOpt(player).ifPresent(vp -> vp.useBlood(finalBloodLoss, false));
-                player.setHealth(1);
-                event.setCanceled(true);
+                if(!(VampirePlayer.getOpt(player).map(vp -> vp.getBloodLevel() == 0).orElse(true))) {
+                    player.setHealth(1);
+                    event.setCanceled(true);
+                }
+
             }
 
         }
