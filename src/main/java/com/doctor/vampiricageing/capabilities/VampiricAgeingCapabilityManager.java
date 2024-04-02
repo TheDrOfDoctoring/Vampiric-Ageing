@@ -119,21 +119,27 @@ public class VampiricAgeingCapabilityManager {
             if(isVampire(player)) {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
+                return (checkRank(player, level) && age < 5);
 
             } else if(CapabilityHelper.isWerewolfCheckMod(player) && WerewolvesAgeingConfig.werewolfAgeing.get()) {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(WReference.WEREWOLF_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
+                return (checkRank(player, level) && age < 5);
 
             } else if(HunterAgeingConfig.hunterAgeing.get() && isHunter(player)) {
                 int level = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0);
                 int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                return (level >= CommonConfig.levelToBeginAgeMechanic.get() && age < 5);
+                return (checkRank(player, level) && age < 5);
 
             }
         }
         return false;
+    }
+    public static boolean checkRank(Player player, int level) {
+        if(CommonConfig.lordLevelRequirement.get()) {
+            int lordLevel = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getLordLevel).orElse(0);
+            return lordLevel >= CommonConfig.lordLevelRankRequirement.get();
+        } else return level >= CommonConfig.levelToBeginAgeMechanic.get();
     }
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {

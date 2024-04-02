@@ -29,7 +29,9 @@ public class CommonConfig {
     public static final ForgeConfigSpec.BooleanValue shouldOnlyDieFromKillingSources;
     public static final ForgeConfigSpec.BooleanValue deadlySourcesFastDrainExhaustion;
     public static final ForgeConfigSpec.BooleanValue immortalBloodLoss;
+    public static final ForgeConfigSpec.BooleanValue lordLevelRequirement;
     public static final ForgeConfigSpec.IntValue ageWaterWalkingRank;
+    public static final ForgeConfigSpec.IntValue lordLevelRankRequirement;
     public static final ForgeConfigSpec.IntValue levelToBeginAgeMechanic;
     public static final ForgeConfigSpec.IntValue stepAssistBonus;
     public static final ForgeConfigSpec.IntValue drainBloodActionDuration;
@@ -71,6 +73,8 @@ public class CommonConfig {
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
+        lordLevelRequirement = COMMON_BUILDER.comment("If enabled, ageing will require the player to be of a specified lord level").define("lordLevelRequirement", false);
+        lordLevelRankRequirement = COMMON_BUILDER.comment("If lordLeveLRequirement is enabled, this defines the minimum lord level required to age").defineInRange("lordLevelRankRequirement", 5, 1, 5);
         sireingMechanic = COMMON_BUILDER.comment("Intended to be a replacement for other forms of ageing, though will work with them. Overrides the mechanic to always begin at Level 1. Ranks can be gained by drinking blood of more powerful vampires. Highly recommended to turn off Death Reset and to make sure Advanced Vampire Age is turned on. More information on GitHub Readme or Curseforge Page").define("sireingMechanic", false);
         biteBasedIncrease = COMMON_BUILDER.comment("Whether to use Number of Bites to increase Age. Enable only one option").define("infectionBasedIncrease", false);
         drainBasedIncrease = COMMON_BUILDER.comment("Whether to use fully draining villagers of blood to increase Age. Enable only one option").define("drainBasedIncrease", true);
@@ -119,9 +123,9 @@ public class CommonConfig {
         shouldOnlyDieFromKillingSources = COMMON_BUILDER.comment("If enabled, (and the vampire meets the age rank requirement) a vampire will not go down when losing all of its health, it has to die from a deadly source of damage").define("shouldOnlyDieFromKillingSources", false);
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         immortalBloodLoss = COMMON_BUILDER.comment("If this and should only die from killing sources is enabled, the player will lose some blood when taking damage. If they have no blood left they will no longer be immortal").define("immortalityBloodRequirement", false);
-        bloodlossDamageThreshold = COMMON_BUILDER.comment("Minimum damage for bloodloss to begin happening with 'immortalBloodLoss' enabled").defineInRange("bloodlossDamageThreshold", 4, 0, 100);
+        bloodlossDamageThreshold = COMMON_BUILDER.comment("Minimum damage for bloodloss to begin happening with 'immortalBloodLoss' enabled").defineInRange("bloodlossDamageThreshold", 1, 0, 100);
         bloodlossDamageCap = COMMON_BUILDER.comment("How much the damage is multiplied to get bloodloss amount 'immortalBloodLoss' enabled").defineInRange("bloodlossDamageCap", 16, 0, 100);
-        bloodlossScaleFactor = COMMON_BUILDER.comment("Maximum damage for bloodloss with immortalBloodLoss' enabled").defineInRange("bloodlossScaleFactor", 0.25d, 0, 100);
+        bloodlossScaleFactor = COMMON_BUILDER.comment("Maximum damage for bloodloss with immortalBloodLoss' enabled").defineInRange("bloodlossScaleFactor", 1d, 0, 100);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
