@@ -15,6 +15,7 @@
     "PowderSnowBlockMixin",
     "SilverOilMixin",
     "VampirePlayerMixin",
+    "VampirePlayerSpecialAttributesMixin",
     "VampirismItemBloodFoodItemMixin",
     "VillagerMixin",
     "WerewolfFormActionMixin"

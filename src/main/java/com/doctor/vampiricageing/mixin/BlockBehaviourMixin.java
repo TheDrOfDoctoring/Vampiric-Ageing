@@ -1,10 +1,16 @@
 package com.doctor.vampiricageing.mixin;
 
+import com.doctor.vampiricageing.actions.VampiricAgeingActions;
+import com.doctor.vampiricageing.capabilities.ISpecialAttributes;
 import com.doctor.vampiricageing.capabilities.VampiricAgeingCapabilityManager;
 import com.doctor.vampiricageing.config.CommonConfig;
+import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -30,10 +36,11 @@ public abstract class BlockBehaviourMixin {
         if (getFluidState().is(FluidTags.WATER) && con instanceof EntityCollisionContext context && CommonConfig.ageWaterWalking.get()) {
             Entity entity = context.getEntity();
             if(entity instanceof Player player && Helper.isVampire(player) && vampiricageing$isAbove(entity, voxelShape, pos) && !entity.isInWater() && !entity.isShiftKeyDown()) {
-                   int age = VampiricAgeingCapabilityManager.getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
-                   if(age >= CommonConfig.ageWaterWalkingRank.get()) {
-                       cir.setReturnValue(voxelShape);
-                   }
+                if(VampirePlayer.getOpt(player).map(vp -> ((ISpecialAttributes) vp.getSpecialAttributes()).ageing$getWaterWalking()).orElse(false)) {
+                    ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleOptions(new ResourceLocation("minecraft", "generic_5"), 1, 0xd3fafb, 0F) , player.getX(), player.getY() , player.getZ(), 2, 0,0, 0, 0);
+                    cir.setReturnValue(voxelShape);
+                }
+
             }
         }
     }

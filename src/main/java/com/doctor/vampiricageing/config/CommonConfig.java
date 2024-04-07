@@ -49,7 +49,8 @@ public class CommonConfig {
     public static final ForgeConfigSpec.DoubleValue bloodlossScaleFactor;
     public static final ForgeConfigSpec.IntValue bloodlossDamageCap;
     public static final ForgeConfigSpec.DoubleValue celerityActionMultiplier;
-
+    public static final ForgeConfigSpec.IntValue waterWalkingDuration;
+    public static final ForgeConfigSpec.IntValue waterWalkingCooldown;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
@@ -129,7 +130,8 @@ public class CommonConfig {
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
-
+        waterWalkingCooldown = COMMON_BUILDER.comment("Cooldown for water walking action").defineInRange("waterWalkingCooldown", 0, 0, Integer.MAX_VALUE);
+        waterWalkingDuration = COMMON_BUILDER.comment("Duration for water walking action").defineInRange("waterWalkingDuration", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
         COMMON_CONFIG = COMMON_BUILDER.build();
     }
 }

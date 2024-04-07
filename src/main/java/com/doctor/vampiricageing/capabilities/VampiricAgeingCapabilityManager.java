@@ -251,6 +251,11 @@ public class VampiricAgeingCapabilityManager {
                 } else {
                     handler.disableSkill(VampiricAgeingSkills.CELERTIY_ACTION.get());
                 }
+                if (age >= CommonConfig.ageWaterWalkingRank.get()) {
+                    handler.enableSkill(VampiricAgeingSkills.WATER_WALKING_SKILL.get());
+                } else {
+                    handler.disableSkill(VampiricAgeingSkills.WATER_WALKING_SKILL.get());
+                }
             });
         }  else if(Helper.isHunter(player)) {
             HunterPlayer.getOpt(player).ifPresent(hunter -> {
