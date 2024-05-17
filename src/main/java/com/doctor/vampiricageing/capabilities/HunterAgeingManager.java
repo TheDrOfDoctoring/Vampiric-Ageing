@@ -252,7 +252,7 @@ public class HunterAgeingManager {
     //Limited Bat Mode removals
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onAttackEntity(AttackEntityEvent event) {
+    public static void onAttackEntity(AttackEntityEvent event) {
         PlayerEntity player = event.getPlayer();
         if (player.isAlive()) {
             if (isBat(player)) {
@@ -261,20 +261,20 @@ public class HunterAgeingManager {
         }
     }
     @SubscribeEvent
-    public void onTryMount(EntityMountEvent event) {
+    public static void onTryMount(EntityMountEvent event) {
         if (event.getEntity() instanceof PlayerEntity && isBat((PlayerEntity) event.getEntity())) {
             event.setCanceled(true);
         }
     }
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
+    public static void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
         if (isBat(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(LivingEntityUseItemEvent.Start event) {
+    public static void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if (isBat(player)) {
@@ -284,7 +284,7 @@ public class HunterAgeingManager {
 
     }
     @SubscribeEvent
-    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+    public static void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
             if (isBat(event.getPlayer())) {
@@ -294,7 +294,7 @@ public class HunterAgeingManager {
         }
     }
     @SubscribeEvent
-    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+    public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         if (event.getPlacedBlock().isAir()) return;
         try {
