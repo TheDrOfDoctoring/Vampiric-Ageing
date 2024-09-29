@@ -1,0 +1,38 @@
+package com.thedrofdoctoring.vampiricageing.mixin;
+
+import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
+import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
+import de.teamlapen.vampirism.items.VampirismItemBloodFoodItem;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(VampirismItemBloodFoodItem.class)
+public class VampirismItemBloodFoodItemMixin {
+    @Shadow @Final private FoodProperties vampireFood;
+
+
+    @Inject(method = "finishUsingItem", at = @At(value = "HEAD"), cancellable = true)
+    private void finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving, CallbackInfoReturnable<ItemStack> cir) {
+        if(entityLiving instanceof Player) {
+            Player player = (Player) entityLiving;
+            int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+            if(cumulativeAge > 0 && cumulativeAge >= HunterAgeingConfig.noNegativeEffectsFromBadFoodAge.get()) {
+                FoodData foodData = player.getFoodData();
+                foodData.eat(this.vampireFood.nutrition(), this.vampireFood.saturation());
+                stack.shrink(1);
+                cir.setReturnValue(stack);
+            }
+        }
+
+    }
+}
