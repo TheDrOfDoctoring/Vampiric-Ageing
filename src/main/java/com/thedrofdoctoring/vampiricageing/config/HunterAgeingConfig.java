@@ -50,6 +50,8 @@ public class HunterAgeingConfig {
     public static final ModConfigSpec.IntValue sunBlindnessTicks;
     public static final ModConfigSpec.DoubleValue limitedBatExhaustion;
     public static final ModConfigSpec.DoubleValue limitedBatFlightSpeed;
+    public static final ModConfigSpec.DoubleValue baseSunDamageAmount;
+
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeNutritionReduction;
@@ -112,6 +114,7 @@ public class HunterAgeingConfig {
         sunSlownessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness effect").defineInRange("sunSlownessTicks", 1800, 1, Integer.MAX_VALUE);
         sunSlownessThreeTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness three effect").defineInRange("sunSlownessTwhreeTicks", 2800, 1, Integer.MAX_VALUE);
         sunDamageTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage begins to take damage").defineInRange("sunDamageTicks", 3600, 1, Integer.MAX_VALUE);
+        baseSunDamageAmount = COMMON_BUILDER.comment("Sun Damage amount").defineInRange("baseSunDamageAmount", 2.5d, 1, 100d);
         sunBlindnessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains blindness effect").defineInRange("sunBlindnessTicks", 5000, 1, Integer.MAX_VALUE);
         temporaryTaintedBloodBaseTicks = COMMON_BUILDER.comment("Base amount of ticks tainted blood bonus lasts for").defineInRange("temporaryTaintedBloodBaseTicks", 3600, 1, Integer.MAX_VALUE);
         maxTicksInSun = COMMON_BUILDER.comment("Max sun tick").defineInRange("maxTicksInSun", 10000, 1, Integer.MAX_VALUE);

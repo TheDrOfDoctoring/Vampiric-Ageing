@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -83,7 +84,9 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             state.setTemporaryTaintedAgeBonus(age);
             entityLiving.addEffect(new MobEffectInstance(ModEffects.TAINTED_BLOOD_EFFECT,HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge(), 0, false, false));
             stack.shrink(1);
-        }
+            if(entityLiving instanceof ServerPlayer sp) {
+                hunter.getType().handleSkills(hunter.getAge(), sp);
+            }        }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 

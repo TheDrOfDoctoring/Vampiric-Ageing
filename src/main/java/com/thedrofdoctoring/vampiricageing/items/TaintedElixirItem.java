@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -90,6 +91,11 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1, 1);
             ModParticles.spawnParticlesServer(player.level(), new GenericParticleOptions(ResourceLocation.fromNamespaceAndPath("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), player.getX(), player.getY(), player.getZ(), 100, 1, 1, 1, 0);
             stack.shrink(1);
+            if(entityLiving instanceof ServerPlayer sp) {
+                ageingManager.getType().handleSkills(ageingManager.getAge(), sp);
+            }
+
+
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }

@@ -152,12 +152,13 @@ public class HunterAgeingHandler {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
         }
         if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get()) {
-            DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 1.5f);
+            float baseDamage = HunterAgeingConfig.baseSunDamageAmount.get().floatValue();
+            DamageHandler.hurtModded(player, ModDamageSources::sunDamage, baseDamage);
             if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 2) {
-                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 1.5f);
+                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, baseDamage);
             }
             if(ticksInSun >= HunterAgeingConfig.sunDamageTicks.get() * 3) {
-                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, 2f);
+                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, baseDamage);
             }
         }
         if(ticksInSun >= HunterAgeingConfig.sunBlindnessTicks.get()) {
