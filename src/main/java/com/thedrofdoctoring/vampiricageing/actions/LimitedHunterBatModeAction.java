@@ -3,12 +3,14 @@ package com.thedrofdoctoring.vampiricageing.actions;
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.capabilities.other.IHunterSpecialAttributes;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.chat.Component;
@@ -47,7 +49,8 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
     }
     @Override
     public int getDuration(IHunterPlayer hunter) {
-        if(AgeingManager.getAge(hunter.asEntity()).isTransformed()) {
+
+        if(AgeingManager.getAge(hunter.asEntity()).getTypeState() instanceof HunterAgeingType.HunterState state && state.isTransformed()) {
             return Mth.clamp(HunterAgeingConfig.limitedBatModeDurationTransformed.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
         }
         return HunterAgeingConfig.limitedBatModeDuration.get() * 20;
@@ -86,6 +89,7 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 100, false, false));
         }
         updatePlayer((HunterPlayer) hunter, false);
+        player.removeData(ModAttachments.VAMPIRE_BAT);
     }
 
     @Override
@@ -126,7 +130,7 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
 
             player.getAbilities().mayfly = true;
             player.getAbilities().flying = true;
-            setFlightSpeed(player, VampirismConfig.BALANCE.vaBatFlightSpeed.get().floatValue());
+            setFlightSpeed(player, HunterAgeingConfig.limitedBatFlightSpeed.get().floatValue());
         } else {
             // Health modifier
             AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);

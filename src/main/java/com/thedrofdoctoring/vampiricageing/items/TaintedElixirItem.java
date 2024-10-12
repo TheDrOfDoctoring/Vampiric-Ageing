@@ -1,6 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.items;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -82,7 +83,7 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
             Player player = (Player) entityLiving;
 
             AgeingManager ageingManager = AgeingManager.getAge(player);
-            ageingManager.setTransformed(true);
+            ((HunterAgeingType.HunterState) ageingManager.getTypeState()).setTransformed(true);
 
             player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 1));
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));

@@ -1,6 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.config;
 
 
+import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Arrays;
@@ -48,6 +49,8 @@ public class HunterAgeingConfig {
     public static final ModConfigSpec.IntValue maxTicksInSun;
     public static final ModConfigSpec.IntValue sunBlindnessTicks;
     public static final ModConfigSpec.DoubleValue limitedBatExhaustion;
+    public static final ModConfigSpec.DoubleValue limitedBatFlightSpeed;
+
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeNutritionReduction;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeSunBadnessMultiplier;
@@ -105,11 +108,11 @@ public class HunterAgeingConfig {
         sunAffectTainted = COMMON_BUILDER.comment("Whether the sun affects tainted blood hunters").define("sunAffectTainted", true);
         taintedAgeSunBadnessMultiplier = COMMON_BUILDER.comment("The speed at which sun effect negative effects are gained.").defineList("taintedSunAgePenaltyGainSpeedMultiplier", Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8), t -> true);
         taintedSunAffectAge = COMMON_BUILDER.comment("At what tainted blood cumulative age is a hunter affected by the sun").defineInRange("taintedSunAffectAge", 9, 0, 11);
-        sunWeaknessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains weakness effect").defineInRange("sunWeaknessTicks", 600, 1, Integer.MAX_VALUE);
-        sunSlownessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness effect").defineInRange("sunSlownessTicks", 2400, 1, Integer.MAX_VALUE);
-        sunSlownessThreeTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness three effect").defineInRange("sunSlownessTwhreeTicks", 3200, 1, Integer.MAX_VALUE);
+        sunWeaknessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains weakness effect").defineInRange("sunWeaknessTicks", 1200, 1, Integer.MAX_VALUE);
+        sunSlownessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness effect").defineInRange("sunSlownessTicks", 1800, 1, Integer.MAX_VALUE);
+        sunSlownessThreeTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains slowness three effect").defineInRange("sunSlownessTwhreeTicks", 2800, 1, Integer.MAX_VALUE);
         sunDamageTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage begins to take damage").defineInRange("sunDamageTicks", 3600, 1, Integer.MAX_VALUE);
-        sunBlindnessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains blindness effect").defineInRange("sunBlindnessTicks", 6400, 1, Integer.MAX_VALUE);
+        sunBlindnessTicks = COMMON_BUILDER.comment("How many ticks before a hunter eligible for sun damage gains blindness effect").defineInRange("sunBlindnessTicks", 5000, 1, Integer.MAX_VALUE);
         temporaryTaintedBloodBaseTicks = COMMON_BUILDER.comment("Base amount of ticks tainted blood bonus lasts for").defineInRange("temporaryTaintedBloodBaseTicks", 3600, 1, Integer.MAX_VALUE);
         maxTicksInSun = COMMON_BUILDER.comment("Max sun tick").defineInRange("maxTicksInSun", 10000, 1, Integer.MAX_VALUE);
         taintedBloodBottleAge = COMMON_BUILDER.comment("At what age can a hunter use tainted blood").defineInRange("taintedBloodBottleAge", 2, 0, 5);
@@ -129,6 +132,7 @@ public class HunterAgeingConfig {
         sunAffectLimitedBatMode = COMMON_BUILDER.comment("Whether limited bat mode is affected by the sun").define("sunAffectLimitedBatMode", false);
         limitedBatModeAge = COMMON_BUILDER.comment("At what cumulative tainted age can a hunter use the limited bat mode").defineInRange("limitedBatModeAge", 10, 0, 11);
         limitedBatModeCooldown = COMMON_BUILDER.comment("Cooldown of limited bat mode in seconds").defineInRange("limitedBatModeCooldown", 120, 1, Integer.MAX_VALUE);
+        limitedBatFlightSpeed = COMMON_BUILDER.comment("Limited bat mode flight speed").defineInRange("limitedBatFlightSpeed", 0.02, 0.001, 0.2);
         limitedBatModeDuration = COMMON_BUILDER.comment("Duration of limited bat mode in seconds ").defineInRange("limitedBatModeDuration", 240, 1, 1000);
         limitedBatModeDurationTransformed = COMMON_BUILDER.comment("Duration of limited bat mode when in permanent tainted transformation").defineInRange("limitedBatModeDurationTransformed", Integer.MAX_VALUE - 1, 10, Integer.MAX_VALUE - 1);
         limitedBatExhaustion = COMMON_BUILDER.comment("Additional exhaustion added while in bat mode. ").defineInRange("limitedBatExhaustion", 0.008f, 0, 0.05);
@@ -139,7 +143,6 @@ public class HunterAgeingConfig {
         taintedAgeNutritionReduction = COMMON_BUILDER.comment("How much nutrition from food is reduced by at each tainted age").defineList("taintedAgeNutritionReduction", Arrays.asList(0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 4, 5), t -> true);
         taintedAgeSaturationReduction = COMMON_BUILDER.comment("How much saturation from food is reduced at each tainted age").defineList("taintedAgeSaturationReduction", Arrays.asList(0d, 0d, 0d, 0d, 0d, 0d, 0d, 0.025d, 0.05d, 0.1d, 0.15d, 0.2d), t -> true);
         noNegativeEffectsFromBadFoodAge = COMMON_BUILDER.comment("At what cumulative tainted age does a hunter not have negative effects from eating human hearts").defineInRange("noNegativeEffectsFromBadFoodAge", 6, 0, 11);
-
         COMMON_BUILDER.pop();
 
         HUNTER_AGEING_CONFIG = COMMON_BUILDER.build();

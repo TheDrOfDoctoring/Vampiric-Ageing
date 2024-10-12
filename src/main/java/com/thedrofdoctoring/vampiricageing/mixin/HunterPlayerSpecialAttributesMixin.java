@@ -12,8 +12,6 @@ public class HunterPlayerSpecialAttributesMixin implements IHunterSpecialAttribu
     @Unique
     private boolean batMode;
 
-    @Unique
-    private int ticksInSun;
     @Override
     public boolean ageing$getBatMode() {
         return batMode;
@@ -24,15 +22,5 @@ public class HunterPlayerSpecialAttributesMixin implements IHunterSpecialAttribu
         this.batMode = batMode;
     }
 
-    @Override
-    public int ageing$getTicksInSun() {
-        return ticksInSun;
-    }
-
-    @Override
-    public void setTicksInSun(int ticks) {
-        this.ticksInSun = ticks;
-
-    }
 
 }

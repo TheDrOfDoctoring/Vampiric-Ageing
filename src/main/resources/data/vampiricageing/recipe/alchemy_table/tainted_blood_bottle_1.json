@@ -8,20 +8,17 @@
   ],
   "input": [
     {
-      "type": "vampirism:nbt",
-      "count": 1,
       "item": "vampirism:pure_blood_0"
     }
   ],
-  "result": [
+  "result":
     {
       "id": "vampiricageing:tainted_blood_bottle",
       "components": {
-        "minecraft:damage": {
-          "damage": 1
-        }
+        "minecraft:damage": 1
       }
-    }
-  ],
-  "skill": "vampiricageing:tainted_blood_skill"
+    },
+  "skill": [
+    "vampiricageing:tainted_blood_skill"
+  ]
 }

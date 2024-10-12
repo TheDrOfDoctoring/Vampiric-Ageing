@@ -1,6 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.client.overlay;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.ClientConfig;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.lib.util.Color;
@@ -20,7 +21,11 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
         if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui) {
             AgeingManager age = AgeingManager.getAge(mc.player);
             int rank = age.getAge();
-            boolean transformed = age.isTransformed();
+
+            boolean transformed = false;
+            if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                transformed = state.isTransformed();
+            }
             if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && (rank > 0 || transformed)) {
                 String text = String.valueOf(rank);
                 int x = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get();
@@ -30,7 +35,10 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
                 graphics.drawString(this.mc.font, text, x, y + 1, 0, false);
                 graphics.drawString(this.mc.font, text, x, y - 1, 0, false);
                 graphics.drawString(this.mc.font, text, x, y, 0x8B0000, false);
-                int tempTainted = AgeingManager.getAge(mc.player).getTemporaryTaintedAgeBonus();
+                int tempTainted = 0;
+                if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                    tempTainted = state.getTemporaryTaintedAgeBonus();
+                }
                 if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && (tempTainted > 0 || transformed)) {
                     int displayBonus = transformed  ? 6 : tempTainted;
                     String taintedTextValue = " (" + (rank + displayBonus) + ")";

@@ -1,6 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.items;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.init.ModEffects;
 import de.teamlapen.vampirism.api.VReference;
@@ -51,7 +52,7 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
         AgeingManager age = AgeingManager.getAge(player);
-        if(age.getAge() >= HunterAgeingConfig.taintedBloodBottleAge.get() && !age.isTransformed()) {
+        if(age.getAge() >= HunterAgeingConfig.taintedBloodBottleAge.get() && !((HunterAgeingType.HunterState) age.getTypeState()).isTransformed()) {
             player.startUsingItem(hand);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
@@ -77,17 +78,20 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
         if(entityLiving instanceof Player player && Helper.isHunter(entityLiving)) {
             int age = stack.getDamageValue();
             AgeingManager hunter = AgeingManager.getAge(player);
-            hunter.setTemporaryTaintedTicks(HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge());
-            hunter.setTemporaryTaintedAgeBonus(age);
+            HunterAgeingType.HunterState state = (HunterAgeingType.HunterState) hunter.getTypeState();
+            state.setTemporaryTaintedTicks(HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge());
+            state.setTemporaryTaintedAgeBonus(age);
             entityLiving.addEffect(new MobEffectInstance(ModEffects.TAINTED_BLOOD_EFFECT,HunterAgeingConfig.temporaryTaintedBloodBaseTicks.get() * hunter.getAge(), 0, false, false));
             stack.shrink(1);
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 
-    public int getUseDuration(@NotNull ItemStack stack) {
+    @Override
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 45;
     }
+
     @Override
     public boolean isBarVisible(@NotNull ItemStack stack) {
         return false;

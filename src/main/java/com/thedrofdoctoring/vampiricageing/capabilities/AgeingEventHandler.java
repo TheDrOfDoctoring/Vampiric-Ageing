@@ -7,6 +7,7 @@ import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.DrinkBloodMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.HuntingMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.TimeMethod;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.data.AgeingDataComponents;
 import de.teamlapen.vampirism.api.VReference;
@@ -252,7 +253,9 @@ public class AgeingEventHandler {
                 if(player.hasEffect(com.thedrofdoctoring.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT)) {
                     player.removeEffect(com.thedrofdoctoring.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT);
                 }
-                age.setTransformed(false);
+                if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                    state.setTransformed(false);
+                }
             }
 
         } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
@@ -280,8 +283,8 @@ public class AgeingEventHandler {
     public static void onTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
         if(player.tickCount % 100 == 0 && event.getEntity() instanceof ServerPlayer sPlayer) {
-            AgeingManager age = AgeingManager.getAge(player);
-            if(age.canAge() && age.getMethod() instanceof TimeMethod) {
+            AgeingManager age = AgeingManager.getAge(sPlayer);
+            if(age.getMethod() instanceof TimeMethod && age.canAge()) {
                 age.setRankProgress(age.getRankProgress() + 100);
                 age.sync(false);
             }
@@ -320,6 +323,11 @@ public class AgeingEventHandler {
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onDeath(LivingDeathEvent event) {
+         if(event.getEntity() instanceof ServerPlayer player && CommonConfig.deathReset.get()) {
+            AgeingManager age = AgeingManager.getAge(player);
+            age.setAge(0);
+            age.sync(true);
+        }
         LivingEntity dead = event.getEntity();
         if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player ) {
             if (CommonConfig.sireingMechanic.get() && player.getOffhandItem().is(Items.GLASS_BOTTLE) && Helper.isVampire(dead) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {

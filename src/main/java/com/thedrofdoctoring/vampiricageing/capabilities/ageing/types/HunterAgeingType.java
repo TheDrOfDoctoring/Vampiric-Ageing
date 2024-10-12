@@ -1,20 +1,31 @@
 package com.thedrofdoctoring.vampiricageing.capabilities.ageing.types;
 
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
+import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
+import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class HunterAgeingType implements IAgeType {
 
@@ -38,7 +49,26 @@ public class HunterAgeingType implements IAgeType {
 
     @Override
     public void handleSkills(int age, ServerPlayer player) {
+        ISkillHandler<IHunterPlayer> skillHandler = HunterPlayer.get(player).getSkillHandler();
 
+        int taintedAge = CapabilityHelper.getCumulativeTaintedAge(player);
+        if(age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.TAINTED_BLOOD_SKILL.get());
+        }
+
+        if(taintedAge >= HunterAgeingConfig.hunterTeleportActionAge.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.HUNTER_TELEPORT_SKILL.get());
+        }
+
+        if(taintedAge >= HunterAgeingConfig.limitedBatModeAge.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
+        }
     }
 
     @Override
@@ -54,5 +84,97 @@ public class HunterAgeingType implements IAgeType {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public Optional<HunterState> getStateType() {
+        return Optional.of(new HunterState());
+    }
+    public static class HunterState extends TypeState {
+
+        int taintedAgeBonus = 0;
+        int taintedTicks = 0;
+        int ticksInSun;
+        boolean transformed = false;
+
+        public int getTemporaryTaintedAgeBonus() {
+            return this.taintedAgeBonus;
+        }
+
+        public void setTemporaryTaintedAgeBonus(int bonus) {
+            taintedAgeBonus = bonus;
+        }
+        public int getTemporaryTainedTicks() {
+            return this.taintedTicks;
+        }
+        public void setTicksInSun(int ticks) {
+            ticksInSun = ticks;
+        }
+        public int getTicksInSun() {
+            return this.ticksInSun;
+        }
+
+        public void setTemporaryTaintedTicks(int ticks) {
+            this.taintedTicks = ticks;
+        }
+        public boolean isTransformed() {
+            return this.transformed;
+        }
+
+        public void setTransformed(boolean transformed) {
+            this.transformed = transformed;
+        }
+
+
+
+        @Override
+        public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
+            nbt.putInt("ageing_tainted_age", taintedAgeBonus);
+            nbt.putInt("ageing_tainted_ticks", taintedTicks);
+            nbt.putInt("ageing_sun_ticks", ticksInSun);
+            nbt.putBoolean("ageing_transformed", transformed);
+
+            return nbt;
+        }
+
+        @Override
+        public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+            if(nbt.getString("ageing_type").isEmpty()) {
+                this.ticksInSun = 0;
+                this.transformed = false;
+                this.taintedTicks = 0;
+                this.taintedAgeBonus = 0;
+            } else {
+                this.taintedAgeBonus = nbt.getInt("ageing_tainted_age");
+                this.taintedTicks = nbt.getInt("ageing_tainted_ticks");
+                this.ticksInSun = nbt.getInt("ageing_sun_ticks");
+                this.transformed = nbt.getBoolean("ageing_transformed");
+            }
+        }
+
+        @Override
+        public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+            if(nbt.getString("ageing_type").isEmpty()) {
+                this.ticksInSun = 0;
+                this.transformed = false;
+                this.taintedTicks = 0;
+                this.taintedAgeBonus = 0;
+            } else {
+                this.taintedAgeBonus = nbt.getInt("ageing_tainted_age");
+                this.taintedTicks = nbt.getInt("ageing_tainted_ticks");
+                this.ticksInSun = nbt.getInt("ageing_sun_ticks");
+                this.transformed = nbt.getBoolean("ageing_transformed");
+            }
+        }
+
+        @Override
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
+            nbt.putInt("ageing_tainted_age", taintedAgeBonus);
+            nbt.putInt("ageing_tainted_ticks", taintedTicks);
+            nbt.putInt("ageing_sun_ticks", ticksInSun);
+            nbt.putBoolean("ageing_transformed", transformed);
+
+            return nbt;
+        }
     }
 }

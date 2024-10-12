@@ -4,6 +4,7 @@ import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.actions.LimitedHunterBatModeAction;
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.capabilities.other.IHunterSpecialAttributes;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.mixin.FoodStatsAccessor;
@@ -57,9 +58,16 @@ public class HunterAgeingHandler {
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if(HunterAgeingConfig.permanentTransformationDeathReset.get()) {
-            if(Helper.isHunter(event.getEntity()) && event.getEntity() instanceof ServerPlayer player) {
-                AgeingManager.getAge(player).setTransformed(false);
+        if(Helper.isHunter(event.getEntity()) && event.getEntity() instanceof ServerPlayer player) {
+            AgeingManager age = AgeingManager.getAge(player);
+            if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                if(HunterAgeingConfig.permanentTransformationDeathReset.get()) {
+                    state.setTransformed(false);
+                }
+                state.setTemporaryTaintedAgeBonus(0);
+                state.setTemporaryTaintedTicks(0);
+                state.setTicksInSun(0);
+                age.sync(false);
             }
         }
     }
@@ -68,7 +76,7 @@ public class HunterAgeingHandler {
         if(!(event.getEntity().level().getGameTime() % 20 == 0)) {
             return;
         }
-        if(!(event.getEntity() instanceof Player) || event.getEntity().level().isClientSide) {
+        if(!(event.getEntity() instanceof Player)) {
             return;
         }
         Player player = (Player) event.getEntity();
@@ -78,7 +86,7 @@ public class HunterAgeingHandler {
         int age = AgeingManager.getAge(player).getAge();
 
         //Faster Regeneration
-        if(age >= HunterAgeingConfig.fasterRegenerationAge.get()) {
+        if(age >= HunterAgeingConfig.fasterRegenerationAge.get() && !player.getCommandSenderWorld().isClientSide()) {
             Difficulty difficulty = player.level().getDifficulty();
             boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
             FoodData stats = player.getFoodData();
@@ -98,32 +106,34 @@ public class HunterAgeingHandler {
             }
         }
         //Tainted Blood
-        if(HunterAgeingConfig.taintedBloodAvailable.get() && age >= HunterAgeingConfig.taintedBloodBottleAge.get()) {
+        if(HunterAgeingConfig.taintedBloodAvailable.get()) {
             AgeingManager manager = AgeingManager.getAge(player);
-            IHunterSpecialAttributes specialAttributes = ((IHunterSpecialAttributes) HunterPlayer.get(player).getSpecialAttributes());
-            if(manager.getTemporaryTaintedAgeBonus() > 0 || manager.isTransformed()) {
-                if(!manager.isTransformed()) {
-                    manager.setTemporaryTaintedTicks(manager.getTemporaryTainedTicks() - 20);
-                    if (manager.getTemporaryTainedTicks() <= 0) {
-                        manager.setTemporaryTaintedAgeBonus(0);
+            if(manager.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                if(state.getTemporaryTaintedAgeBonus() > 0 || state.isTransformed()) {
+                    if(!state.isTransformed()) {
+                        state.setTemporaryTaintedTicks(state.getTemporaryTainedTicks() - 20);
+                        if (state.getTemporaryTainedTicks() <= 0) {
+                            state.setTemporaryTaintedAgeBonus(0);
+                        }
                     }
-                }
-                int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
-                if(HunterAgeingConfig.sunAffectTainted.get() && cumulativeAge >= HunterAgeingConfig.taintedSunAffectAge.get()) {
-                    int ticksInSun = specialAttributes.ageing$getTicksInSun();
-                    if(Helper.gettingSundamge(player, player.getCommandSenderWorld(), player.getCommandSenderWorld().getProfiler()) && ticksInSun <= HunterAgeingConfig.maxTicksInSun.get() ) {
-                        specialAttributes.setTicksInSun(ticksInSun + 20 * HunterAgeingConfig.taintedAgeSunBadnessMultiplier.get().get(cumulativeAge));
-                    } else if(specialAttributes.ageing$getTicksInSun() >= 100) {
-                        int reductionAmount = specialAttributes.ageing$getTicksInSun() < 1000 ? 100 : 1000;
-                        specialAttributes.setTicksInSun(Math.max(0, ticksInSun - reductionAmount));
+                    int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
+                    if(HunterAgeingConfig.sunAffectTainted.get() && cumulativeAge >= HunterAgeingConfig.taintedSunAffectAge.get()) {
+                        int ticksInSun = state.getTicksInSun();
+                        if(Helper.gettingSundamge(player, player.getCommandSenderWorld(), player.getCommandSenderWorld().getProfiler()) && ticksInSun <= HunterAgeingConfig.maxTicksInSun.get() ) {
+                            state.setTicksInSun(ticksInSun + 20 * HunterAgeingConfig.taintedAgeSunBadnessMultiplier.get().get(cumulativeAge));
+                        } else if(state.getTicksInSun() >= 100) {
+                            int reductionAmount = state.getTicksInSun() < 1000 ? 60 : 250;
+                            state.setTicksInSun(Math.max(0, ticksInSun - reductionAmount));
+                        }
+                        applySunEffects(player, state.getTicksInSun());
                     }
-                    applySunEffects(player, specialAttributes.ageing$getTicksInSun());
+                    if(cumulativeAge >= HunterAgeingConfig.underwaterBreathingTaintedAge.get()) {
+                        player.setAirSupply(300);
+                    }
+                    manager.sync(false);
                 }
-                if(cumulativeAge >= HunterAgeingConfig.underwaterBreathingTaintedAge.get()) {
-                    player.setAirSupply(300);
-                }
-                manager.sync(false);
             }
+
         }
 
     }
@@ -172,9 +182,12 @@ public class HunterAgeingHandler {
         Player player = event.getEntity();
         if(event.getItemStack().is(ModItems.INJECTION_GARLIC.get()) && CapabilityHelper.getCumulativeTaintedAge(player) > 0) {
             AgeingManager age = AgeingManager.getAge(player);
-            age.setTemporaryTaintedAgeBonus(0);
-            age.setTemporaryTaintedTicks(0);
-            age.setTransformed(false);
+            if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+                state.setTemporaryTaintedAgeBonus(0);
+                state.setTemporaryTaintedTicks(0);
+                state.setTransformed(false);
+            }
+
             age.sync(false);
             event.getItemStack().shrink(1);
         }
@@ -254,7 +267,7 @@ public class HunterAgeingHandler {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if((event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null)) {
                 Player player = (Player) event.getEntity();
-                boolean batMode = ((IHunterSpecialAttributes) HunterPlayer.get(player).getSpecialAttributes()).ageing$getBatMode();
+                boolean batMode = isBat(player);
                 if(batMode) {
                     event.setNewSize(LimitedHunterBatModeAction.BAT_SIZE);
                 }
@@ -327,7 +340,7 @@ public class HunterAgeingHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
     public static boolean isBat(Player player) {

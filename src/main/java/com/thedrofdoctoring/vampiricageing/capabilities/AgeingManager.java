@@ -4,6 +4,7 @@ import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.TypeState;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.init.ModAttachments;
 import de.teamlapen.lib.HelperLib;
@@ -55,19 +56,20 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
 
     private IAgeType type;
     private IAgeMethod method;
+    private TypeState ageingTypeData;
     private int ageRank;
     private final LivingEntity entity;
     private int rankProgress;
-    private int tainted;
-    private int taintedTicks;
-    private boolean transformed;
     private String typeId = null;
 
     public AgeingManager(LivingEntity entity) {
         this.entity = entity;
     }
 
-
+    @Override
+    public TypeState getTypeState() {
+        return ageingTypeData;
+    }
 
     public static @NotNull Optional<AgeingManager> getOpt(@NotNull Player player) {
         return Optional.of(player.getData(ModAttachments.AGEING_MANAGER.get()));
@@ -98,25 +100,6 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         return this.rankProgress;
     }
 
-    @Override
-    public int getTemporaryTaintedAgeBonus() {
-        return this.tainted;
-    }
-
-    @Override
-    public void setTemporaryTaintedAgeBonus(int bonus) {
-        this.tainted = bonus;
-    }
-    @Override
-    public void setTemporaryTaintedTicks(int ticks) {
-        this.taintedTicks = ticks;
-    }
-
-    @Override
-    public int getTemporaryTainedTicks() {
-        return this.taintedTicks;
-    }
-
 
     @Override
     public IAgeMethod getMethod() {
@@ -135,16 +118,6 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         } else {
             this.typeId = type.getId();
         }
-    }
-
-    @Override
-    public boolean isTransformed() {
-        return this.transformed;
-    }
-
-    @Override
-    public void setTransformed(boolean transformed) {
-        this.transformed = transformed;
     }
 
     @Override
@@ -198,20 +171,27 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
 
     public void onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
 
-        this.type.handleSkills(this.ageRank, player);
-        Map<Holder<Attribute>, AttributeModifier> attributes =  this.type.getAgeAttributes(this.ageRank, player, false);
-
-        if(oldAgeType != this.type) {
+        this.type = this.getAgeType();
+        if(oldAgeType != null && oldAgeType != this.type) {
+            oldAgeType.handleSkills(this.ageRank, player);
             Map<Holder<Attribute>, AttributeModifier> oldAttributes =  oldAgeType.getAgeAttributes(this.ageRank, player, true);
             oldAttributes.forEach((attribute, modifier) -> {
                 removeModifier(player.getAttribute(attribute), modifier.id());
             });
+            if(this.type != null && this.type.getStateType().isPresent()) {
+                this.ageingTypeData = this.type.getStateType().get();
+            }
         }
-        if(this.getAgeType() != null) {
+        if(this.type != null) {
+            Map<Holder<Attribute>, AttributeModifier> attributes =  this.type.getAgeAttributes(this.ageRank, player, false);
             attributes.forEach((attribute, modifier) -> {
                 removeModifier(player.getAttribute(attribute), modifier.id());
                 player.getAttribute(attribute).addPermanentModifier(modifier);
             });
+            type.handleSkills(this.ageRank, player);
+            if(this.ageingTypeData == null && this.type.getStateType().isPresent()) {
+                this.ageingTypeData = this.type.getStateType().get();
+            }
         }
 
     }
@@ -248,9 +228,9 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             if(entity instanceof Player) {
                 nbt.putString("ageing_type", this.typeId);
                 nbt.putInt("ageing_rank_progress", this.rankProgress);
-                nbt.putInt("ageing_tainted", this.tainted);
-                nbt.putInt("ageing_tainted_time", this.taintedTicks);
-                nbt.putBoolean("ageing_transformed", this.transformed);
+                if(this.ageingTypeData != null ) {
+                    nbt = ageingTypeData.serializeNBT(provider, nbt);
+                }
             }
         }
 
@@ -265,9 +245,12 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
                 this.typeId = nbt.getString("ageing_type");
                 this.type = getAgeType();
                 this.rankProgress = nbt.getInt("ageing_rank_progress");
-                this.tainted = nbt.getInt("ageing_tainted");
-                this.taintedTicks = nbt.getInt("ageing_tainted_time");
-                this.transformed = nbt.getBoolean("ageing_transformed");
+                if(this.ageingTypeData == null && this.type.getStateType().isPresent()) {
+                    this.ageingTypeData = this.type.getStateType().get();
+                }
+                if(this.ageingTypeData != null) {
+                    this.ageingTypeData.deserializeNBT(provider, nbt);
+                }
             }
         }
     }
@@ -278,18 +261,18 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             this.type = null;
             this.ageRank = 0;
             this.rankProgress = 0;
-            this.taintedTicks = 0;
-            this.transformed = false;
-            this.tainted = 0;
         } else {
             this.ageRank = nbt.getInt("ageing_rank");
             if (entity instanceof Player) {
                 this.typeId = nbt.getString("ageing_type");
                 this.type = getAgeType();
                 this.rankProgress = nbt.getInt("ageing_rank_progress");
-                this.tainted = nbt.getInt("ageing_tainted");
-                this.taintedTicks = nbt.getInt("ageing_tainted_time");
-                this.transformed = nbt.getBoolean("ageing_transformed");
+                if(this.ageingTypeData == null && this.type.getStateType().isPresent()) {
+                    this.ageingTypeData = this.type.getStateType().get();
+                }
+                if(this.ageingTypeData != null) {
+                    this.ageingTypeData.deserializeUpdateNBT(provider, nbt);
+                }
             }
 
         }
@@ -304,9 +287,9 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             if(entity instanceof Player) {
                 nbt.putString("ageing_type", this.typeId);
                 nbt.putInt("ageing_rank_progress", this.rankProgress);
-                nbt.putInt("ageing_tainted", this.tainted);
-                nbt.putInt("ageing_tainted_time", this.taintedTicks);
-                nbt.putBoolean("ageing_transformed", this.transformed);
+                if(this.ageingTypeData != null) {
+                    nbt = ageingTypeData.serializeUpdateNBT(provider, nbt);
+                }
             }
 
         }

@@ -20,9 +20,6 @@ import com.thedrofdoctoring.vampiricageing.init.ModAttachments;
 import com.thedrofdoctoring.vampiricageing.init.ModEffects;
 import com.thedrofdoctoring.vampiricageing.init.ModItems;
 import com.thedrofdoctoring.vampiricageing.init.ModOils;
-import com.thedrofdoctoring.vampiricageing.networking.ClientProxy;
-import com.thedrofdoctoring.vampiricageing.networking.IProxy;
-import com.thedrofdoctoring.vampiricageing.networking.ServerProxy;
 import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
@@ -39,6 +36,8 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -54,7 +53,6 @@ public class VampiricAgeing
     public static final String MODID = "vampiricageing";
     public static final String WEREWOLVES_MODID = "werewolves";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final IProxy proxy = FMLEnvironment.dist == Dist.CLIENT ? new ClientProxy() : new ServerProxy();
     private final IEventBus modBus;
 
     public VampiricAgeing(IEventBus modEventBus, ModContainer container)
@@ -64,7 +62,9 @@ public class VampiricAgeing
         modEventBus.addListener(this::enqueueIMC);
         this.modBus = modEventBus;
         if(FMLEnvironment.dist == Dist.CLIENT) {
+            container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
             ClientRegistryHandler.init(modEventBus);
+
         }
         container.registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_CONFIG);
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_CONFIG);
@@ -78,10 +78,9 @@ public class VampiricAgeing
 
         AgeingRegistry.registerAgeType(AgeingReference.VAMP);
         AgeingRegistry.registerAgeType(AgeingReference.HUNTER);
-        AgeingRegistry.registerAgeType(AgeingReference.WEREWOLF);
+
 
         AgeingRegistry.registerAgeMethod(new BitingMethod());
-        AgeingRegistry.registerAgeMethod(new DevourMethod());
         AgeingRegistry.registerAgeMethod(new TimeMethod());
         AgeingRegistry.registerAgeMethod(new VampHuntingMethod());
         AgeingRegistry.registerAgeMethod(new HunterHuntingMethod());
@@ -90,6 +89,9 @@ public class VampiricAgeing
 
         container.registerConfig(ModConfig.Type.COMMON, HunterAgeingConfig.HUNTER_AGEING_CONFIG, MODID+"-hunterAgeing.toml");
         if(ModList.get().isLoaded(WEREWOLVES_MODID)) {
+            AgeingRegistry.registerAgeType(AgeingReference.WEREWOLF);
+            AgeingRegistry.registerAgeMethod(new DevourMethod());
+
             container.registerConfig(ModConfig.Type.COMMON, WerewolvesAgeingConfig.WEREWOLF_AGEING_CONFIG,MODID+"-werewolfAgeing.toml");
             NeoForge.EVENT_BUS.register(new WerewolfAgeingHandler());
         }

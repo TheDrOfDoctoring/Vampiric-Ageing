@@ -85,6 +85,7 @@ public class CommonConfig {
 
         COMMON_BUILDER.push("Vampire Values");
         vampireAgeing = COMMON_BUILDER.comment("Whether vampires can age.").define("vampireAgeing", true);
+        levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins, Level 4 is the minimum age to have access to the Infect Action").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
         ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: BITING, DRAINING, TIME, V_HUNTING").define("ageingMethod", "DRAINING");
         sireingMechanic = COMMON_BUILDER.comment("Intended to be a replacement for other forms of ageing, though will work with them. Overrides the mechanic to always begin at Level 1. Ranks can be gained by drinking blood of more powerful vampires. Highly recommended to turn off Death Reset and to make sure Advanced Vampire Age is turned on. More information on GitHub Readme or Curseforge Page").define("sireingMechanic", false);
         pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires or hunters").defineInRange("pettyHuntWorth", 1, 0, 99);
@@ -94,17 +95,20 @@ public class CommonConfig {
         vampirePowderedSnowImmunity = COMMON_BUILDER.comment("Whether vampires should be immune to the effects of Powdered Snow. Applies to ALL vampires").define("powderedSnowImmunity", true);
         ageWaterWalking = COMMON_BUILDER.comment("Whether high Age Rank vampires can walk on water").define("ageWaterWalking", true);
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  5);
+        waterWalkingCooldown = COMMON_BUILDER.comment("Cooldown for water walking action").defineInRange("waterWalkingCooldown", 0, 0, Integer.MAX_VALUE);
+        waterWalkingDuration = COMMON_BUILDER.comment("Duration for water walking action").defineInRange("waterWalkingDuration", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+
         celerityActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Celerity Action").defineInRange("celerityActionRank", 1, 0, 5);
         celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 60, 20, 36000);
         celerityActionMultiplier = COMMON_BUILDER.comment("Speed Multiplier provided by Celerity Action").defineInRange("celerityActionMultiplier", 1.025D, 1, 5D);
-        celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityBloodActionDuration", 8, 1, 36000);
-        celerityAction = COMMON_BUILDER.comment("Whether the Celerity action is available for Aged Vampires").define("celerityBloodAction", true);
+        celerityActionDuration = COMMON_BUILDER.comment("Duration of the Celerity action in seconds").defineInRange("celerityActionDuration", 8, 1, 36000);
+        celerityAction = COMMON_BUILDER.comment("Whether the Celerity action is available for Aged Vampires").define("celerityAction", true);
         drainBloodActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Blood Tap Action").defineInRange("drainBloodActionRank", 3, 0, 5);
         drainBloodActionCooldown = COMMON_BUILDER.comment("Cooldown of the Blood Tap action in seconds").defineInRange("drainBloodActionCooldown", 150, 1, 36000);
         drainBloodActionDuration = COMMON_BUILDER.comment("Duration of the Blood Tap action in seconds").defineInRange("drainBloodActionDuration", 10, 1, 36000);
         drainBloodAction = COMMON_BUILDER.comment("Whether the Blood Tap action is available for Aged Vampires").define("drainBloodAction", true);
         COMMON_BUILDER.comment("For any config with a list of 6 numbers, the very first number refers to a vampire with no age rank and the second number is the first age rank.");
-        levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins, Level 4 is the minimum age to have access to the Infect Action").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
+        advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         percentageAdvancedVampireAges = COMMON_BUILDER.comment("The percentage, as a decimal, of how likely an advanced vampire is to get each rank with advanced vampire ages enabled").defineList("percentageAdvancedVampireAges", Arrays.asList(0.5D, 0.3D, 0.1D, 0.08D, 0.02D), it -> true);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 2D, 2D, 3D, 4D, 5D), t -> true);
         doesAgeAffectPrices = COMMON_BUILDER.comment("Whether Age makes a difference on Trade Prices").define("doesAgeAffectPrices", true);
@@ -115,12 +119,11 @@ public class CommonConfig {
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1d, 1.25d, 1.5d, 1.75d, 2d, 2.5d), it -> true);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> true);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> true);
-        ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 1D, 1.5D, 2D, 3D, 4D), it -> true);
         drainedBloodForNextAge = COMMON_BUILDER.comment("How much blood drained for next Age Rank. Count is reset on Rank Up").defineList("drainedBloodForNextAge", Arrays.asList(150, 300, 600, 900, 1250), it -> true);
+        ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 1D, 1.5D, 2D, 3D, 4D), it -> true);
         stepAssistBonus = COMMON_BUILDER.comment("The Age Rank at which a vampire gains step assist. Set to 0 to disable. ").defineInRange("stepAssistLevel", 2, 0, 6);
         shouldAgeAffectExhaustion = COMMON_BUILDER.comment("Whether Age affects Blood Exhaustion").define("ageAffectsBloodExhaustion", true);
         ageExhaustionEffect = COMMON_BUILDER.comment("How much each rank affects Blood Exhaustion Rate (Blood Drain), lower numbers are a lower decrease in exhaustion, higher numbers decrease exhaustion, values above 1 will cause 0 blood drain. Set all to 0 to have no change in exhaustion rate. Negative Numbers can be used for inverse effect").defineList("ageExhaustionEffect", Arrays.asList(-0.0D, -0.1D, -0.2D, -0.3D, -0.4D, -0.5D), it -> true);
-        advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
         shouldAgeAffectHealing = COMMON_BUILDER.comment("Whether Age Rank affects healing").define("ageHealingAffect", false);
         ageHealingMultiplier = COMMON_BUILDER.comment("How much each rank multiplies healing, this affects all types of healing ").defineList("ageHealingMultiplier", Arrays.asList(1d, 1d, 1d, 1.5d, 1.75d, 2d), it -> true);
         shouldAgeIncreaseHunterMobDamage = COMMON_BUILDER.comment("Whether Age Rank affects how much damage Hunter mobs do").define("shouldAgeIncreaseHunterMobDamage", true);
@@ -131,13 +134,11 @@ public class CommonConfig {
         shouldOnlyDieFromKillingSourcesAgeRank = COMMON_BUILDER.comment("The age rank at which shouldOnlyDieFromKillingSources activates at").defineInRange("shouldOnlyDieFromKillingSourcesAgeRank", 4, 0, 5);
         immortalBloodLoss = COMMON_BUILDER.comment("If this and should only die from killing sources is enabled, the player will lose some blood when taking damage. If they have no blood left they will no longer be immortal").define("immortalityBloodRequirement", false);
         bloodlossDamageThreshold = COMMON_BUILDER.comment("Minimum damage for bloodloss to begin happening with 'immortalBloodLoss' enabled").defineInRange("bloodlossDamageThreshold", 1, 0, 100);
-        bloodlossDamageCap = COMMON_BUILDER.comment("How much the damage is multiplied to get bloodloss amount 'immortalBloodLoss' enabled").defineInRange("bloodlossDamageCap", 16, 0, 100);
-        bloodlossScaleFactor = COMMON_BUILDER.comment("Maximum damage for bloodloss with immortalBloodLoss' enabled").defineInRange("bloodlossScaleFactor", 1d, 0, 100);
+        bloodlossDamageCap = COMMON_BUILDER.comment("Maximum damage for bloodloss with immortalBloodLoss' enabled").defineInRange("bloodlossDamageCap", 16, 0, 100);
+        bloodlossScaleFactor = COMMON_BUILDER.comment("How much the damage is multiplied to get bloodloss amount 'immortalBloodLoss' enabled").defineInRange("bloodlossScaleFactor", 1d, 0, 100);
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
-        waterWalkingCooldown = COMMON_BUILDER.comment("Cooldown for water walking action").defineInRange("waterWalkingCooldown", 0, 0, Integer.MAX_VALUE);
-        waterWalkingDuration = COMMON_BUILDER.comment("Duration for water walking action").defineInRange("waterWalkingDuration", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 
         COMMON_BUILDER.pop();
 

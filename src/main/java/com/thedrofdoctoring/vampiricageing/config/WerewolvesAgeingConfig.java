@@ -53,7 +53,7 @@ public class WerewolvesAgeingConfig {
         healonBiteAmount = COMMON_BUILDER.comment("How much the player is healed for biting an entity based on rank").defineList("healonBiteAmount", Arrays.asList(0d, 0d, 0d, 1d, 2d, 2d), it -> true);
         formTimeMultiplier = COMMON_BUILDER.comment("How much the duration of time a player can stay in werewolf form is multiplied by").defineList("formTimeMultiplier", Arrays.asList(1d, 1.5d, 2d, 3d, 4d, 5d), it -> true);
         ageBuffsHowl = COMMON_BUILDER.comment("Whether higher age ranks buffs the mobs summoned by howling").define("ageBuffsHowl", true);
-        bitingGivesFood = COMMON_BUILDER.comment("When enabled, biting an entity").define("bitingGivesFood", true);
+        bitingGivesFood = COMMON_BUILDER.comment("When enabled, biting an entity provides sustenance").define("bitingGivesFood", true);
         rankForBiteFood = COMMON_BUILDER.comment("Requires bitingGivesFood to be enabled. At what rank should biting begin to give food").defineInRange("rankForBitefood", 2, 0, 5);
         biteNutrition = COMMON_BUILDER.comment("How much nutrition (hungar bar value) a bite gives").defineInRange("biteNutrition", 1, 0, 20);
         biteSaturation = COMMON_BUILDER.comment("How much saturation a bite gives").defineInRange("biteSaturation", 0.1D, 0D, 1.2D);

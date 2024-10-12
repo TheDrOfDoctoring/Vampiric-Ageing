@@ -2,7 +2,7 @@
   "type": "vampirism:alchemical_table",
   "ingredient": [
     {
-      "items": "vampirism:pure_blood_4"
+      "item": "vampirism:pure_blood_4"
     }
   ],
   "input": [
@@ -11,16 +11,15 @@
       "count": 1,
       "items": "vampiricageing:tainted_blood_bottle",
       "components": {
-        "minecraft:damage": {
-          "damage": 5
-        }
+        "minecraft:damage": 5
       }
     }
   ],
-  "result": [
+  "result":
     {
       "id": "vampiricageing:tainted_concentrate"
-    }
-  ],
-  "skill": "vampiricageing:tainted_blood_skill"
+    },
+  "skill": [
+    "vampiricageing:tainted_blood_skill"
+  ]
 }

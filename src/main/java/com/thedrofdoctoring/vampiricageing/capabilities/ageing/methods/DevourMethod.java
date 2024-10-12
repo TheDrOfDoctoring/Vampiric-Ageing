@@ -4,6 +4,7 @@ import com.thedrofdoctoring.vampiricageing.AgeingReference;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
+import net.neoforged.fml.ModList;
 
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ public class DevourMethod implements IAgeMethod {
     }
     @Override
     public boolean isEnabled() {
-        return WerewolvesAgeingConfig.ageingMethod.get().equals(ID);
+        return ModList.get().isLoaded("werewolves") && WerewolvesAgeingConfig.ageingMethod.get().equals(ID);
     }
     @Override
     public String getId() {

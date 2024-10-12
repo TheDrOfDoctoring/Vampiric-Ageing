@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class VampireAgeingType implements IAgeType  {
     private static final String id = "VAMPIRE";
@@ -83,5 +84,11 @@ public class VampireAgeingType implements IAgeType  {
     public String getId() {
         return id;
     }
+
+    @Override
+    public Optional<TypeState> getStateType() {
+        return Optional.empty();
+    }
+
 
 }

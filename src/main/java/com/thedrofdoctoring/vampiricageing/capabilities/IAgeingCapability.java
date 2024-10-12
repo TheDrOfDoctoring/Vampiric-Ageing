@@ -3,6 +3,7 @@ package com.thedrofdoctoring.vampiricageing.capabilities;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.TypeState;
 
 public interface IAgeingCapability  {
 
@@ -13,21 +14,13 @@ public interface IAgeingCapability  {
     void setRankProgress(int progress);
     int getRankProgress();
 
-    int getTemporaryTaintedAgeBonus();
-
-    void setTemporaryTaintedAgeBonus(int bonus);
-    int getTemporaryTainedTicks();
-
-    void setTemporaryTaintedTicks(int ticks);
-
     IAgeMethod getMethod();
     IAgeType getType();
     void setMethod(IAgeMethod method);
     void setType(IAgeType type);
 
-    boolean isTransformed();
+    TypeState getTypeState();
 
-    void setTransformed(boolean transformed);
 
 
 }

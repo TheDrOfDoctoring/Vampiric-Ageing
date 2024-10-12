@@ -4,6 +4,7 @@ import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -34,14 +35,18 @@ public class CapabilityHelper {
             return 0;
         }
         AgeingManager age = AgeingManager.getAge(player);
-        boolean transformed = age.isTransformed();
-        int tainted = age.getTemporaryTaintedAgeBonus();
-        int bonus = transformed ? 6 : tainted;
-        int rank = age.getAge();
-        if(rank == 0 && !transformed) {
-            return 0;
+        if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
+            boolean transformed = state.isTransformed();
+            int tainted = state.getTemporaryTaintedAgeBonus();
+            int bonus = transformed ? 6 : tainted;
+            int rank = age.getAge();
+            if(rank == 0 && !transformed) {
+                return 0;
+            }
+            return rank + bonus;
         }
-        return rank + bonus;
+        return 0;
+
     }
     public static void setDefaultAgeTypeAndMethod(Player player) {
         AgeingManager manager = AgeingManager.getAge(player);
