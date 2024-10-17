@@ -152,6 +152,8 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
     }
 
     public boolean canAge() {
+        if(this.type == null) return false;
+
         if(entity instanceof ServerPlayer player && entity.isAlive()) {
             int level = FactionPlayerHandler.get(player).getCurrentLevel();
 
