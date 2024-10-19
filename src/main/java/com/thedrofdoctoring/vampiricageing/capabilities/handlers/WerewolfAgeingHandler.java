@@ -24,7 +24,7 @@ public class WerewolfAgeingHandler {
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
-        if(event.getSource().getEntity() instanceof Player player) {
+        if(event.getSource().getEntity() instanceof Player player && event.getSource().is(ModDamageTypes.BITE)) {
             AgeingManager age = AgeingManager.getAge(player);
             int pointWorth;
             if(!(age.getMethod() instanceof DevourMethod)) return;
@@ -41,6 +41,7 @@ public class WerewolfAgeingHandler {
                 pointWorth = 0;
             }
             age.increaseRankPoints(pointWorth);
+            age.sync(false);
         }
 
     }

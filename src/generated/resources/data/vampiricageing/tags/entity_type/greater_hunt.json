@@ -1,0 +1,9 @@
+{
+  "values": [
+    "vampirism:vampire_baron",
+    {
+      "id": "werewolves:alpha_werewolf",
+      "required": false
+    }
+  ]
+}

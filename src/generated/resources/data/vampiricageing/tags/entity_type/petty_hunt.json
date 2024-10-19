@@ -1,0 +1,10 @@
+{
+  "values": [
+    "vampirism:vampire",
+    "vampirism:vampire_imob",
+    {
+      "id": "werewolves:werewolf_survivalist",
+      "required": false
+    }
+  ]
+}
