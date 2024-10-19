@@ -45,8 +45,8 @@ public class WerewolvesAgeingConfig {
         devouredForNextAge = COMMON_BUILDER.comment("How many points worth of devoured entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("devouredforNextAge", Arrays.asList(30, 60, 100, 250, 500), it -> true);
         pettyDevourWorth = COMMON_BUILDER.comment("How much a petty devour is worth. These are things like basic animals").defineInRange("pettyDevourWorth", 1, 0, 99);
         commonDevourWorth = COMMON_BUILDER.comment("How much a common devour is worth. These are things like certain hostile mobs").defineInRange("commonDevourWorth", 2, 0, 99);
-        greaterDevourWorth = COMMON_BUILDER.comment("How much a greater devour is worth. These are things like advanced faction mobs").defineInRange("greaterDevourWorth", 4, 0, 99);
-        exquisiteDevourWorth = COMMON_BUILDER.comment("How much a exquisite devour is worth. These are things like vampire barons").defineInRange("exquisiteDevourWorth", 8, 0, 99);
+        greaterDevourWorth = COMMON_BUILDER.comment("How much a greater devour is worth. These are things like advanced faction mobs").defineInRange("greaterDevourWorth", 5, 0, 99);
+        exquisiteDevourWorth = COMMON_BUILDER.comment("How much a exquisite devour is worth. These are things like vampire barons").defineInRange("exquisiteDevourWorth", 10, 0, 99);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 2D, 2D, 4D, 4D, 6D), t -> true);
         biteDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies bite damage. Bite damage multiplier is strange and values of 0 should be treated as 1, values like 0.2 should be treated as a 1.2 multiplier").defineList("biteDamageMultiplier", Arrays.asList(0d, 0d, 0d, 0.125d, 0.25d, 0.5d), it -> true);
         silverOilDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies damages from Silver Oil. Values are set to 1 by default as to disable it by default.").defineList("silverOilMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 1d, 1d), it -> true);
