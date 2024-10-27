@@ -33,6 +33,7 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
+import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.ModDamageSources;
@@ -418,10 +419,14 @@ public class VampiricAgeingCapabilityManager {
         }
     }
     @SubscribeEvent
-    public static void useItem(LivingEntityUseItemEvent.Finish event) {
+    public static void useItem(LivingEntityUseItemEvent.Stop event) {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
+
+        if(BloodHelper.getBlood(stack) != 0) return;
+
         if(CommonConfig.sireingMechanic.get() && stack.getOrCreateTag().contains("AGE") && entity instanceof Player player && Helper.isVampire(entity) && event.getItem().is(ModItems.BLOOD_BOTTLE.get())) {
+
             int age = stack.getOrCreateTag().getInt("AGE");
             int ageRank = getAge(entity).map(ageCap -> ageCap.getAge()).orElse(0);
             stack.getOrCreateTag().remove("AGE");
@@ -628,21 +633,15 @@ public class VampiricAgeingCapabilityManager {
                 }
                 List<? extends Double> percentages = CommonConfig.percentageAdvancedVampireAges.get();
                 double random = vamp.getRandom().nextDouble();
-                //im tired but i think this works right?
-                if(random <= percentages.get(0)) {
-                    vampireAge.setAge(1);
-                } else if ((random <= percentages.get(1) + percentages.get(0)) && random > percentages.get(0)) {
-                    vampireAge.setAge(2);
-                } else if (random <= percentages.get(2) + percentages.get(1) && random > percentages.get(1)) {
-                    vampireAge.setAge(3);
-                } else if (random <= percentages.get(3) + percentages.get(2) && random > percentages.get(2)) {
-                    vampireAge.setAge(4);
-                } else if(random <= percentages.get(4) + percentages.get(3) && random > percentages.get(3)) {
-                    vampireAge.setAge(5);
-                } else {
-                    vampireAge.setAge(0);
-                    return;
+                double cumulative = 0;
+                for (int i = 0; i < percentages.size(); i++) {
+                    cumulative += percentages.get(i);
+                    if (random <= cumulative) {
+                        vampireAge.setAge(i);
+                        break;
+                    }
                 }
+
                 float ageMultiplier = Math.min(1, (float) vampireAge.getAge() / 2);
                 removeModifier(vamp.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_UUID);
                 removeModifier(vamp.getAttribute(Attributes.ATTACK_DAMAGE), ATTACK_DAMAGE_UUID);
