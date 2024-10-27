@@ -23,7 +23,10 @@ public class BloodTesterItem extends Item {
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity source) {
         if(source instanceof Player player && !source.getCommandSenderWorld().isClientSide &&target.isAlive() && Helper.isVampire(target) && (target.getType() == EntityType.PLAYER || (target.getType().is(ModTags.Entities.ADVANCED_VAMPIRE) && CommonConfig.advancedVampireAge.get()))) {
-            int age = AgeingManager.getAge(player).getAge();
+            int age = 0;
+            if(AgeingManager.getAge(target).isPresent()) {
+                age = AgeingManager.getAge(target).get().getAge();
+            }
             player.sendSystemMessage(Component.translatable("text.vampiricageing.vampire_blood_rank", age));
         }
         return super.hurtEnemy(stack, target, source);

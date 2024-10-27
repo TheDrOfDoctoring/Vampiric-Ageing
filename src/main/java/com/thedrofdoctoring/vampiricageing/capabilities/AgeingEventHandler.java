@@ -1,5 +1,6 @@
 package com.thedrofdoctoring.vampiricageing.capabilities;
 
+import com.thedrofdoctoring.vampiricageing.AgeingReference;
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.actions.VampiricAgeingActions;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
@@ -16,16 +17,15 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.core.ModDamageTypes;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
+import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import net.minecraft.ChatFormatting;
@@ -140,20 +140,15 @@ public class AgeingEventHandler {
             }
             List<? extends Double> percentages = CommonConfig.percentageAdvancedVampireAges.get();
             double random = vamp.getRandom().nextDouble();
-            //im tired but i think this works right?
-            if(random <= percentages.get(0)) {
-                manager.setAge(1);
-            } else if ((random <= percentages.get(1) + percentages.get(0)) && random > percentages.get(0)) {
-                manager.setAge(2);
-            } else if (random <= percentages.get(2) + percentages.get(1) && random > percentages.get(1)) {
-                manager.setAge(3);
-            } else if (random <= percentages.get(3) + percentages.get(2) && random > percentages.get(2)) {
-                manager.setAge(4);
-            } else if(random <= percentages.get(4) + percentages.get(3) && random > percentages.get(3)) {
-                manager.setAge(5);
-            } else {
-                manager.setAge(0);
-                return;
+            double cumulative = 0;
+            manager.setType(AgeingReference.VAMP);
+
+            for (int i = 0; i < percentages.size(); i++) {
+                cumulative += percentages.get(i);
+                if (random <= cumulative) {
+                    manager.setAge(i);
+                    break;
+                }
             }
             float ageMultiplier = Math.min(1, (float) manager.getAge() / 2);
 
@@ -161,7 +156,6 @@ public class AgeingEventHandler {
             ResourceLocation ATTACK_DAMAGE = VampiricAgeing.rl("adv_vamp_age_damage");
             ResourceLocation KNOCKBACK_RESISTANCE = VampiricAgeing.rl("adv_vamp_age_resistance");
             ResourceLocation SPEED = VampiricAgeing.rl("adv_vamp_age_speed");
-
 
             removeModifier(vamp.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH);
             removeModifier(vamp.getAttribute(Attributes.ATTACK_DAMAGE), ATTACK_DAMAGE);
@@ -331,12 +325,12 @@ public class AgeingEventHandler {
         LivingEntity dead = event.getEntity();
         if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player ) {
             if (CommonConfig.sireingMechanic.get() && player.getOffhandItem().is(Items.GLASS_BOTTLE) && Helper.isVampire(dead) && (dead instanceof AdvancedVampireEntity || dead instanceof Player)) {
-                int age = AgeingManager.getAge(player).getAge();
+                int age = AgeingManager.getAge(dead).get().getAge();
                 ItemStack offHandStack = player.getOffhandItem();
                 offHandStack.shrink(1);
                 ItemStack stack = ModItems.BLOOD_BOTTLE.get().getDefaultInstance();
+                stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(1));
                 stack.set(AgeingDataComponents.AGE_RANK, age);
-                stack.setDamageValue(1);
                 player.addItem(stack);
             }
         }
@@ -355,9 +349,12 @@ public class AgeingEventHandler {
         }
     }
     @SubscribeEvent
-    public static void useItem(LivingEntityUseItemEvent.Finish event) {
+    public static void useItem(LivingEntityUseItemEvent.Stop event) {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
+
+        if(BloodHelper.getBlood(stack) != 0) return;
+
         if(CommonConfig.sireingMechanic.get()  && entity instanceof Player player && Helper.isVampire(entity) && event.getItem().is(ModItems.BLOOD_BOTTLE.get())) {
             int age = stack.getOrDefault(AgeingDataComponents.AGE_RANK, 0);
             AgeingManager manager = AgeingManager.getAge(player);
