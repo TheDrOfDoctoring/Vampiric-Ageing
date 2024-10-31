@@ -109,7 +109,7 @@ public class CommonConfig {
         drainBloodAction = COMMON_BUILDER.comment("Whether the Blood Tap action is available for Aged Vampires").define("drainBloodAction", true);
         COMMON_BUILDER.comment("For any config with a list of 6 numbers, the very first number refers to a vampire with no age rank and the second number is the first age rank.");
         advancedVampireAge = COMMON_BUILDER.comment("Whether Advanced Vampires should spawn with an Age Tier").define("advancedVampireAge", true);
-        percentageAdvancedVampireAges = COMMON_BUILDER.comment("The percentage, as a decimal, of how likely an advanced vampire is to get each rank with advanced vampire ages enabled").defineList("percentageAdvancedVampireAges", Arrays.asList(0.5D, 0.3D, 0.1D, 0.08D, 0.02D), it -> true);
+        percentageAdvancedVampireAges = COMMON_BUILDER.comment("The percentage, as a decimal, of how likely an advanced vampire is to get each rank with advanced vampire ages enabled").defineList("percentageAdvancedVampireAges", Arrays.asList(0.5D, 0.3D, 0.1D, 0.06D, 0.03D, 0.01D), it -> true);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 2D, 2D, 3D, 4D, 5D), t -> true);
         doesAgeAffectPrices = COMMON_BUILDER.comment("Whether Age makes a difference on Trade Prices").define("doesAgeAffectPrices", true);
         harsherOutOfBlood = COMMON_BUILDER.comment("Makes running out of blood harsher on vampire, scaling with age").define("harsherOutOfBlood", false);
