@@ -50,6 +50,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -560,14 +561,7 @@ public class VampiricAgeingCapabilityManager {
 
         }
     }
-    @SubscribeEvent
-    public static void onHeal(LivingHealEvent event) {
-        if(CommonConfig.shouldAgeAffectHealing.get() && Helper.isVampire(event.getEntity())) {
-            int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
-            event.setAmount(event.getAmount() * CommonConfig.ageHealingMultiplier.get().get(age).floatValue());
-        }
 
-    }
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
@@ -655,6 +649,19 @@ public class VampiricAgeingCapabilityManager {
                     vamp.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(AGE_ADVANCED_SPEED_INCREASE, "AGE_VAMPIRE_SPEED_INCREASE", 0.2 * ageMultiplier, AttributeModifier.Operation.MULTIPLY_TOTAL));
                 }
             });
+        }
+    }
+    @SubscribeEvent
+    public static void onFoodEatenFinish(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
+            int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+            if(!event.getItem().is(Items.ENCHANTED_GOLDEN_APPLE) || age < CommonConfig.goldenAppleNoRegenRank.get()) {
+                return;
+            }
+
+            if(player.getEffect(MobEffects.REGENERATION) != null && player.getEffect(MobEffects.REGENERATION).getDuration() == 400) {
+                player.removeEffect(MobEffects.REGENERATION);
+            }
         }
     }
 

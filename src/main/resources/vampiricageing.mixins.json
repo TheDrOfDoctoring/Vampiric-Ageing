@@ -6,6 +6,7 @@
   "plugin": "com.doctor.vampiricageing.VampiricAgeingMixinPlugin",
   "mixins": [
     "BlockBehaviourMixin",
+    "BloodStatsMixin",
     "DamageHandlerMixin",
     "FoodDataMixin",
     "FoodStatsAccessor",
