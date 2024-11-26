@@ -171,7 +171,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
 
 
 
-    public void onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
+    public void  onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
 
         this.type = this.getAgeType();
         if(oldAgeType != null && oldAgeType != this.type) {

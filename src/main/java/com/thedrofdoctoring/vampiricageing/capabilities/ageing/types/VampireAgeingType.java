@@ -41,8 +41,8 @@ public class VampireAgeingType implements IAgeType  {
 
         attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_attack_damage"), CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
         attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_max_health"), CommonConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
-        attributeMap.put(ModAttributes.DBNO_DURATION, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_dbno_duration"), CommonConfig.DBNOTimeMultiplier.get().get(age) - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        attributeMap.put(ModAttributes.NEONATAL_DURATION, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_neonatal_duration"), CommonConfig.neonatalTimeMultiplier.get().get(age) - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        attributeMap.put(ModAttributes.DBNO_DURATION, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_dbno_duration"), CommonConfig.DBNOTimeMultiplier.get().get(age), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        attributeMap.put(ModAttributes.NEONATAL_DURATION, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_neonatal_duration"), CommonConfig.neonatalTimeMultiplier.get().get(age), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         return attributeMap;
     }
 
