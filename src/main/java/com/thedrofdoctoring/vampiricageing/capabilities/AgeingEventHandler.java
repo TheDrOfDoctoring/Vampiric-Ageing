@@ -189,6 +189,17 @@ public class AgeingEventHandler {
     public static void onDamage(LivingIncomingDamageEvent event) {
         if(event.getEntity() instanceof Player player && Helper.isVampire(event.getEntity())) {
             int age = AgeingManager.getAge(player).getAge();
+            if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
+                VampirePlayer vp = VampirePlayer.get(player);
+                if(event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
+                    int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getAmount(), CommonConfig.bloodlossDamageCap.get().floatValue()));
+                    vp.useBlood(bloodLoss, false);
+                }
+                if(!(vp.getBloodLevel() <= 0.5f)) {
+                    player.setHealth(1);
+                    event.setCanceled(true);
+                }
+            }
             if(event.getSource().is(ModDamageTypes.SUN_DAMAGE)) {
                 event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
             } else if(event.getSource().is(ModDamageTypes.VAMPIRE_IN_FIRE) || event.getSource().is(ModDamageTypes.VAMPIRE_ON_FIRE)  || event.getSource().is(ModDamageTypes.HOLY_WATER) ) {
@@ -205,16 +216,6 @@ public class AgeingEventHandler {
                 event.setAmount(event.getAmount() * age);
             } else if(event.getSource().getEntity() != null && event.getSource().getEntity().getType().is(ModTags.Entities.HUNTER) && CommonConfig.shouldAgeIncreaseHunterMobDamage.get()) {
                 event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age).floatValue());
-            } else if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
-                if(event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
-                    int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getAmount(), CommonConfig.bloodlossDamageCap.get().floatValue()));
-                    VampirePlayer.getOpt(player).ifPresent(vp -> vp.useBlood(bloodLoss, false));
-                }
-                if(!(VampirePlayer.getOpt(player).map(vp -> vp.getBloodLevel() == 0).orElse(true))) {
-                    player.setHealth(1);
-                    event.setCanceled(true);
-                }
-
             }
 
         }
