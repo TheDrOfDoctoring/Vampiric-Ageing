@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -81,7 +82,8 @@ public class HunterTeleportAction extends DefaultHunterAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IHunterPlayer hunter) {
-        return CapabilityHelper.getCumulativeTaintedAge(hunter.getRepresentingPlayer()) >= HunterAgeingConfig.hunterTeleportActionAge.get();
+        boolean isBat = VampiricAgeingCapabilityManager.getAge(hunter.getRepresentingEntity()).map(h -> h.getBatMode()).orElse(false);
+        return CapabilityHelper.getCumulativeTaintedAge(hunter.getRepresentingPlayer()) >= HunterAgeingConfig.hunterTeleportActionAge.get() && !isBat;
     }
 
     @Override
