@@ -1,12 +1,14 @@
 package com.thedrofdoctoring.vampiricageing.actions;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
+import com.thedrofdoctoring.vampiricageing.capabilities.other.IHunterSpecialAttributes;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -79,7 +81,9 @@ public class HunterTeleportAction extends DefaultHunterAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IHunterPlayer hunter) {
-        return CapabilityHelper.getCumulativeTaintedAge(hunter.asEntity()) >= HunterAgeingConfig.hunterTeleportActionAge.get();
+        IHunterSpecialAttributes atts = (IHunterSpecialAttributes) ((HunterPlayer) hunter).getSpecialAttributes();
+        boolean isBat = atts.ageing$getBatMode();
+        return (CapabilityHelper.getCumulativeTaintedAge(hunter.asEntity()) >= HunterAgeingConfig.hunterTeleportActionAge.get()) && !isBat;
     }
 
     @Override
