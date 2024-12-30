@@ -657,13 +657,28 @@ public class VampiricAgeingCapabilityManager {
     @SubscribeEvent
     public static void onFoodEatenFinish(LivingEntityUseItemEvent.Finish event) {
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
+
             int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+
+
             if(!event.getItem().is(Items.ENCHANTED_GOLDEN_APPLE) || age < CommonConfig.goldenAppleNoRegenRank.get()) {
                 return;
             }
 
             if(player.getEffect(MobEffects.REGENERATION) != null && player.getEffect(MobEffects.REGENERATION).getDuration() == 400) {
                 player.removeEffect(MobEffects.REGENERATION);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemUseStart(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
+
+            int age = getAge(player).map(ageCap -> ageCap.getAge()).orElse(0);
+
+            if(event.getItem().is(Items.ENCHANTED_GOLDEN_APPLE) && age >= CommonConfig.goldenAppleNoEatRank.get()) {
+                event.setCanceled(true);
             }
         }
     }
