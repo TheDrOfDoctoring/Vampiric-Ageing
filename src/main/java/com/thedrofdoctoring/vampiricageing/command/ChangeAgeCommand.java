@@ -39,13 +39,10 @@ public class ChangeAgeCommand extends BasicCommand {
             if (age < 6 && age >= 0 && level > 0) {
                     manager.setAge(age);
                     IAgeType old = manager.getAgeType();
-                    if(manager.getAgeType() == null && age != 0) {
+                    if(manager.getAgeType() == null) {
                         CapabilityHelper.setDefaultAgeTypeAndMethod(player);
                     }
-                    if(age == 0) {
-                        manager.setType(null);
 
-                    }
                     manager.sync(true);
                     if(Helper.isHunter(player) && player.hasEffect(ModEffects.TAINTED_BLOOD_EFFECT)) {
                         player.removeEffect(ModEffects.TAINTED_BLOOD_EFFECT);

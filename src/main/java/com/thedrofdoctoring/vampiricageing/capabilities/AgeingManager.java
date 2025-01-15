@@ -148,6 +148,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
                 }
                 ModParticles.spawnParticlesServer(entity.level(), new GenericParticleOptions(ResourceLocation.fromNamespaceAndPath("minecraft", "spell_1"), 50, 0x8B0000, 0.2F), entity.getX(), entity.getY(), entity.getZ(), 100, 1, 1, 1, 0);
             }
+            this.sync(false);
         }
     }
 
