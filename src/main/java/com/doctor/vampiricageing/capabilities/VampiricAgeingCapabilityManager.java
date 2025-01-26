@@ -533,11 +533,12 @@ public class VampiricAgeingCapabilityManager {
             int age = getAge(event.getEntity()).map(ageCap -> ageCap.getAge()).orElse(0);
 
             if(!Helper.canKillVampires(event.getSource()) && event.getAmount() >= event.getEntity().getHealth()  && CommonConfig.shouldOnlyDieFromKillingSources.get() && age >= CommonConfig.shouldOnlyDieFromKillingSourcesAgeRank.get()) {
-                if(event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
+                if(CommonConfig.immortalBloodLoss.get() && event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
                     int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getAmount(), CommonConfig.bloodlossDamageCap.get().floatValue()));
                     VampirePlayer.getOpt(player).ifPresent(vp -> vp.useBlood(bloodLoss, true));
                 }
-                if(!(VampirePlayer.getOpt(player).map(vp -> vp.getBloodLevel() < 0.5).orElse(false))) {
+
+                if((!CommonConfig.immortalBloodLoss.get()) || (CommonConfig.immortalBloodLoss.get() && !(VampirePlayer.getOpt(player).map(vp -> vp.getBloodLevel() < 0.5).orElse(false)))) {
                     player.setHealth(1);
                     event.setCanceled(true);
                 }
