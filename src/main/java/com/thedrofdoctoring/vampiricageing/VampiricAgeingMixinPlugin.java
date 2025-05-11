@@ -12,6 +12,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public final class VampiricAgeingMixinPlugin implements IMixinConfigPlugin {
+
+    private static final Supplier<Boolean> WEREWOLVES_LOADED = () -> LoadingModList.get().getModFileById(VampiricAgeing.WEREWOLVES_MODID) != null;
+
+
+
     @Override
     public void onLoad(String mixinPackage) {
 
@@ -21,17 +26,18 @@ public final class VampiricAgeingMixinPlugin implements IMixinConfigPlugin {
     public String getRefMapperConfig() {
         return null;
     }
-    private static final Supplier<Boolean> TRUE = () -> true;
-    private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-            "com.doctor.vampiricageing.mixin.HowlActionMixin",() -> LoadingModList.get().getModFileById(VampiricAgeing.WEREWOLVES_MODID) != null,
-            "com.doctor.vampiricageing.mixin.SilverOilMixin", () -> LoadingModList.get().getModFileById(VampiricAgeing.WEREWOLVES_MODID) != null,
-            "com.doctor.vampiricageing.mixin.WerewolfFormActionMixin", () -> LoadingModList.get().getModFileById(VampiricAgeing.WEREWOLVES_MODID) != null
 
+
+    private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
+            "com.thedrofdoctoring.vampiricageing.mixin.HowlActionMixin", WEREWOLVES_LOADED,
+            "com.thedrofdoctoring.vampiricageing.mixin.SilverOilMixin", WEREWOLVES_LOADED,
+            "com.thedrofdoctoring.vampiricageing.mixin.WerewolfFormActionMixin", WEREWOLVES_LOADED
+            
     );
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return CONDITIONS.getOrDefault(mixinClassName, TRUE).get();
+        return CONDITIONS.getOrDefault(mixinClassName, () -> true).get();
     }
     @Override
     public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {

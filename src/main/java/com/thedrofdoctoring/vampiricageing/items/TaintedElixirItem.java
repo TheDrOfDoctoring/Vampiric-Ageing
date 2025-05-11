@@ -1,6 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.items;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import de.teamlapen.vampirism.api.VReference;
@@ -93,7 +94,10 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
             stack.shrink(1);
             if(entityLiving instanceof ServerPlayer sp) {
                 ageingManager.getType().handleSkills(ageingManager.getAge(), sp);
+                ageingManager.onAgeChange(sp, ageingManager.getAgeType());
+
             }
+
 
 
         }

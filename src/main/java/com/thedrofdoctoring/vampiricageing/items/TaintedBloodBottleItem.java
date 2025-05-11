@@ -86,6 +86,8 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             stack.shrink(1);
             if(entityLiving instanceof ServerPlayer sp) {
                 hunter.getType().handleSkills(hunter.getAge(), sp);
+                hunter.onAgeChange(sp, hunter.getAgeType());
+
             }        }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }

@@ -1,18 +1,24 @@
 package com.thedrofdoctoring.vampiricageing.capabilities.handlers;
 
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
+import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.DevourMethod;
+import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
+import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.data.EntityTypeTagProvider;
 import de.teamlapen.werewolves.blocks.StoneAltarFireBowlBlock;
 import de.teamlapen.werewolves.core.ModDamageTypes;
+import de.teamlapen.werewolves.core.ModEffects;
 import de.teamlapen.werewolves.util.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -81,5 +87,20 @@ public class WerewolfAgeingHandler {
                 }
             }
         }
+    }
+    @SubscribeEvent
+    public void onDamageWerewolves(LivingIncomingDamageEvent event) {
+        if(!Helper.isWerewolf(event.getEntity())) {
+            return;
+        }
+        if(!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getEntity();
+        if(player.hasEffect(ModEffects.SILVER)) {
+            int age = AgeingManager.getAge(player).getAge();
+            event.setAmount(event.getAmount() * WerewolvesAgeingConfig.silverDamageMultiplier.get().get(age).floatValue());
+        }
+
     }
 }
