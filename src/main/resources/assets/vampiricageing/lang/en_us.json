@@ -124,8 +124,8 @@
   "vampiricageing.configuration.taintedBloodWorseTradeDealsAge": "Tainted Age for Worse Trades",
   "vampiricageing.configuration.taintedAgeDamageBonus": "Tainted Damage Bonuses",
   "vampiricageing.configuration.taintedAgeFireDamageMultiplier": "Tainted Fire Damage Multiplier",
-  "vampiricageing.configuration.taintedAMaxHealthBonus": "Tainted Max Health",
-  "vampiricageing.configuration.taintedAMovementSpeedIncreases": "Tainted Movement Speed",
+  "vampiricageing.configuration.taintedAgeMaxHealthBonus": "Tainted Max Health",
+  "vampiricageing.configuration.taintedAgeMovementSpeedIncreases": "Tainted Movement Speed",
   "vampiricageing.configuration.taintedBloodtradeDealPricesMultiplier": "Tainted Blood Trade Prices",
   "vampiricageing.configuration.hunterMiningSpeedBonus": "Cumulative Age Mining Speeds",
   "vampiricageing.configuration.hunterTeleportAction": "Tainted Teleport Action ",
@@ -163,7 +163,10 @@
   "vampiricageing.configuration.biteNutrition": "Nutrition from Bite",
   "vampiricageing.configuration.biteSaturation": "Saturation from Bite",
   "vampiricageing.configuration.nourishmentMultipliers": "Age Nourishment Multipliers",
-
+  "vampiricageing.configuration.hunterAgeRankTitles": "Hunter Ageing Rank Titles",
+  "vampiricageing.configuration.vampireAgeRankTitles": "Vampire Ageing Rank Titles",
+  "vampiricageing.configuration.werewolfAgeRankTitles": "Werewolf Ageing Rank Titles",
+  "vampiricageing.configuration.silverDamageMultiplier": "Werewolf Silver Damage Multiplier",
 
   "vampiricageing.configuration.Vampire Values": "Vampire Values",
   "vampiricageing.configuration.section.vampiricageing.common.toml": "Common & Vampire Ageing",

@@ -17,8 +17,8 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
     //This is basically just a copy of the FactionLevelOverlay
     private final Minecraft mc = Minecraft.getInstance();
     @Override
-    public void render(GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui) {
+    public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
+        if (this.mc.player != null && this.mc.player.isAlive() && !this.mc.player.isUnderWater() && this.mc.player.getVehicle() == null && !this.mc.options.hideGui) {
             AgeingManager age = AgeingManager.getAge(mc.player);
             int rank = age.getAge();
 
@@ -27,8 +27,9 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
                 transformed = state.isTransformed();
             }
             if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && (rank > 0 || transformed)) {
-                String text = String.valueOf(rank);
-                int x = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + ClientConfig.guiLevelOffsetX.get();
+                String text = age.getType().getAgeTitle(rank);
+                int width = this.mc.font.width(text);
+                int x = (this.mc.getWindow().getGuiScaledWidth() - width) / 2 + ClientConfig.guiLevelOffsetX.get();
                 int y = this.mc.getWindow().getGuiScaledHeight() - ClientConfig.guiLevelOffsetY.get();
                 graphics.drawString(this.mc.font, text, x + 1, y, 0, false);
                 graphics.drawString(this.mc.font, text, x - 1, y, 0, false);
@@ -39,16 +40,15 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
                 if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
                     tempTainted = state.getTemporaryTaintedAgeBonus();
                 }
-                if(Helper.isHunter(this.mc.player) && HunterAgeingConfig.taintedBloodAvailable.get() && (tempTainted > 0 || transformed)) {
+                if(Helper.isHunter(this.mc.player) && ClientConfig.showTaintedAgeRank.get() && HunterAgeingConfig.taintedBloodAvailable.get() && (tempTainted > 0 || transformed)) {
                     int displayBonus = transformed  ? 6 : tempTainted;
                     String taintedTextValue = " (" + (rank + displayBonus) + ")";
-                    int x2 = x + 5;
-                    int y2 = y;
-                    graphics.drawString(this.mc.font, taintedTextValue, x2 + 1, y2, 0, false);
-                    graphics.drawString(this.mc.font, taintedTextValue, x2 - 1, y2, 0, false);
-                    graphics.drawString(this.mc.font, taintedTextValue, x2, y2 + 1, 0, false);
-                    graphics.drawString(this.mc.font, taintedTextValue, x2, y2 - 1, 0, false);
-                    graphics.drawString(this.mc.font, taintedTextValue, x2, y2, Color.MAGENTA_DARK.getRGB(), false);
+                    int x2 = x + 1 + width;
+                    graphics.drawString(this.mc.font, taintedTextValue, x2 + 1, y, 0, false);
+                    graphics.drawString(this.mc.font, taintedTextValue, x2 - 1, y, 0, false);
+                    graphics.drawString(this.mc.font, taintedTextValue, x2, y + 1, 0, false);
+                    graphics.drawString(this.mc.font, taintedTextValue, x2, y - 1, 0, false);
+                    graphics.drawString(this.mc.font, taintedTextValue, x2, y, Color.MAGENTA_DARK.getRGB(), false);
                 }
             }
         }

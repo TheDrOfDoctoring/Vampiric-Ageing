@@ -30,6 +30,7 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> silverDamageMultiplier;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> werewolfAgeRankTitles;
 
     public static final ModConfigSpec.ConfigValue<String> ageingMethod;
 
@@ -61,6 +62,7 @@ public class WerewolvesAgeingConfig {
         nourishmentMultipliers = COMMON_BUILDER.comment("How much more nourishing raw meat is for a werewolf based on age rank").defineList("nourishmentMultipliers", Arrays.asList(1, 1, 2, 2, 3, 3), it -> true);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 2D, 3D, 4D), it -> true);
         silverDamageMultiplier = COMMON_BUILDER.comment("How much each age rank multiples damage taken, when the silver effect is active.").defineList("silverDamageMultiplier", Arrays.asList(1.0D, 1.0D, 1.1D, 1.15D, 1.2D, 1.25D), it -> true);
+        werewolfAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("werewolfAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);
 
         WEREWOLF_AGEING_CONFIG = COMMON_BUILDER.build();
     }

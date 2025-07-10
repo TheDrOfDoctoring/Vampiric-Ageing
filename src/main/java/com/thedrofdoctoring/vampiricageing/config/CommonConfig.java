@@ -71,6 +71,7 @@ public class CommonConfig {
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> drainedBloodForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> infectedForNextAge;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> vampireAgeRankTitles;
 
     static {
         ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
@@ -139,6 +140,7 @@ public class CommonConfig {
         deadlySourcesFastDrainExhaustion = COMMON_BUILDER.comment("Garlic and fire will quickly drain them of blood saturation").define("deadlySourcesFastDrainExhaustion", true);
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
+        vampireAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("vampireAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);
 
         COMMON_BUILDER.pop();
 

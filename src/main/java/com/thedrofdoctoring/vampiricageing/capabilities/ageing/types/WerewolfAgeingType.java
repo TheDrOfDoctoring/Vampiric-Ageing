@@ -60,6 +60,11 @@ public class WerewolfAgeingType implements IAgeType {
     }
 
     @Override
+    public String getAgeTitle(int ageRank) {
+        return WerewolvesAgeingConfig.werewolfAgeRankTitles.get().get(ageRank - 1);
+    }
+
+    @Override
     public Optional<TypeState> getStateType() {
         return Optional.empty();
     }

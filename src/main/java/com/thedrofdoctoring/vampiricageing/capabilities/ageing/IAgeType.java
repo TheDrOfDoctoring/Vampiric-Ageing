@@ -25,6 +25,7 @@ public interface IAgeType {
     boolean isEnabled();
 
     String getId();
+    String getAgeTitle(int ageRank);
 
     Optional<? extends TypeState> getStateType();
 

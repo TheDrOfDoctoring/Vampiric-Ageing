@@ -91,6 +91,11 @@ public class HunterAgeingType implements IAgeType {
     }
 
     @Override
+    public String getAgeTitle(int ageRank) {
+        return HunterAgeingConfig.hunterAgeRankTitles.get().get(ageRank - 1);
+    }
+
+    @Override
     public Optional<HunterState> getStateType() {
         return Optional.of(new HunterState());
     }

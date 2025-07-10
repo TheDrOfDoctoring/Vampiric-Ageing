@@ -3,6 +3,7 @@ package com.thedrofdoctoring.vampiricageing.capabilities.ageing.types;
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
+import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -83,6 +84,12 @@ public class VampireAgeingType implements IAgeType  {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getAgeTitle(int ageRank) {
+        return CommonConfig.vampireAgeRankTitles.get().get(ageRank - 1);
+
     }
 
     @Override

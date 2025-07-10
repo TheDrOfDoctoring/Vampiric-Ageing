@@ -52,6 +52,7 @@ public class HunterAgeingConfig {
     public static final ModConfigSpec.DoubleValue limitedBatFlightSpeed;
     public static final ModConfigSpec.DoubleValue baseSunDamageAmount;
 
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> hunterAgeRankTitles;
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> taintedAgeNutritionReduction;
@@ -146,6 +147,8 @@ public class HunterAgeingConfig {
         taintedAgeNutritionReduction = COMMON_BUILDER.comment("How much nutrition from food is reduced by at each tainted age").defineList("taintedAgeNutritionReduction", Arrays.asList(0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 4, 5), t -> true);
         taintedAgeSaturationReduction = COMMON_BUILDER.comment("How much saturation from food is reduced at each tainted age").defineList("taintedAgeSaturationReduction", Arrays.asList(0d, 0d, 0d, 0d, 0d, 0d, 0d, 0.025d, 0.05d, 0.1d, 0.15d, 0.2d), t -> true);
         noNegativeEffectsFromBadFoodAge = COMMON_BUILDER.comment("At what cumulative tainted age does a hunter not have negative effects from eating human hearts").defineInRange("noNegativeEffectsFromBadFoodAge", 6, 0, 11);
+        hunterAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("hunterAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);
+
         COMMON_BUILDER.pop();
 
         HUNTER_AGEING_CONFIG = COMMON_BUILDER.build();
