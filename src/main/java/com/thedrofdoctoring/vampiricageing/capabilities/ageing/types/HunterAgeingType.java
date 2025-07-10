@@ -41,9 +41,13 @@ public class HunterAgeingType implements IAgeType {
         attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_max_health"), HunterAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
         attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_speed"), HunterAgeingConfig.movementSpeedBonus.get().get(age), AttributeModifier.Operation.ADD_VALUE));
         int cumulativeTaintedBloodAge = CapabilityHelper.getCumulativeTaintedAge(player);
-        attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_attack_damage"), HunterAgeingConfig.taintedDamageBonuses.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
-        attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_max_health"), HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
-        attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_speed"), HunterAgeingConfig.taintedBloodMovementSpeedIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
+        HunterState state = (HunterState) AgeingManager.getAge(player).getTypeState();
+        if(state != null && state.taintedAgeBonus > 0) {
+            attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_attack_damage"), HunterAgeingConfig.taintedDamageBonuses.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
+            attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_max_health"), HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
+            attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_speed"), HunterAgeingConfig.taintedBloodMovementSpeedIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
+        }
+
         return attributeMap;
     }
 

@@ -173,8 +173,12 @@ public class AgeingEventHandler {
 
     @SubscribeEvent
     public static void handleAgeMethod(EntityJoinLevelEvent event) {
-        if(event.getEntity() instanceof Player player) {
+        if(event.getEntity() instanceof ServerPlayer player) {
+            AgeingManager manager = AgeingManager.getAge(player);
+            IAgeType oldType = manager.getType();
             CapabilityHelper.setDefaultAgeTypeAndMethod(player);
+            manager.onAgeChange(player, oldType);
+            manager.sync(true);
         }
     }
 
@@ -320,8 +324,10 @@ public class AgeingEventHandler {
     public static void onDeath(LivingDeathEvent event) {
          if(event.getEntity() instanceof ServerPlayer player && CommonConfig.deathReset.get()) {
             AgeingManager age = AgeingManager.getAge(player);
+            IAgeType originalAgeType = age.getAgeType();
             age.setAge(0);
             age.sync(true);
+            age.onAgeChange(player, originalAgeType);
         }
         LivingEntity dead = event.getEntity();
         if(!dead.getCommandSenderWorld().isClientSide && event.getSource().getEntity() instanceof ServerPlayer player ) {

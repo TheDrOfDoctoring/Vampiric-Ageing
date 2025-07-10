@@ -95,7 +95,7 @@ dependencies {
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     // implementation ("curse.maven:jei-238222:5074416")
-    implementation ("curse.maven:vampirism-233029:5653984")// Example mod dependency using a mod jar from ./libs with a flat dir repository
+    implementation ("curse.maven:vampirism-233029:6544569")// Example mod dependency using a mod jar from ./libs with a flat dir repository
     implementation ("curse.maven:werewolves-417851:6164806")// Example mod dependency using a mod jar from ./libs with a flat dir repository
 
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

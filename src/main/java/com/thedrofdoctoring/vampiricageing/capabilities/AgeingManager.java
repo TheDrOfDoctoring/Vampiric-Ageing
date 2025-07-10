@@ -170,9 +170,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         } else return level >= type.minFactionRank();
     }
 
-
-
-    public void  onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
+    public void onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
 
         this.type = this.getAgeType();
         if(oldAgeType != null && oldAgeType != this.type) {
