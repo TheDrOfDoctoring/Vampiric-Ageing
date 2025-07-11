@@ -5,6 +5,8 @@ import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.data.EntityTypeTagProvider;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
@@ -54,8 +56,10 @@ public class VampHuntingMethod extends HuntingMethod {
         return AgeingReference.VAMP;
     }
 
+
     @Override
-    public String getRemainingLang() {
-        return "text.vampiricageing.progress_hunted_vampire";
+    public void displayLevelRequirements(Player player, int points, int age) {
+        int pointsForNextAge = getRankProgressions()[age] - points;
+        player.displayClientMessage(Component.translatable("text.vampiricageing.progress_hunted_vampire", pointsForNextAge).withStyle(ChatFormatting.DARK_RED), true);
     }
 }

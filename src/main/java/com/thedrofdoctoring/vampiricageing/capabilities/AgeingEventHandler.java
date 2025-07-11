@@ -28,7 +28,6 @@ import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -109,12 +108,8 @@ public class AgeingEventHandler {
         Player player = event.getEntity();
         if(Helper.isVampire(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && AgeingManager.getAge(player).canAge()) {
             AgeingManager age = AgeingManager.getAge(player);
-
             int points = age.getRankProgress();
-            points = age.getMethod().getRankProgressions()[age.getAge()] - points;
-
-            player.displayClientMessage(Component.translatable(age.getMethod().getRemainingLang(), points).withStyle(ChatFormatting.DARK_RED), true);
-
+            age.getMethod().displayLevelRequirements(player, points, age.getAge());
 
         }
     }
@@ -241,12 +236,12 @@ public class AgeingEventHandler {
             AgeingManager age = AgeingManager.getAge(player);
             IAgeType type = age.getAgeType();
             age.setAge(0);
+            age.setRankProgress(0);
             CapabilityHelper.setDefaultAgeTypeAndMethod(player);
 
             if(!player.getCommandSenderWorld().isClientSide) {
                 age.onAgeChange((ServerPlayer) player ,type);
             }
-
 
             if(event.getOldFaction() == VReference.HUNTER_FACTION && event.getCurrentFaction() != event.getOldFaction()) {
                 if(player.hasEffect(com.thedrofdoctoring.vampiricageing.init.ModEffects.TAINTED_BLOOD_EFFECT)) {

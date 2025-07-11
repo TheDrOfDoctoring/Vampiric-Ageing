@@ -1,5 +1,7 @@
 package com.thedrofdoctoring.vampiricageing.capabilities.ageing;
 
+import net.minecraft.world.entity.player.Player;
+
 public interface IAgeMethod {
 
     int[] getRankProgressions();
@@ -7,6 +9,5 @@ public interface IAgeMethod {
     IAgeType getValidType();
     boolean isEnabled();
 
-    String getRemainingLang();
-
+    void displayLevelRequirements(Player player, int points, int age);
 }

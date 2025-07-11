@@ -173,8 +173,7 @@ public class HunterAgeingHandler {
             if (player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof MedChairBlock && manager.canAge()) {
                 int age = manager.getAge();
                 int points = manager.getRankProgress();
-                int pointsForNextAge = manager.getMethod().getRankProgressions()[age] - points;
-                player.sendSystemMessage(Component.translatable("text.vampiricageing.progress_hunted", pointsForNextAge).withStyle(ChatFormatting.DARK_RED));
+                manager.getMethod().displayLevelRequirements(player, points, age);
             }
         }
     }
