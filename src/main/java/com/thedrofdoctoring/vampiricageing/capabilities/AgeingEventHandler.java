@@ -279,7 +279,7 @@ public class AgeingEventHandler {
         if(player.tickCount % 100 == 0 && event.getEntity() instanceof ServerPlayer sPlayer) {
             AgeingManager age = AgeingManager.getAge(sPlayer);
             if(age.getMethod() instanceof TimeMethod && age.canAge()) {
-                age.setRankProgress(age.getRankProgress() + 100);
+                age.increaseRankPoints(100);
                 age.sync(false);
             }
         }
