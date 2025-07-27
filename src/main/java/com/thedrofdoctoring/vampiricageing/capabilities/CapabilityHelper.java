@@ -11,8 +11,12 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.werewolves.api.WReference;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
+
+import javax.annotation.Nullable;
 
 public class CapabilityHelper {
 
@@ -29,6 +33,13 @@ public class CapabilityHelper {
         } else {
             return de.teamlapen.werewolves.util.Helper.isWerewolf(entity) || faction == WReference.WEREWOLF_FACTION;
         }
+    }
+
+    /**
+     * Work around for mixins, layer of indirection. Only call if werewolves is already loaded
+     */
+    public static boolean isRawMeat(@Nullable LivingEntity entity, ItemStack stack) {
+        return de.teamlapen.werewolves.util.Helper.isRawMeat(entity, stack);
     }
     public static int getCumulativeTaintedAge(Player player) {
         if(!Helper.isHunter(player) || !HunterAgeingConfig.taintedBloodAvailable.get()) {

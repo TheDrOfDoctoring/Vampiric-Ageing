@@ -162,7 +162,9 @@
   "vampiricageing.configuration.rankForBitefood": "Age Rank for Food Biting",
   "vampiricageing.configuration.biteNutrition": "Nutrition from Bite",
   "vampiricageing.configuration.biteSaturation": "Saturation from Bite",
-  "vampiricageing.configuration.nourishmentMultipliers": "Age Nourishment Multipliers",
+  "vampiricageing.configuration.nutritionMultipliers": "Raw Meat Nourishment Multipliers",
+  "vampiricageing.configuration.saturationMultipliers": "Raw Meat Saturation Multipliers",
+
   "vampiricageing.configuration.hunterAgeRankTitles": "Hunter Ageing Rank Titles",
   "vampiricageing.configuration.vampireAgeRankTitles": "Vampire Ageing Rank Titles",
   "vampiricageing.configuration.werewolfAgeRankTitles": "Werewolf Ageing Rank Titles",

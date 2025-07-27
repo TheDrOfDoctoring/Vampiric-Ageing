@@ -67,19 +67,7 @@ public class WerewolfAgeingHandler {
             }
         }
     }
-    @SubscribeEvent
-    public void onFoodEatenFinish(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof Player player && Helper.isWerewolf((Player) event.getEntity())) {
-            if (Helper.isRawMeat(player, event.getItem())) {
-                AgeingManager manager = AgeingManager.getAge(player);
-                int age = manager.getAge();
-                int multiplier = WerewolvesAgeingConfig.nourishmentMultipliers.get().get(age) - 1;
-                for(int i = 1; i <= multiplier; i++) {
-                    player.eat(player.getCommandSenderWorld(), event.getItem());
-                }
-            }
-        }
-    }
+
     @SubscribeEvent
     public void onDamageWerewolves(LivingIncomingDamageEvent event) {
         if(!Helper.isWerewolf(event.getEntity())) {

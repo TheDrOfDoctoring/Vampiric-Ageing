@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
+import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.data.ItemTagProvider;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +29,8 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @Shadow protected FoodData foodData;
 
+    @Shadow public abstract void sweepAttack();
+
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }
@@ -49,8 +52,8 @@ public abstract class PlayerMixin extends LivingEntity {
             this.foodData.addExhaustion(pExhaustion * HunterAgeingConfig.fasterExhaustionAmounts.get().get(age).floatValue());
         }
     }
-    @ModifyVariable(method = "eat", at = @At("HEAD"), argsOnly = true)
-    private FoodProperties modifyTaintedFoodProperties(FoodProperties props, @Local(ordinal = 0) ItemStack stack) {
+    @ModifyVariable(method = "eat", at = @At("HEAD"), argsOnly = true, remap = false)
+    private FoodProperties modifyEatenFoodProperties(FoodProperties props, @Local(ordinal = 0, argsOnly = true) ItemStack stack) {
         if(!stack.is(ItemTagProvider.taintedFood) && HunterAgeingConfig.reducedBenefitFromNormalFoods.get()) {
             if(Helper.isHunter(this)) {
 
@@ -58,6 +61,14 @@ public abstract class PlayerMixin extends LivingEntity {
                 int nutritionReduction = HunterAgeingConfig.taintedAgeNutritionReduction.get().get(cumulativeAge);
                 float saturationReduction = HunterAgeingConfig.taintedAgeSaturationReduction.get().get(cumulativeAge).floatValue();
                 return new FoodProperties(props.nutrition() - nutritionReduction, props.saturation() - saturationReduction, props.canAlwaysEat(), props.eatSeconds(), props.usingConvertsTo(), props.effects());
+            }
+        }
+        if(CapabilityHelper.isWerewolfCheckMod(this)) {
+            AgeingManager manager = AgeingManager.getAge((Player)(Object)this);
+            if(CapabilityHelper.isRawMeat(this, stack)) {
+                float nutritionMult = WerewolvesAgeingConfig.nutritionMultipliers.get().get(manager.getAge()).floatValue();
+                float saturationMult = WerewolvesAgeingConfig.saturationMultipliers.get().get(manager.getAge()).floatValue();
+                return new FoodProperties((int) (props.nutrition() * nutritionMult), props.saturation() * saturationMult, props.canAlwaysEat(), props.eatSeconds(), props.usingConvertsTo(), props.effects());
             }
         }
         return props;

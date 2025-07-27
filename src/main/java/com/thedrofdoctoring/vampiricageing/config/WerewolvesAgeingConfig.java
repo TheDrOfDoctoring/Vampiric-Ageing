@@ -22,7 +22,8 @@ public class WerewolvesAgeingConfig {
 
     public static final ModConfigSpec.DoubleValue biteSaturation;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> devouredForNextAge;
-    public static final ModConfigSpec.ConfigValue<List<? extends Integer>> nourishmentMultipliers;
+    public static final ModConfigSpec.ConfigValue<List<? extends Double>> nutritionMultipliers;
+    public static final ModConfigSpec.ConfigValue<List<? extends Double>> saturationMultipliers;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> biteDamageMultiplier;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> silverOilDamageMultiplier;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> formTimeMultiplier;
@@ -59,7 +60,9 @@ public class WerewolvesAgeingConfig {
         rankForBiteFood = COMMON_BUILDER.comment("Requires bitingGivesFood to be enabled. At what rank should biting begin to give food").defineInRange("rankForBitefood", 2, 0, 5);
         biteNutrition = COMMON_BUILDER.comment("How much nutrition (hungar bar value) a bite gives").defineInRange("biteNutrition", 1, 0, 20);
         biteSaturation = COMMON_BUILDER.comment("How much saturation a bite gives").defineInRange("biteSaturation", 0.1D, 0D, 1.2D);
-        nourishmentMultipliers = COMMON_BUILDER.comment("How much more nourishing raw meat is for a werewolf based on age rank").defineList("nourishmentMultipliers", Arrays.asList(1, 1, 2, 2, 3, 3), it -> true);
+        nutritionMultipliers = COMMON_BUILDER.comment("How much more nourishing raw meat is for a werewolf based on age rank").defineList("nutritionMultipliers", Arrays.asList(1d, 1d, 2d, 2d, 3d, 3d), it -> true);
+        saturationMultipliers = COMMON_BUILDER.comment("How much more saturating raw meat is for a werewolf based on age rank").defineList("saturationMultipliers", Arrays.asList(1d, 1d, 1.5d, 1.5d, 2d, 2d), it -> true);
+
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 2D, 3D, 4D), it -> true);
         silverDamageMultiplier = COMMON_BUILDER.comment("How much each age rank multiples damage taken, when the silver effect is active.").defineList("silverDamageMultiplier", Arrays.asList(1.0D, 1.0D, 1.1D, 1.15D, 1.2D, 1.25D), it -> true);
         werewolfAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("werewolfAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);
