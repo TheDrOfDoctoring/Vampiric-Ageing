@@ -81,6 +81,13 @@ public class AgeingEventHandler {
                 IVampirePlayer.BITE_TYPE biteType = vamp.determineBiteType(target);
                 int blood = 0;
                 float saturationMod = 1.0F;
+
+                if(biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD) {
+
+                    IBiteableEntity entity = (IBiteableEntity) target;
+                    blood = entity.onBite(vamp);
+                }
+
                 if (biteType == IVampirePlayer.BITE_TYPE.SUCK_BLOOD_PLAYER) {
                     VampirePlayer v = VampirePlayer.get((Player) target);
 
@@ -97,6 +104,7 @@ public class AgeingEventHandler {
                     }).orElse(0);
                     saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0.0F);
                 }
+
                 DrinkBloodContext context = new DrinkBloodContext(target);
                 vamp.drinkBlood(blood, saturationMod, context);
                 VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(vamp, blood, saturationMod, true, context);

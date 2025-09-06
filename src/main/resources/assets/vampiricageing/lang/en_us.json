@@ -175,5 +175,6 @@
   "vampiricageing.configuration.section.vampiricageing.werewolfageing.toml": "Werewolf Ageing",
   "vampiricageing.configuration.section.vampiricageing.hunterageing.toml": "Hunter Ageing",
   "command.vampiricageing.failed_to_execute.players.invalid_age": "Player must have age rank between 0 and 5 to use this command.",
-  "command.vampiricageing.base.rank_progress_sucess": "%s has increased their Age Rank progress by %s"
+  "command.vampiricageing.base.rank_progress_sucess": "%s has increased their Age Rank progress by %s",
+  "text.vampiricageing.dbno_age_loss": "With this resurrection, you have lost some of your power... (Age Rank - 1)"
 }

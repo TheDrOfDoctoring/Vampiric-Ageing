@@ -6,6 +6,8 @@ import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,10 +25,10 @@ public abstract class VampirePlayerMixin extends FactionBasePlayer<IVampirePlaye
     private void addEffect(CallbackInfo ci) {
         if(CommonConfig.ageLossDBNO.get() > 0 && player instanceof ServerPlayer sp) {
             AgeingManager manager = AgeingManager.getAge(player);
-            IAgeType old = manager.getAgeType();
             manager.setAge(Math.max(0, manager.getAge() - CommonConfig.ageLossDBNO.get()));
             manager.sync(false);
             manager.onAgeChange(sp, manager.getAgeType());
+            sp.displayClientMessage(Component.translatable("text.vampiricageing.dbno_age_loss").withStyle(ChatFormatting.DARK_RED), true);
         }
     }
 }
