@@ -278,7 +278,7 @@ public class AgeingEventHandler {
                 }
             }
 
-        } else if (event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
+        } else if (event.getOldLevel() == 0 && event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
             int sireAge = event.getPlayer().asEntity().getPersistentData().getInt("AGE");
             AgeingManager age = AgeingManager.getAge(event.getPlayer().asEntity());
             age.setAge(sireAge);
