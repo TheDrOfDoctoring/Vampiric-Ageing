@@ -61,8 +61,8 @@ public class CapabilityHelper {
     }
     public static void setDefaultAgeTypeAndMethod(Player player) {
         AgeingManager manager = AgeingManager.getAge(player);
+        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
         for(IAgeType type: AgeingRegistry.getAgeingTypes()) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if(type.isEnabled() && handler.getCurrentLevel() >= type.minFactionRank() && type.faction() == handler.getCurrentFaction()) {
                     manager.setType(type);
                 }

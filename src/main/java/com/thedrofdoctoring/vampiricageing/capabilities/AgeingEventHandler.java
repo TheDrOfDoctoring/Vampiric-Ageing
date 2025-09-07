@@ -4,6 +4,7 @@ import com.thedrofdoctoring.vampiricageing.AgeingReference;
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.actions.VampiricAgeingActions;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
+import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.DrinkBloodMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.HuntingMethod;
@@ -289,9 +290,20 @@ public class AgeingEventHandler {
             AgeingManager man = AgeingManager.getAge(event.getPlayer().asEntity());
             for(IAgeType type : AgeingRegistry.getAgeingTypes()) {
                 if(event.getNewLevel() >= type.minFactionRank() && type.faction() == event.getCurrentFaction()) {
+                    if(type.isEnabled() && type.equals(man.getType())) return;
+                    if(!type.isEnabled()) {
+                        man.setType(null);
+                        man.setAge(0);
+                        continue;
+                    }
                     man.setType(type);
                     man.setAge(0);
-                    CapabilityHelper.setDefaultAgeTypeAndMethod(event.getPlayer().asEntity());
+                    for(IAgeMethod method : AgeingRegistry.getAgeingMethods()) {
+                        if(method.isEnabled() && method.getValidType() == man.getType()) {
+                            man.setMethod(method);
+                        }
+                    }
+                    man.sync(false);
 
                 }
             }
