@@ -53,6 +53,8 @@ public class CommonConfig {
     public static final ModConfigSpec.IntValue waterWalkingDuration;
     public static final ModConfigSpec.IntValue waterWalkingCooldown;
 
+    public static final ModConfigSpec.IntValue goldenAppleNoEatRank;
+
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> genericVampireWeaknessReduction;
@@ -141,6 +143,10 @@ public class CommonConfig {
         amountExhaustionDrainFromSources = COMMON_BUILDER.comment("How much extra exhaustion there is of each garlic and fire tick at each age rank").defineList("amountExhaustionDrainFromSources", Arrays.asList(0d, 0d, 0d, 0.08d, 0.16d, 0.3d), it -> true);
         ageLossDBNO = COMMON_BUILDER.comment("How many ranks of age are lost after resurrecting from DBNO").defineInRange("ageLossDBNO", 1, 0, 5);
         vampireAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("vampireAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);
+
+        COMMON_BUILDER.comment("Below is deprecated in favour of data map for disabling items based on age rank.");
+        COMMON_BUILDER.comment("Look into the example provided in the (vampiric-ageing-repo)/examples/data/vampiricageing/data_maps for an example structure");
+        goldenAppleNoEatRank = COMMON_BUILDER.comment("Age rank at which enchanted golden apples cannot be eaten").defineInRange("goldenAppleNoEatRank", 6, 0, 6);
 
         COMMON_BUILDER.pop();
 

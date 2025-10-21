@@ -12,6 +12,8 @@ import com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods.TimeMetho
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.HunterAgeingType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.data.AgeingDataComponents;
+import com.thedrofdoctoring.vampiricageing.data.datamaps.AgeItemRestriction;
+import com.thedrofdoctoring.vampiricageing.data.datamaps.AgeingDatamaps;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -21,6 +23,7 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
@@ -402,8 +405,33 @@ public class AgeingEventHandler {
                 manager.setAge(age);
                 manager.sync(false);
             }
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void onItemUseStart(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player player) {
+
+            AgeingManager manager = AgeingManager.getAge(player);
+            AgeItemRestriction restriction = event.getItem().getItemHolder().getData(AgeingDatamaps.AGE_ITEM_RESTRICTION);
+            if(restriction != null) {
+                if(manager.getAge() >= restriction.ageRank() && FactionPlayerHandler.get(player).isInFaction(restriction.faction())) {
+                    event.setCanceled(true);
+                    return;
+                }
             }
 
+            if(Helper.isVampire(player) && event.getItem().is(Items.ENCHANTED_GOLDEN_APPLE) && manager.getAge() >= CommonConfig.goldenAppleNoEatRank.get()) {
+                event.setCanceled(true);
+            }
+
+            if(event.isCanceled()) {
+                player.displayClientMessage(Component.translatable("text.vampiricageing.item_disabled"), true);
+            }
+
+
         }
+    }
 }
 

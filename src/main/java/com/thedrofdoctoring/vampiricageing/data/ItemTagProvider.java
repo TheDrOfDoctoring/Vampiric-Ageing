@@ -11,6 +11,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,7 +23,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     public static final TagKey<Item> taintedFood = ItemTags.create(VampiricAgeing.rl("tainted_food"));
 
     @Override
-    protected void addTags(HolderLookup.Provider p_256380_) {
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
         this.tag(taintedFood).add(ModItems.HUMAN_HEART.get()).add(ModItems.WEAK_HUMAN_HEART.get());
     }
 

@@ -16,6 +16,8 @@ import com.thedrofdoctoring.vampiricageing.data.AgeingBlockTagsProvider;
 import com.thedrofdoctoring.vampiricageing.data.AgeingDataComponents;
 import com.thedrofdoctoring.vampiricageing.data.EntityTypeTagProvider;
 import com.thedrofdoctoring.vampiricageing.data.ItemTagProvider;
+import com.thedrofdoctoring.vampiricageing.data.datamaps.AgeingDatamaps;
+import com.thedrofdoctoring.vampiricageing.data.datamaps.AgeingDatamapsProvider;
 import com.thedrofdoctoring.vampiricageing.init.ModAttachments;
 import com.thedrofdoctoring.vampiricageing.init.ModEffects;
 import com.thedrofdoctoring.vampiricageing.init.ModItems;
@@ -42,6 +44,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -53,14 +56,13 @@ public class VampiricAgeing
     public static final String MODID = "vampiricageing";
     public static final String WEREWOLVES_MODID = "werewolves";
     public static final Logger LOGGER = LogUtils.getLogger();
-    private final IEventBus modBus;
 
     public VampiricAgeing(IEventBus modEventBus, ModContainer container)
     {
 
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::enqueueIMC);
-        this.modBus = modEventBus;
+        modEventBus.addListener(this::registerDataMapTypes);
         if(FMLEnvironment.dist == Dist.CLIENT) {
             container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
             ClientRegistryHandler.init(modEventBus);
@@ -110,6 +112,7 @@ public class VampiricAgeing
         EntityTypeTagProvider entityTypeTagProvider = new EntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper);
         AgeingBlockTagsProvider provider = new AgeingBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
         ItemTagProvider itemTagProvider = new ItemTagProvider(packOutput, lookupProvider, provider, existingFileHelper);
+        generator.addProvider(event.includeServer(), new AgeingDatamapsProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), provider);
         generator.addProvider(event.includeServer(), itemTagProvider);
         generator.addProvider(event.includeServer(), entityTypeTagProvider);
@@ -117,6 +120,10 @@ public class VampiricAgeing
     private void enqueueIMC(final InterModEnqueueEvent event) {
         HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.AGEING_MANAGER.get(), AgeingManager.class);
         HelperRegistry.registerSyncableEntityCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.AGEING_MANAGER.get(), AgeingManager.class);
+    }
+
+    public void registerDataMapTypes(final RegisterDataMapTypesEvent event) {
+        event.register(AgeingDatamaps.AGE_ITEM_RESTRICTION);
     }
 
 

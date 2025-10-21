@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:apple": {
+      "age_rank": 4,
+      "for_faction": {
+        "id": "vampirism:vampire"
+      }
+    }
+  }
+}
