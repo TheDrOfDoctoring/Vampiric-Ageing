@@ -418,16 +418,14 @@ public class AgeingEventHandler {
             if(restriction != null) {
                 if(manager.getAge() >= restriction.ageRank() && FactionPlayerHandler.get(player).isInFaction(restriction.faction())) {
                     event.setCanceled(true);
+                    player.displayClientMessage(Component.translatable("text.vampiricageing.item_disabled"), true);
                     return;
                 }
             }
 
             if(Helper.isVampire(player) && event.getItem().is(Items.ENCHANTED_GOLDEN_APPLE) && manager.getAge() >= CommonConfig.goldenAppleNoEatRank.get()) {
-                event.setCanceled(true);
-            }
-
-            if(event.isCanceled()) {
                 player.displayClientMessage(Component.translatable("text.vampiricageing.item_disabled"), true);
+                event.setCanceled(true);
             }
 
 
