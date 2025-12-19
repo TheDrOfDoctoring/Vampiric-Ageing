@@ -49,11 +49,10 @@ public class CommonConfig {
     public static final ModConfigSpec.IntValue bloodlossDamageCap;
     public static final ModConfigSpec.DoubleValue celerityActionMultiplier;
     public static final ModConfigSpec.ConfigValue<String> ageingMethod;
-
     public static final ModConfigSpec.IntValue waterWalkingDuration;
     public static final ModConfigSpec.IntValue waterWalkingCooldown;
-
     public static final ModConfigSpec.IntValue goldenAppleNoEatRank;
+    public static final ModConfigSpec.IntValue ageLostOnDeath;
 
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
@@ -81,6 +80,7 @@ public class CommonConfig {
         COMMON_BUILDER.push("Generic Values");
 
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
+        ageLostOnDeath = COMMON_BUILDER.comment("Requires 'death reset' to be enabled, if this config is set to a value > 0 then only that many age ranks will be lost on death, instead of all ranks.").defineInRange("ageLostOnDeath", 0, 0, 5);
         lordLevelRequirement = COMMON_BUILDER.comment("If enabled, ageing will require the player to be of a specified lord level").define("lordLevelRequirement", false);
         lordLevelRankRequirement = COMMON_BUILDER.comment("If lordLeveLRequirement is enabled, this defines the minimum lord level required to age").defineInRange("lordLevelRankRequirement", 5, 1, 5);
 

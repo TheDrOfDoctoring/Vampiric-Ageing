@@ -164,6 +164,9 @@
   "vampiricageing.configuration.biteSaturation": "Saturation from Bite",
   "vampiricageing.configuration.nutritionMultipliers": "Raw Meat Nourishment Multipliers",
   "vampiricageing.configuration.saturationMultipliers": "Raw Meat Saturation Multipliers",
+  "vampiricageing.configuration.ageLostOnDeath": "Age Lost on Death",
+  "vampiricageing.configuration.goldenAppleNoEatRank": "Golden Apple Inedible Rank",
+  "vampiricageing.configuration.showTaintedAgeRank": "Display Tainted Age Rank",
 
   "vampiricageing.configuration.hunterAgeRankTitles": "Hunter Ageing Rank Titles",
   "vampiricageing.configuration.vampireAgeRankTitles": "Vampire Ageing Rank Titles",

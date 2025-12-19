@@ -361,7 +361,12 @@ public class AgeingEventHandler {
          if(event.getEntity() instanceof ServerPlayer player && CommonConfig.deathReset.get()) {
             AgeingManager age = AgeingManager.getAge(player);
             IAgeType originalAgeType = age.getAgeType();
-            age.setAge(0);
+            if(CommonConfig.ageLostOnDeath.get() > 0) {
+                int current = age.getAge();
+                age.setAge(current - CommonConfig.ageLostOnDeath.get());
+            } else {
+                age.setAge(0);
+            }
             age.sync(true);
             age.onAgeChange(player, originalAgeType);
         }
