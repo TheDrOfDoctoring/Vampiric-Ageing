@@ -48,10 +48,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -230,9 +227,9 @@ public class AgeingEventHandler {
         }
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onDamageLowest(LivingIncomingDamageEvent event) {
+    public static void onDamageLowest(LivingDamageEvent.Pre event) {
 
-        if(event.getAmount() < event.getEntity().getHealth()) return;
+        if(event.getNewDamage() < event.getEntity().getHealth()) return;
 
         if(event.getEntity() instanceof Player player && Helper.isVampire(player)) {
             int age = AgeingManager.getAge(player).getAge();
@@ -241,17 +238,17 @@ public class AgeingEventHandler {
 
                 if(CommonConfig.immortalBloodLoss.get()) {
                     VampirePlayer vp = VampirePlayer.get(player);
-                    if(event.getAmount() >= CommonConfig.bloodlossDamageThreshold.get()) {
-                        int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getAmount(), CommonConfig.bloodlossDamageCap.get().floatValue()));
+                    if(event.getNewDamage() >= CommonConfig.bloodlossDamageThreshold.get()) {
+                        int bloodLoss = Math.round(CommonConfig.bloodlossScaleFactor.get().floatValue() * Math.min(event.getNewDamage(), CommonConfig.bloodlossDamageCap.get().floatValue()));
                         vp.useBlood(bloodLoss, true);
                     }
                     if(vp.getBloodLevel() >= 0.5f) {
                         player.setHealth(1);
-                        event.setCanceled(true);
+                        event.setNewDamage(0);
                     }
                 } else {
                     player.setHealth(1);
-                    event.setCanceled(true);
+                    event.setNewDamage(0);
                 }
             }
         }
