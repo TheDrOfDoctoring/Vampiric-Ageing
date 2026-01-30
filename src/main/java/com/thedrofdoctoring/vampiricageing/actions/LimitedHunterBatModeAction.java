@@ -37,7 +37,7 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
 
     @Override
     public boolean activate(IHunterPlayer hunter, ActivationContext context) {
-        Player player = hunter.getRepresentingPlayer();
+        Player player = hunter.asEntity();
         setModifier(player, true);
         updatePlayer((HunterPlayer) hunter, true);
         return true;
@@ -134,7 +134,7 @@ public class LimitedHunterBatModeAction extends DefaultHunterAction implements I
         } else {
             // Health modifier
             AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
-            AttributeModifier m = armorAttributeInst.getModifier(VampiricAgeing.rl("bat_armour_toughness"));
+            AttributeModifier m = armorAttributeInst.getModifier(VampiricAgeing.rl("bat_armour_modifier"));
             if (m != null) {
                 armorAttributeInst.removeModifier(m);
             }
