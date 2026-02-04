@@ -115,7 +115,9 @@ public class AgeingEventHandler {
     @SubscribeEvent
     public static void onCoffinInteract(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();
-        if(Helper.isVampire(player) && !player.getCommandSenderWorld().isClientSide && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && AgeingManager.getAge(player).canAge()) {
+        if(!player.isShiftKeyDown()) return;
+        if(Helper.isVampire(player) && !player.getCommandSenderWorld().isClientSide
+                && player.getCommandSenderWorld().getBlockState(event.getPos()).getBlock() instanceof CoffinBlock && AgeingManager.getAge(player).canAge()) {
             AgeingManager age = AgeingManager.getAge(player);
             int points = age.getRankProgress();
             age.getMethod().displayLevelRequirements(player, points, age.getAge());
