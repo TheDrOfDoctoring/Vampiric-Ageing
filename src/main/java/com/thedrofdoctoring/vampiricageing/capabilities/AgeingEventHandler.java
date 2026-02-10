@@ -362,7 +362,7 @@ public class AgeingEventHandler {
             IAgeType originalAgeType = age.getAgeType();
             if(CommonConfig.ageLostOnDeath.get() > 0) {
                 int current = age.getAge();
-                age.setAge(current - CommonConfig.ageLostOnDeath.get());
+                age.setAge(Math.max(0, current - CommonConfig.ageLostOnDeath.get()));
             } else {
                 age.setAge(0);
             }

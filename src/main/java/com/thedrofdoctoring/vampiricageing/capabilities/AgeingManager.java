@@ -242,7 +242,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if(nbt.contains("ageing_type")) {
-            this.ageRank = nbt.getInt("ageing_rank");
+            this.ageRank = Math.max(0, nbt.getInt("ageing_rank"));
             if(entity instanceof Player) {
                 this.typeId = nbt.getString("ageing_type");
                 this.type = getAgeType();
@@ -264,7 +264,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             this.ageRank = 0;
             this.rankProgress = 0;
         } else {
-            this.ageRank = nbt.getInt("ageing_rank");
+            this.ageRank = Math.max(0, nbt.getInt("ageing_rank"));
             if (entity instanceof Player) {
                 this.typeId = nbt.getString("ageing_type");
                 this.type = getAgeType();
