@@ -1,9 +1,9 @@
 package com.thedrofdoctoring.vampiricageing.capabilities.ageing.types;
 
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
+import com.thedrofdoctoring.vampiricageing.actions.StepAssistAction;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
-import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -33,11 +33,12 @@ public class VampireAgeingType implements IAgeType  {
     @Override
     public Map<Holder<Attribute>, AttributeModifier> getAgeAttributes(int age, Player player, boolean cleanup) {
         HashMap<Holder<Attribute>, AttributeModifier> attributeMap = new HashMap<>();
-        if(age > 0 && age >= CommonConfig.stepAssistBonus.get()) {
-            attributeMap.put(Attributes.STEP_HEIGHT, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_step_height"), 0.5, AttributeModifier.Operation.ADD_VALUE));
-        }
-        if(CommonConfig.shouldAgeAffectExhaustion.get()) {
+
+        if(CommonConfig.shouldAgeAffectExhaustion.get() || cleanup) {
             attributeMap.put(ModAttributes.BLOOD_EXHAUSTION, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_exhaustion"), CommonConfig.ageExhaustionEffect.get().get(age), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        if(cleanup) {
+            attributeMap.put(Attributes.STEP_HEIGHT, new AttributeModifier(StepAssistAction.STEP_HEIGHT, 0.0f, AttributeModifier.Operation.ADD_VALUE));
         }
 
         attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("vamp_ageing_attack_damage"), CommonConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
@@ -55,6 +56,12 @@ public class VampireAgeingType implements IAgeType  {
             skillHandler.enableSkill(VampiricAgeingSkills.WATER_WALKING_SKILL.get());
         } else {
             skillHandler.disableSkill(VampiricAgeingSkills.WATER_WALKING_SKILL.get());
+        }
+
+        if(age >= CommonConfig.stepAssistBonus.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.STEP_ASSIST_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.STEP_ASSIST_SKILL.get());
         }
 
         if(age >= CommonConfig.celerityActionRank.get()) {

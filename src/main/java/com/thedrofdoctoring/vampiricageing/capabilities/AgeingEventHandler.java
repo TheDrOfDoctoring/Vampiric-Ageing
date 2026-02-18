@@ -33,9 +33,11 @@ import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,7 +56,9 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager.removeModifier;
 
@@ -199,25 +203,24 @@ public class AgeingEventHandler {
     public static void onDamage(LivingIncomingDamageEvent event) {
         if(event.getEntity() instanceof Player player && Helper.isVampire(event.getEntity())) {
             int age = AgeingManager.getAge(player).getAge();
+            ResourceKey<DamageType> source = event.getSource().typeHolder().getKey();
+            if(DAMAGE_MAP.containsKey(source)) {
+                float damageResistance = getDamageSourceResistance(source, age);
 
-            if(event.getSource().is(ModDamageTypes.SUN_DAMAGE)) {
-                event.setAmount(event.getAmount() / CommonConfig.sunDamageReduction.get().get(age).floatValue());
-            } else if(event.getSource().is(ModDamageTypes.VAMPIRE_IN_FIRE) || event.getSource().is(ModDamageTypes.VAMPIRE_ON_FIRE)  || event.getSource().is(ModDamageTypes.HOLY_WATER) ) {
-                if(CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.getOpt(player).map(vamp -> vamp.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())).orElse(false) && CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue() < 1) {
-                    return;
+                if(event.getSource().is(ModDamageTypes.VAMPIRE_IN_FIRE) || event.getSource().is(ModDamageTypes.VAMPIRE_ON_FIRE) || event.getSource().is(ModDamageTypes.HOLY_WATER)) {
+                    if(CommonConfig.rageModeWeaknessToggle.get() && VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get()) && damageResistance < 1) {
+                        return;
+                    }
+                    if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get()) {
+                        VampirePlayer.get(player).addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
+                    }
                 }
-                if(!event.getSource().is(ModDamageTypes.HOLY_WATER) && CommonConfig.deadlySourcesFastDrainExhaustion.get() && event.getEntity() instanceof Player) {
-                    VampirePlayer.getOpt(player).ifPresent(vamp -> {
-                        vamp.addExhaustion(CommonConfig.amountExhaustionDrainFromSources.get().get(age).floatValue());
-                    });
-                }
-                event.setAmount(event.getAmount() / CommonConfig.genericVampireWeaknessReduction.get().get(age).floatValue());
+                event.setAmount(event.getAmount() / damageResistance);
             } else if(event.getSource().is(DamageTypes.STARVE) && CommonConfig.harsherOutOfBlood.get() && age > 0) {
                 event.setAmount(event.getAmount() * age);
             } else if(event.getSource().getEntity() != null && event.getSource().getEntity().getType().is(ModTags.Entities.HUNTER) && CommonConfig.shouldAgeIncreaseHunterMobDamage.get()) {
                 event.setAmount(event.getAmount() * CommonConfig.damageMultiplierFromHunters.get().get(age).floatValue());
             }
-
         }
         if(event.getSource().getEntity() instanceof AdvancedVampireEntity vamp && CommonConfig.sireingMechanic.get() && event.getEntity() instanceof ServerPlayer player && Helper.canBecomeVampire(player)) {
             AgeingManager age = AgeingManager.getAge(vamp);
@@ -228,6 +231,18 @@ public class AgeingEventHandler {
             }
         }
     }
+
+    private static final Map<ResourceKey<DamageType>, Supplier<List<? extends Double>>> DAMAGE_MAP = Map.of(
+            ModDamageTypes.VAMPIRE_IN_FIRE, CommonConfig.fireWeaknessReduction,
+            ModDamageTypes.VAMPIRE_ON_FIRE, CommonConfig.fireWeaknessReduction,
+            ModDamageTypes.HOLY_WATER,      CommonConfig.holyWaterWeaknessReduction,
+            ModDamageTypes.SUN_DAMAGE,      CommonConfig.sunDamageReduction
+    );
+
+    private static float getDamageSourceResistance(ResourceKey<DamageType> source, int rank) {
+        return DAMAGE_MAP.getOrDefault(source, () -> List.of(1d, 1d, 1d, 1d, 1d, 1d, 1d)).get().get(rank).floatValue();
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onDamageLowest(LivingDamageEvent.Pre event) {
 

@@ -53,10 +53,13 @@ public class CommonConfig {
     public static final ModConfigSpec.IntValue waterWalkingCooldown;
     public static final ModConfigSpec.IntValue goldenAppleNoEatRank;
     public static final ModConfigSpec.IntValue ageLostOnDeath;
+    public static final ModConfigSpec.IntValue stepAssistDuration;
+    public static final ModConfigSpec.IntValue stepAssistCooldown;
 
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> sunDamageReduction;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> percentageAdvancedVampireAges;
-    public static final ModConfigSpec.ConfigValue<List<? extends Double>> genericVampireWeaknessReduction;
+    public static final ModConfigSpec.ConfigValue<List<? extends Double>> fireWeaknessReduction;
+    public static final ModConfigSpec.ConfigValue<List<? extends Double>> holyWaterWeaknessReduction;
 
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> ageExhaustionEffect;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
@@ -100,6 +103,8 @@ public class CommonConfig {
         ageWaterWalkingRank = COMMON_BUILDER.comment("Age rank a vampire must be to walk on water").defineInRange("ageWaterWalkingRank", 4, 0,  6);
         waterWalkingCooldown = COMMON_BUILDER.comment("Cooldown for water walking action").defineInRange("waterWalkingCooldown", 0, 0, Integer.MAX_VALUE);
         waterWalkingDuration = COMMON_BUILDER.comment("Duration for water walking action").defineInRange("waterWalkingDuration", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+        stepAssistCooldown = COMMON_BUILDER.comment("Cooldown for step assist action").defineInRange("stepAsisstCooldown", 0, 0, Integer.MAX_VALUE);
+        stepAssistDuration = COMMON_BUILDER.comment("Duration for step assist action").defineInRange("stepAsisstDuration", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 
         celerityActionRank = COMMON_BUILDER.comment("What Age Rank a vampire must be to use the Celerity Action").defineInRange("celerityActionRank", 1, 0, 6);
         celerityActionCooldown = COMMON_BUILDER.comment("Cooldown of the Celerity action in seconds").defineInRange("celerityActionCooldown", 60, 20, 36000);
@@ -118,7 +123,9 @@ public class CommonConfig {
         harsherOutOfBlood = COMMON_BUILDER.comment("Makes running out of blood harsher on vampire, scaling with age").define("harsherOutOfBlood", false);
         ageAffectTradePrices = COMMON_BUILDER.comment("How much each rank affects Villager trade prices. ").defineList("ageAffectTradePrices", Arrays.asList(1D, 1.1D, 1.25D, 1.5D, 1.75D, 2D), t -> true);
         rageModeWeaknessToggle = COMMON_BUILDER.comment("If enabled, vampire rage will nullify increased damage from generic vampire weakness reduction").define("rageModeWeaknessToggle", true);
-        genericVampireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases generic vampire weakness damage sources (such as Fire) in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("genericVampireWeaknessReduction", Arrays.asList(1d, 1d, 0.95d, 0.9d, 0.8d, 0.75d), it -> true);
+        fireWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases fire damage sources in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("fireWeaknessReduction", Arrays.asList(1d, 1d, 0.95d, 0.9d, 0.8d, 0.75d), () -> 1d,it -> true);
+        holyWaterWeaknessReduction = COMMON_BUILDER.comment("How much each rank reduces/increases holy water damage sources in terms of how much the damage is divided by. Set all to 1 to have no change, use decimal values to increase damage").defineList("holyWaterWeaknessReduction", Arrays.asList(1d, 1d, 0.95d, 0.9d, 0.8d, 0.75d), () -> 1d,it -> true);
+
         sunDamageReduction = COMMON_BUILDER.comment("How much each rank reduces/increases Sun Damage in terms of how much the sun damage is divided by. Set all to 1 to have no change, use decimal values to increase sun damage").defineList("sunDamageReduction", Arrays.asList(1d, 1.25d, 1.5d, 1.75d, 2d, 2.5d), it -> true);
         ticksForNextAge = COMMON_BUILDER.comment("How much time in ticks for a player to advance to the next Age Rank. Count is reset on Rank Up").defineList("ticksForNextAge", Arrays.asList(72000, 144000, 288000, 576000, 1152000), it -> true);
         infectedForNextAge = COMMON_BUILDER.comment("How many entities infected for next Age Rank. Count is reset on Rank Up").defineList("infectedForNextAge", Arrays.asList(30, 45, 70, 100, 200), it -> true);

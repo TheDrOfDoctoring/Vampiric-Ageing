@@ -10,9 +10,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +44,11 @@ public class HunterAgeingType implements IAgeType {
             attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_attack_damage"), HunterAgeingConfig.taintedDamageBonuses.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
             attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_max_health"), HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
             attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_speed"), HunterAgeingConfig.taintedBloodMovementSpeedIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
+        }
+        if(cleanup) {
+            attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_attack_damage"), HunterAgeingConfig.taintedDamageBonuses.get().get(1), AttributeModifier.Operation.ADD_VALUE));
+            attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_max_health"), HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(1), AttributeModifier.Operation.ADD_VALUE));
+            attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_speed"), HunterAgeingConfig.taintedBloodMovementSpeedIncreases.get().get(1), AttributeModifier.Operation.ADD_VALUE));
         }
 
         return attributeMap;
