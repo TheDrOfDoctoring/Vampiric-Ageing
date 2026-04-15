@@ -86,8 +86,13 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
     }
 
     @Override
-    public void setAge(int age) {
-        this.ageRank = age;
+    public void setAge(int newRank) {
+        int oldRank = this.ageRank;
+        this.ageRank = newRank;
+        if(oldRank > 0 && newRank == 0 && this.entity instanceof Player player) {
+            this.type = null;
+            CapabilityHelper.setDefaultAgeTypeAndMethod(player);
+        }
     }
 
     @Override

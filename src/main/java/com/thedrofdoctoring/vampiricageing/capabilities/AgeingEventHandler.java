@@ -279,6 +279,7 @@ public class AgeingEventHandler {
             Player player = event.getPlayer().asEntity();
             AgeingManager age = AgeingManager.getAge(player);
             IAgeType type = age.getAgeType();
+            age.setType(null);
             age.setAge(0);
             age.setRankProgress(0);
             CapabilityHelper.setDefaultAgeTypeAndMethod(player);
@@ -296,7 +297,8 @@ public class AgeingEventHandler {
                 }
             }
 
-        } else if (event.getOldLevel() == 0 && event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION && CommonConfig.sireingMechanic.get() && event.getPlayer().getPlayer().getPersistentData().contains("AGE")) {
+        } else if (event.getOldLevel() == 0 && event.getNewLevel() > 0 && event.getCurrentFaction() == VReference.VAMPIRE_FACTION
+                && CommonConfig.sireingMechanic.get() && event.getPlayer().asEntity().getPersistentData().contains("AGE")) {
             int sireAge = event.getPlayer().asEntity().getPersistentData().getInt("AGE");
             AgeingManager age = AgeingManager.getAge(event.getPlayer().asEntity());
             age.setAge(sireAge);
@@ -415,14 +417,14 @@ public class AgeingEventHandler {
         LivingEntity entity = event.getEntity();
         ItemStack stack = event.getItem();
 
-        if(BloodHelper.getBlood(stack) != 0) return;
+        if(BloodHelper.getBlood(stack) != 0 || entity.getCommandSenderWorld().isClientSide) return;
 
         if(CommonConfig.sireingMechanic.get()  && entity instanceof Player player && Helper.isVampire(entity) && event.getItem().is(ModItems.BLOOD_BOTTLE.get())) {
             int age = stack.getOrDefault(AgeingDataComponents.AGE_RANK, 0);
             AgeingManager manager = AgeingManager.getAge(player);
             if(manager.getAge() < age) {
                 manager.setAge(age);
-                manager.sync(false);
+                manager.sync(true);
             }
         }
 
