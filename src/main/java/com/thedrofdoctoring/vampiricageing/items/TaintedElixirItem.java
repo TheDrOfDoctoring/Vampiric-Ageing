@@ -49,7 +49,7 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
         return UseAnim.DRINK;
     }
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if(!HunterAgeingConfig.permanentTransformationAvailable.get()) {
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
@@ -68,11 +68,10 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack stack, int count) {
         if(pLivingEntity instanceof IHunterPlayer) return;
-        if(!(pLivingEntity instanceof Player) || !pLivingEntity.isAlive() || !HunterAgeingConfig.permanentTransformationAvailable.get()) {
+        if(!(pLivingEntity instanceof Player player) || !pLivingEntity.isAlive() || !HunterAgeingConfig.permanentTransformationAvailable.get()) {
             pLivingEntity.releaseUsingItem();
             return;
         }
-        Player player = (Player) pLivingEntity;
         int age = AgeingManager.getAge(player).getAge();
         if(age >= 5) {
             pLivingEntity.startUsingItem(pLivingEntity.getUsedItemHand());
@@ -81,8 +80,7 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
     @NotNull
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
-        if(entityLiving instanceof Player && Helper.isHunter(entityLiving)) {
-            Player player = (Player) entityLiving;
+        if(entityLiving instanceof Player player && Helper.isHunter(entityLiving)) {
 
             AgeingManager ageingManager = AgeingManager.getAge(player);
             ((HunterAgeingType.HunterState) ageingManager.getTypeState()).setTransformed(true);
@@ -95,22 +93,19 @@ public class TaintedElixirItem extends Item implements IFactionExclusiveItem {
             if(entityLiving instanceof ServerPlayer sp) {
                 ageingManager.getType().handleSkills(ageingManager.getAge(), sp);
                 ageingManager.onAgeChange(sp, ageingManager.getAgeType());
-
             }
-
-
 
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, List<Component> pTooltipComponents, @NotNull TooltipFlag pTooltipFlag) {
         pTooltipComponents.add(Component.translatable("text.vampiricageing.tainted_elixir_useage", 5).withStyle(ChatFormatting.RED));
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity p_344979_) {
         return 45;
     }
 }

@@ -44,7 +44,7 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if(!HunterAgeingConfig.taintedBloodAvailable.get()) {
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
@@ -87,13 +87,13 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
             if(entityLiving instanceof ServerPlayer sp) {
                 hunter.getType().handleSkills(hunter.getAge(), sp);
                 hunter.onAgeChange(sp, hunter.getAgeType());
-
-            }        }
+            }
+        }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity entity) {
         return 45;
     }
 
@@ -103,7 +103,7 @@ public class TaintedBloodBottleItem extends Item implements IFactionExclusiveIte
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> components, TooltipFlag pTooltipFlag) {
+    public void appendHoverText(ItemStack pStack, @NotNull TooltipContext pContext, List<Component> components, @NotNull TooltipFlag pTooltipFlag) {
         components.add(Component.translatable("text.vampiricageing.tainted_blood_useage", HunterAgeingConfig.taintedBloodBottleAge.get()).withStyle(ChatFormatting.GRAY));
         components.add(Component.translatable("text.vampiricageing.tainted_blood_rank", pStack.getDamageValue()).withStyle(ChatFormatting.RED));
         super.appendHoverText(pStack, pContext, components, pTooltipFlag);

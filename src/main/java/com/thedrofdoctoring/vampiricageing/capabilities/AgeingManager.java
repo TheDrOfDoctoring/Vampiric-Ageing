@@ -182,6 +182,8 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             this.ageingTypeData = null;
             if(this.type != null && this.type.getStateType().isPresent()) {
                 this.ageingTypeData = this.type.getStateType().get();
+            } else {
+                this.ageingTypeData = null;
             }
         }
         if(this.type != null) {
