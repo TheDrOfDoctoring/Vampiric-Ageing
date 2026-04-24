@@ -7,11 +7,13 @@
   "mixins": [
     "BlockBehaviourMixin",
     "BloodStatsMixin",
+    "CoffinBlockMixin",
     "DamageHandlerMixin",
     "FoodStatsAccessor",
     "HowlActionMixin",
     "HunterPlayerSpecialAttributesMixin",
     "InfectActionMixin",
+    "ModPlayerEventHandlerMixin",
     "PlayerMixin",
     "PowderSnowBlockMixin",
     "SilverOilMixin",
