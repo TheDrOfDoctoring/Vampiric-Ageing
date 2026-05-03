@@ -107,10 +107,10 @@ public class HunterAgeingType implements IAgeType {
     }
     public static class HunterState extends TypeState {
 
-        int taintedAgeBonus = 0;
-        int taintedTicks = 0;
-        int ticksInSun;
-        boolean transformed = false;
+        private int taintedAgeBonus = 0;
+        private int taintedTicks = 0;
+        private int ticksInSun;
+        private boolean transformed = false;
 
         public int getTemporaryTaintedAgeBonus() {
             return this.taintedAgeBonus;
@@ -140,7 +140,12 @@ public class HunterAgeingType implements IAgeType {
             this.transformed = transformed;
         }
 
-
+        @Override
+        public void clear() {
+            this.taintedAgeBonus = 0;
+            this.taintedTicks = 0;
+            this.ticksInSun = 0;
+        }
 
         @Override
         public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {

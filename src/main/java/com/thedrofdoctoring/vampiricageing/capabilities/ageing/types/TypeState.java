@@ -15,4 +15,5 @@ public abstract class TypeState {
 
     public abstract @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt);
 
+    public abstract void clear();
 }

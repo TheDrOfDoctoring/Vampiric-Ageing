@@ -29,7 +29,7 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
             }
             IAgeType type = age.getAgeType();
             if (type != null && this.mc.gameMode != null && this.mc.gameMode.hasExperience() && (rank > 0 || transformed)) {
-                String text = age.getType().getAgeTitle(rank);
+                String text = type.getAgeTitle(rank);
                 int width = this.mc.font.width(text);
                 int x = (this.mc.getWindow().getGuiScaledWidth() - width) / 2 + ClientConfig.guiLevelOffsetX.get();
                 int y = this.mc.getWindow().getGuiScaledHeight() - ClientConfig.guiLevelOffsetY.get();

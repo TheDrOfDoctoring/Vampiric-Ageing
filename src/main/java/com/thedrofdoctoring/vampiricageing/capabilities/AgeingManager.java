@@ -91,6 +91,9 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         this.ageRank = newRank;
         if(oldRank > 0 && newRank == 0 && this.entity instanceof Player player) {
             this.type = null;
+            if(this.ageingTypeData != null) {
+                this.ageingTypeData.clear();
+            }
             CapabilityHelper.setDefaultAgeTypeAndMethod(player);
         }
     }
@@ -213,11 +216,10 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         }
     }
     public IAgeType getAgeType() {
-        IAgeType ageType;
         for(IAgeType type : AgeingRegistry.getAgeingTypes()) {
             if(type.getId().equals(this.typeId)) {
-                ageType = type;
-                return ageType;
+                this.type = type;
+                return type;
             }
         }
         return null;
