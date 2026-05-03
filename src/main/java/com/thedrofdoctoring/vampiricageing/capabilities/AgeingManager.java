@@ -179,7 +179,6 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
     }
 
     public void onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
-
         this.type = this.getAgeType();
         if(oldAgeType != null && oldAgeType != this.type) {
             oldAgeType.handleSkills(this.ageRank, player);
@@ -198,7 +197,7 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
             Map<Holder<Attribute>, AttributeModifier> attributes =  this.type.getAgeAttributes(this.ageRank, player, false);
             attributes.forEach((attribute, modifier) -> {
                 removeModifier(player.getAttribute(attribute), modifier.id());
-                player.getAttribute(attribute).addPermanentModifier(modifier);
+                player.getAttribute(attribute).addOrUpdateTransientModifier(modifier);
             });
             type.handleSkills(this.ageRank, player);
             if(this.ageingTypeData == null && this.type.getStateType().isPresent()) {

@@ -29,16 +29,20 @@ public class AgeRankOverlay implements LayeredDraw.Layer {
             }
             IAgeType type = age.getAgeType();
             if (type != null && this.mc.gameMode != null && this.mc.gameMode.hasExperience() && (rank > 0 || transformed)) {
-                String text = type.getAgeTitle(rank);
-                int width = this.mc.font.width(text);
+                int width = 0;
                 int x = (this.mc.getWindow().getGuiScaledWidth() - width) / 2 + ClientConfig.guiLevelOffsetX.get();
                 int y = this.mc.getWindow().getGuiScaledHeight() - ClientConfig.guiLevelOffsetY.get();
-                if(!text.isEmpty()) {
-                    graphics.drawString(this.mc.font, text, x + 1, y, 0, false);
-                    graphics.drawString(this.mc.font, text, x - 1, y, 0, false);
-                    graphics.drawString(this.mc.font, text, x, y + 1, 0, false);
-                    graphics.drawString(this.mc.font, text, x, y - 1, 0, false);
-                    graphics.drawString(this.mc.font, text, x, y, 0x8B0000, false);
+                if(rank > 0) {
+                    String text = type.getAgeTitle(rank);
+                    width = this.mc.font.width(text);
+                    x = (this.mc.getWindow().getGuiScaledWidth() - width) / 2 + ClientConfig.guiLevelOffsetX.get();
+                    if(!text.isEmpty()) {
+                        graphics.drawString(this.mc.font, text, x + 1, y, 0, false);
+                        graphics.drawString(this.mc.font, text, x - 1, y, 0, false);
+                        graphics.drawString(this.mc.font, text, x, y + 1, 0, false);
+                        graphics.drawString(this.mc.font, text, x, y - 1, 0, false);
+                        graphics.drawString(this.mc.font, text, x, y, 0x8B0000, false);
+                    }
                 }
                 int tempTainted = 0;
                 if(age.getTypeState() instanceof HunterAgeingType.HunterState state) {
