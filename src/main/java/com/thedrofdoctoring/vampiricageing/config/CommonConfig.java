@@ -27,7 +27,6 @@ public class CommonConfig {
     public static final ModConfigSpec.BooleanValue shouldOnlyDieFromKillingSources;
     public static final ModConfigSpec.BooleanValue deadlySourcesFastDrainExhaustion;
     public static final ModConfigSpec.BooleanValue immortalBloodLoss;
-    public static final ModConfigSpec.BooleanValue lordLevelRequirement;
     public static final ModConfigSpec.BooleanValue vampireAgeing;
     public static final ModConfigSpec.IntValue ageWaterWalkingRank;
     public static final ModConfigSpec.IntValue lordLevelRankRequirement;
@@ -84,12 +83,10 @@ public class CommonConfig {
 
         deathReset = COMMON_BUILDER.comment("Whether dying resets Age").define("deathReset", true);
         ageLostOnDeath = COMMON_BUILDER.comment("Requires 'death reset' to be enabled, if this config is set to a value > 0 then only that many age ranks will be lost on death, instead of all ranks.").defineInRange("ageLostOnDeath", 0, 0, 5);
-        lordLevelRequirement = COMMON_BUILDER.comment("If enabled, ageing will require the player to be of a specified lord level").define("lordLevelRequirement", false);
-        lordLevelRankRequirement = COMMON_BUILDER.comment("If lordLeveLRequirement is enabled, this defines the minimum lord level required to age").defineInRange("lordLevelRankRequirement", 5, 1, 5);
-
         COMMON_BUILDER.pop();
 
         COMMON_BUILDER.push("Vampire Values");
+        lordLevelRankRequirement = COMMON_BUILDER.comment("This defines the minimum lord level, for vampires, required to age, 0 to not require a lord level").defineInRange("vampireLordLevelRankRequirement", 0, 0, 5);
         vampireAgeing = COMMON_BUILDER.comment("Whether vampires can age.").define("vampireAgeing", true);
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins, Level 4 is the minimum age to have access to the Infect Action").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
         ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: BITING, DRAINING, TIME, V_HUNTING").define("ageingMethod", "DRAINING");

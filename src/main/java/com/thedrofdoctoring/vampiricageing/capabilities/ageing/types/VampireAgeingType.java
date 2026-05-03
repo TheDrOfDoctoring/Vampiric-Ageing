@@ -4,12 +4,14 @@ import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.actions.StepAssistAction;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
+import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModAttributes;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
@@ -76,6 +78,11 @@ public class VampireAgeingType implements IAgeType  {
             skillHandler.disableSkill(VampiricAgeingSkills.BLOOD_DRAIN_SKILL.get());
         }
 
+    }
+
+    @Override
+    public boolean canAge(ServerPlayer player) {
+        return FactionPlayerHandler.get(player).getLordLevel() >= CommonConfig.lordLevelRankRequirement.get();
     }
 
     @Override

@@ -19,6 +19,7 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.IntValue rankForBiteFood;
     public static final ModConfigSpec.IntValue biteNutrition;
     public static final ModConfigSpec.IntValue levelToBeginAgeMechanic;
+    public static final ModConfigSpec.IntValue lordLevelRankRequirement;
 
     public static final ModConfigSpec.DoubleValue biteSaturation;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> devouredForNextAge;
@@ -44,6 +45,7 @@ public class WerewolvesAgeingConfig {
         werewolfAgeing = COMMON_BUILDER.comment("Whether Werewolves can Age. Requires Werewolves Addon for Vampirism.").define("werewolfAgeing", true);
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
         ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: DEVOUR").define("ageingMethod", "DEVOUR");
+        lordLevelRankRequirement = COMMON_BUILDER.comment("This defines the minimum lord level, for werewolves, required to age, 0 to not require a lord level").defineInRange("werewolfLordLevelRankRequirement", 0, 0, 5);
 
         devouredForNextAge = COMMON_BUILDER.comment("How many points worth of devoured entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("devouredforNextAge", Arrays.asList(30, 60, 100, 250, 500), it -> true);
         pettyDevourWorth = COMMON_BUILDER.comment("How much a petty devour is worth. These are things like basic animals").defineInRange("pettyDevourWorth", 1, 0, 99);

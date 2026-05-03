@@ -8,7 +8,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ public interface IAgeType {
     int minFactionRank();
 
     boolean isEnabled();
+    boolean canAge(ServerPlayer player);
 
     String getId();
     String getAgeTitle(int ageRank);

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -23,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 public class HunterAgeingType implements IAgeType {
@@ -93,6 +93,12 @@ public class HunterAgeingType implements IAgeType {
     @Override
     public boolean isEnabled() {
         return HunterAgeingConfig.hunterAgeing.get();
+    }
+
+
+    @Override
+    public boolean canAge(ServerPlayer player) {
+        return FactionPlayerHandler.get(player).getLordLevel() >= HunterAgeingConfig.lordLevelRankRequirement.get();
     }
 
     @Override

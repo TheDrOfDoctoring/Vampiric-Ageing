@@ -1,23 +1,20 @@
 package com.thedrofdoctoring.vampiricageing.capabilities.ageing.types;
 
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
-import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.werewolves.api.WReference;
 import de.teamlapen.werewolves.core.ModAttributes;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +49,11 @@ public class WerewolfAgeingType implements IAgeType {
     @Override
     public boolean isEnabled() {
         return ModList.get().isLoaded("werewolves") && WerewolvesAgeingConfig.werewolfAgeing.get();
+    }
+
+    @Override
+    public boolean canAge(ServerPlayer player) {
+        return FactionPlayerHandler.get(player).getLordLevel() >= WerewolvesAgeingConfig.lordLevelRankRequirement.get();
     }
 
     @Override

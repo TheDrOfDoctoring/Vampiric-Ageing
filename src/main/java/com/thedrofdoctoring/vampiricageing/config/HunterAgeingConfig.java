@@ -51,6 +51,7 @@ public class HunterAgeingConfig {
     public static final ModConfigSpec.IntValue sunDamageTicks;
     public static final ModConfigSpec.IntValue maxTicksInSun;
     public static final ModConfigSpec.IntValue sunBlindnessTicks;
+    public static final ModConfigSpec.IntValue lordLevelRankRequirement;
     public static final ModConfigSpec.DoubleValue limitedBatExhaustion;
     public static final ModConfigSpec.DoubleValue limitedBatFlightSpeed;
     public static final ModConfigSpec.DoubleValue baseSunDamageAmount;
@@ -88,6 +89,7 @@ public class HunterAgeingConfig {
         hunterAgeing = COMMON_BUILDER.comment("Whether hunters can age.").define("hunterAgeing", true);
         ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: HUNTING").define("ageingMethod", "HUNTING");
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
+        lordLevelRankRequirement = COMMON_BUILDER.comment("This defines the minimum lord level, for hunters, required to age, 0 to not require a lord level").defineInRange("hunterLordLevelRankRequirement", 0, 0, 5);
 
         hunterIncreasedMiningSpeed = COMMON_BUILDER.comment("Whether hunters receive increased mining speed based on age").define("hunterMiningSpeed", true);
         seniorityOilUseAge = COMMON_BUILDER.comment("At what age should a hunter be able to use Seniority Oil").defineInRange("seniorityOilAge", 2, 0, 5);

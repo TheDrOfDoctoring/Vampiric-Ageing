@@ -5,7 +5,6 @@ import com.thedrofdoctoring.vampiricageing.capabilities.ageing.AgeingRegistry;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.types.TypeState;
-import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.init.ModAttachments;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.IAttachment;
@@ -166,16 +165,13 @@ public class AgeingManager implements IAgeingCapability, IAttachment {
         if(entity instanceof ServerPlayer player && entity.isAlive()) {
             int level = FactionPlayerHandler.get(player).getCurrentLevel();
 
-            return (checkRank(level) && this.ageRank < 5);
+            return (checkRank(level) && this.ageRank < 5 && type.canAge(player));
         }
         return false;
     }
 
     private boolean checkRank(int level) {
-        if(CommonConfig.lordLevelRequirement.get() && entity instanceof ServerPlayer player) {
-            int lordLevel = FactionPlayerHandler.get(player).getLordLevel();
-            return lordLevel >= CommonConfig.lordLevelRankRequirement.get();
-        } else return level >= type.minFactionRank();
+        return level >= type.minFactionRank();
     }
 
     public void onAgeChange(ServerPlayer player, IAgeType oldAgeType) {
