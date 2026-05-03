@@ -23,6 +23,7 @@ public class HunterAgeingConfig {
     public static final ModConfigSpec.BooleanValue reducedBenefitFromNormalFoods;
     public static final ModConfigSpec.IntValue taintedSunAffectAge;
     public static final ModConfigSpec.IntValue taintedAgeForCoffinUse;
+    public static final ModConfigSpec.IntValue seniorityOilUses;
 
 
     public static final ModConfigSpec.IntValue noNegativeEffectsFromBadFoodAge;
@@ -101,6 +102,7 @@ public class HunterAgeingConfig {
         xpGainReduction = COMMON_BUILDER.comment("How much XP gain is divided by based on age rank. Decimal numbers can be used to instead make it an XP multiplier").defineList("xpGainReduction", Arrays.asList(1d, 1d, 1.25d, 1.5d, 1.75d, 2d), t -> true);
         fasterExhaustionAmounts = COMMON_BUILDER.comment("How much food exhaustion is multiplied by based on age").defineList("fasterExhaustionMultiplier", Arrays.asList(1d, 1d, 1.25d, 1.5d, 2d, 2.5d), t -> true);
 
+        seniorityOilUses = COMMON_BUILDER.comment("The amount of hits the seniority oil is useful for").defineInRange("seniorityOilUses", 15, 1, Integer.MAX_VALUE);
         seniorityOilDamageBonus = COMMON_BUILDER.comment("How much more damage seniority oil does to each age rank").defineList("seniorityOilDamageBonus", Arrays.asList(0d, 0d, 0.1d, 0.2d, 0.4d, 0.6d), t -> true);
         ageEnemyFactionDamageIncrease  = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. This extra damage only applies to enemy faction creatures. Set all to 0 to disable completely.").defineList("ageEnemyFactionDamageIncrease", Arrays.asList(0d, 0d, 2d, 2d, 4d, 4d), it -> true);
 

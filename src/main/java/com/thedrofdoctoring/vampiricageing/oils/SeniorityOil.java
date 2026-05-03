@@ -20,7 +20,10 @@ public class SeniorityOil extends WeaponOil {
         super(color, maxDuration);
     }
 
-
+    @Override
+    public int getMaxDuration(ItemStack stack) {
+        return HunterAgeingConfig.seniorityOilUses.get();
+    }
 
     @Override
     public float onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source) {

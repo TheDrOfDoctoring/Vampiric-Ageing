@@ -27,7 +27,7 @@
   "action.vampiricageing.hunter_teleport_action": "Teleport",
   "action.vampiricageing.water_walking_action": "Water Walking",
   "action.vampiricageing.step_assist_action": "Auto Step-Up",
-  "oil.vampiricageing.seniority_oil": "Seniority",
+  "oil.vampiricageing.seniority_oil": "Seniority Oil",
   "text.vampiricageing.useable_by": "Only useable by Age Rank %s Hunters",
   "skill.vampiricageing.tainted_blood_skill": "",
   "gui.vampirism.hunter_weapon_table.skill": "Only available to high age rank hunters",
@@ -173,6 +173,7 @@
   "vampiricageing.configuration.showTaintedAgeRank": "Display Tainted Age Rank",
   "vampiricageing.configuration.taintedAgeForCoffinUse": "Coffin Use Tainted Age Rank",
   "vampiricageing.configuration.baseSunDamageAmount": "Base Sun Damage Amount",
+  "vampiricageing.configuration.seniorityOilUses": "Seniority Oil Uses",
 
   "vampiricageing.configuration.hunterAgeRankTitles": "Hunter Ageing Rank Titles",
   "vampiricageing.configuration.vampireAgeRankTitles": "Vampire Ageing Rank Titles",
