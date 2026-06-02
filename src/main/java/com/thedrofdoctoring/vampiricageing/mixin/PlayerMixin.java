@@ -3,6 +3,8 @@ package com.thedrofdoctoring.vampiricageing.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
 import com.thedrofdoctoring.vampiricageing.capabilities.CapabilityHelper;
+import com.thedrofdoctoring.vampiricageing.capabilities.cache.AgeingPlayerCache;
+import com.thedrofdoctoring.vampiricageing.capabilities.cache.IAgeingPlayerCache;
 import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.data.ItemTagProvider;
@@ -18,18 +20,27 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity {
+public abstract class PlayerMixin extends LivingEntity implements IAgeingPlayerCache {
     @Shadow @Final private Abilities abilities;
 
     @Shadow protected FoodData foodData;
 
     @Shadow public abstract void sweepAttack();
+
+    @Unique
+    private final AgeingPlayerCache ageing$ageingPlayerCache = new AgeingPlayerCache();
+
+    @Override
+    public AgeingPlayerCache ageing$getCache() {
+        return this.ageing$ageingPlayerCache;
+    }
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);

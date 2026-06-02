@@ -25,6 +25,9 @@ public class VampiricAgeingSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_TELEPORT_SKILL = SKILLS.register("hunter_teleport_skill", () -> new ActionSkill<>(VampiricAgeingActions.HUNTER_TELEPORT_ACTION, HunterSkills.Trees.LEVEL, 0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LIMITED_BAT_MODE_SKILL = SKILLS.register("limited_bat_mode_skill", () -> new ActionSkill<>(VampiricAgeingActions.LIMITED_HUNTER_BATMODE_ACTION, HunterSkills.Trees.LEVEL, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> TAINTED_BLOOD_SKILL = SKILLS.register("tainted_blood_skill", () -> new VampirismSkill.SimpleHunterSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> STEP_ASSIST_HUNTER_SKILL = SKILLS.register("step_assist_hunter_skill", () -> new ActionSkill<>(VampiricAgeingActions.STEP_ASSIST_HUNTER_ACTION, HunterSkills.Trees.LEVEL, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> WISE_EYE_SKILL = SKILLS.register("wise_eye_skill", () -> new ActionSkill<>(VampiricAgeingActions.HUNTER_WISE_EYE, HunterSkills.Trees.LEVEL, false));
+
 
     public static void register(IEventBus bus) {
         SKILLS.register(bus);

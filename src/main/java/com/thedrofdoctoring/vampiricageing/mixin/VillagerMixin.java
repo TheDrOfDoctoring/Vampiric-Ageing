@@ -36,13 +36,21 @@ public abstract class VillagerMixin extends AbstractVillager {
             if(!BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(profession).is(ModTags.Professions.HAS_FACTION)) {
                 int age = AgeingManager.getAge(player).getAge();
                 int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(player);
-                if(!Helper.isHunter(player) || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
+                boolean isVampire = Helper.isVampire(player);
+                boolean isHunter  = Helper.isHunter(player);
+                if(isVampire || cumulativeAge >= HunterAgeingConfig.taintedBloodWorseTradeDealsAge.get()) {
                     for(MerchantOffer merchantoffer1 : this.getOffers()) {
                         double ageMult = !Helper.isHunter(player) ? CommonConfig.ageAffectTradePrices.get().get(age) : HunterAgeingConfig.taintedBloodTradeDealPricesMultiplier.get().get(cumulativeAge).floatValue();
                         double d0 = 1 - ageMult;
 
                         int j = d0 != 0 ? (int)Math.floor((merchantoffer1.getBaseCostA().getCount()) * (ageMult - 1)) : 0;
                         merchantoffer1.addToSpecialPriceDiff(j);
+                    }
+                } else if(isHunter && cumulativeAge == 0 && age > 0) {
+                    double mult = -HunterAgeingConfig.regularTradeDealPricesMultiplier.get().get(age) + 1;
+                    for (MerchantOffer merchantoffer1 : this.getOffers()) {
+                        int diff = mult != 0 ? (int) Math.floor((merchantoffer1.getBaseCostA().getCount()) * (mult)) : 0;
+                        merchantoffer1.addToSpecialPriceDiff(diff);
                     }
                 }
             }

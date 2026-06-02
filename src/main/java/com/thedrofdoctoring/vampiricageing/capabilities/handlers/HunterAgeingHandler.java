@@ -87,22 +87,20 @@ public class HunterAgeingHandler {
 
         //Faster Regeneration
         if(age >= HunterAgeingConfig.fasterRegenerationAge.get() && !player.getCommandSenderWorld().isClientSide()) {
-            Difficulty difficulty = player.level().getDifficulty();
             boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
             FoodData stats = player.getFoodData();
+            double fasterMult = HunterAgeingConfig.fasterRegenerationMultPerAgeRank.get().get(age);
             if (flag && stats.getSaturationLevel() > 0.0F && player.isHurt() && stats.getFoodLevel() >= 20) {
                 if (((FoodStatsAccessor)stats).getFoodTimer() >= 9) {
-                    float f = Math.min(stats.getSaturationLevel(), 6.0F);
+                    float f = (float) (Math.min(stats.getSaturationLevel(), 6.0F) * fasterMult);
                     player.heal(f / 6.0F);
                     stats.addExhaustion(f);
                 }
             } else if (flag && stats.getFoodLevel() >= 18 && player.isHurt()) {
                 if (((FoodStatsAccessor)stats).getFoodTimer() >= 79) {
-                    player.heal(1.0F);
-                    stats.addExhaustion(6.0F);
+                    player.heal((float) (1.0F * fasterMult));
+                    stats.addExhaustion((float) (6.0F * fasterMult));
                 }
-            } else if (stats.getFoodLevel() <= 0 && ((FoodStatsAccessor)stats).getFoodTimer() >= 79 && (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL)) {
-                DamageHandler.hurtVanilla(player, DamageSources::starve, 1.0F);
             }
         }
         //Tainted Blood
@@ -192,31 +190,6 @@ public class HunterAgeingHandler {
             event.getItemStack().shrink(1);
         }
     }
-    @SubscribeEvent
-    public static void onDamageByHunter(LivingIncomingDamageEvent event) {
-        if(event.getSource().getEntity() == null || event.getEntity().getCommandSenderWorld().isClientSide) {
-            return;
-        }
-        Entity sourceEntity = event.getSource().getEntity();
-        if(!Helper.isHunter(sourceEntity) || !HunterAgeingConfig.hunterAgeing.get() || !(sourceEntity instanceof Player)) {
-            return;
-        }
-        ItemStack item = ((Player) sourceEntity).getMainHandItem();
-        ItemAttributeModifiers modifiers = item.getAttributeModifiers();
-        double baseDamage = 0;
-        for (ItemAttributeModifiers.Entry modifier : modifiers.modifiers()) {
-            if(modifier.attribute().is(Attributes.ATTACK_DAMAGE)); {
-                baseDamage = modifier.modifier().amount();
-            }
-        }
-
-
-        if(baseDamage >= 2 && (Helper.isVampire(event.getEntity()) || CapabilityHelper.isWerewolfCheckMod(event.getEntity()))); {
-            Player hunterSource = (Player) sourceEntity;
-            int age = AgeingManager.getAge(hunterSource).getAge();
-            event.setAmount(event.getAmount() + HunterAgeingConfig.ageEnemyFactionDamageIncrease.get().get(age).floatValue());
-        }
-    }
 
 
     @SubscribeEvent
@@ -259,8 +232,12 @@ public class HunterAgeingHandler {
             event.setCanceled(true);
         }
         int age = AgeingManager.getAge(event.getEntity()).getAge();
-        event.setNewSpeed(event.getOriginalSpeed() * HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age).floatValue());
-
+        int cumulativeAge = CapabilityHelper.getCumulativeTaintedAge(event.getEntity());
+        if(cumulativeAge > 0) {
+            event.setNewSpeed(event.getOriginalSpeed() * HunterAgeingConfig.taintedHunterMiningSpeedBonus.get().get(cumulativeAge).floatValue());
+        } else {
+            event.setNewSpeed(event.getOriginalSpeed() * HunterAgeingConfig.hunterMiningSpeedBonus.get().get(age).floatValue());
+        }
     }
     @SubscribeEvent
     public static void eyeHeight(EntityEvent.Size event) {

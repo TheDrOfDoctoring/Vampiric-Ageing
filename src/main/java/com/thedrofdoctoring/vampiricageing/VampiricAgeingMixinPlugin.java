@@ -31,8 +31,8 @@ public final class VampiricAgeingMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
             "com.thedrofdoctoring.vampiricageing.mixin.HowlActionMixin", WEREWOLVES_LOADED,
             "com.thedrofdoctoring.vampiricageing.mixin.SilverOilMixin", WEREWOLVES_LOADED,
-            "com.thedrofdoctoring.vampiricageing.mixin.WerewolfFormActionMixin", WEREWOLVES_LOADED
-            
+            "com.thedrofdoctoring.vampiricageing.mixin.WerewolfFormActionMixin", WEREWOLVES_LOADED,
+            "com.thedrofdoctoring.vampiricageing.mixin.WWModPlayerEventHandlerMixin", WEREWOLVES_LOADED
     );
 
     @Override

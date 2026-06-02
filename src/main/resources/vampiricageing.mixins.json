@@ -21,9 +21,12 @@
     "VampirePlayerSpecialAttributesMixin",
     "VampirismItemBloodFoodItemMixin",
     "VillagerMixin",
-    "WerewolfFormActionMixin"
+    "WerewolfFormActionMixin",
+    "WWModPlayerEventHandlerMixin"
   ],
   "client": [
+    "client.LivingEntityRendererMixin",
+    "client.RenderHandlerMixin"
   ],
   "minVersion": "0.8"
 }

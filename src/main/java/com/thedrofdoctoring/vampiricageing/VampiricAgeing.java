@@ -23,6 +23,7 @@ import com.thedrofdoctoring.vampiricageing.init.ModEffects;
 import com.thedrofdoctoring.vampiricageing.init.ModItems;
 import com.thedrofdoctoring.vampiricageing.init.ModOils;
 import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
+import com.thedrofdoctoring.vampiricageing.skills.WerewolfAgeingSkills;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import net.minecraft.core.HolderLookup;
@@ -96,6 +97,7 @@ public class VampiricAgeing
 
             container.registerConfig(ModConfig.Type.COMMON, WerewolvesAgeingConfig.WEREWOLF_AGEING_CONFIG,MODID+"-werewolfAgeing.toml");
             NeoForge.EVENT_BUS.register(new WerewolfAgeingHandler());
+            WerewolfAgeingSkills.register(modEventBus);
         }
         NeoForge.EVENT_BUS.addListener(this::onCommandsRegister);
     }

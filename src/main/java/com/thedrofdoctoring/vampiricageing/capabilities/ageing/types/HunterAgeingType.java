@@ -39,14 +39,14 @@ public class HunterAgeingType implements IAgeType {
         HashMap<Holder<Attribute>, AttributeModifier> attributeMap = new HashMap<>();
         attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_max_health"), HunterAgeingConfig.maxHealthIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
         attributeMap.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_speed"), HunterAgeingConfig.movementSpeedBonus.get().get(age), AttributeModifier.Operation.ADD_VALUE));
+        attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_damage"), HunterAgeingConfig.ageDamageIncrease.get().get(age), AttributeModifier.Operation.ADD_VALUE));
         int cumulativeTaintedBloodAge = CapabilityHelper.getCumulativeTaintedAge(player);
         HunterState state = (HunterState) AgeingManager.getAge(player).getTypeState();
         if(state != null && cumulativeTaintedBloodAge > age) {
             // I don't like this being impure, but the proper fixes are for 26.1
-            if(player.getAttribute(Attributes.MAX_HEALTH) != null && player.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
-                AgeingManager.removeModifier(player.getAttribute(Attributes.MAX_HEALTH), VampiricAgeing.rl("hunter_ageing_max_health"));
-                AgeingManager.removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), VampiricAgeing.rl("hunter_ageing_speed"));
-            }
+            AgeingManager.removeModifier(player.getAttribute(Attributes.MAX_HEALTH), VampiricAgeing.rl("hunter_ageing_max_health"));
+            AgeingManager.removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), VampiricAgeing.rl("hunter_ageing_speed"));
+            AgeingManager.removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), VampiricAgeing.rl("hunter_ageing_damage"));
 
             attributeMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampiricAgeing.rl("hunter_ageing_attack_damage"), HunterAgeingConfig.taintedDamageBonuses.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
             attributeMap.put(Attributes.MAX_HEALTH, new AttributeModifier(VampiricAgeing.rl("hunter_tainted_ageing_max_health"), HunterAgeingConfig.taintedBloodMaxHealthIncreases.get().get(cumulativeTaintedBloodAge), AttributeModifier.Operation.ADD_VALUE));
@@ -83,6 +83,18 @@ public class HunterAgeingType implements IAgeType {
         } else {
             skillHandler.disableSkill(VampiricAgeingSkills.LIMITED_BAT_MODE_SKILL.get());
         }
+
+        if(age >= HunterAgeingConfig.stepAssistAge.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.STEP_ASSIST_HUNTER_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.STEP_ASSIST_HUNTER_SKILL.get());
+        }
+        if(age >= HunterAgeingConfig.wiseEyeAge.get()) {
+            skillHandler.enableSkill(VampiricAgeingSkills.WISE_EYE_SKILL.get());
+        } else {
+            skillHandler.disableSkill(VampiricAgeingSkills.WISE_EYE_SKILL.get());
+        }
+
     }
 
     @Override

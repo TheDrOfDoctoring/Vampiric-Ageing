@@ -22,6 +22,11 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.IntValue lordLevelRankRequirement;
 
     public static final ModConfigSpec.DoubleValue biteSaturation;
+    public static final ModConfigSpec.IntValue improvedSensesAge;
+    public static final ModConfigSpec.IntValue improvedSensesDuration;
+    public static final ModConfigSpec.IntValue improvedSensesCooldown;
+    public static final ModConfigSpec.BooleanValue improvedSensesSlowdown;
+    public static final ModConfigSpec.BooleanValue improvedSensesSensesRequirement;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> devouredForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> nutritionMultipliers;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> saturationMultipliers;
@@ -32,6 +37,7 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> maxHealthIncrease;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> ageDamageIncrease;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> silverDamageMultiplier;
+    public static final ModConfigSpec.ConfigValue<List<? extends Double>> leapStrengthMultiplier;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> werewolfAgeRankTitles;
 
     public static final ModConfigSpec.ConfigValue<String> ageingMethod;
@@ -55,6 +61,7 @@ public class WerewolvesAgeingConfig {
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 2D, 2D, 4D, 4D, 6D), t -> true);
         biteDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies bite damage. Bite damage multiplier is strange and values of 0 should be treated as 1, values like 0.2 should be treated as a 1.2 multiplier").defineList("biteDamageMultiplier", Arrays.asList(0d, 0d, 0d, 0.125d, 0.25d, 0.5d), it -> true);
         silverOilDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies damages from Silver Oil. Values are set to 1 by default as to disable it by default.").defineList("silverOilMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 1d, 1d), it -> true);
+        leapStrengthMultiplier = COMMON_BUILDER.comment("How much each rank multiplies the strength of the Leap ability").defineList("leapStrengthMultiplier", Arrays.asList(1d, 1d, 1.25d, 1.5d, 1.75d, 2d), it -> true);
         healonBiteAmount = COMMON_BUILDER.comment("How much the player is healed for biting an entity based on rank").defineList("healonBiteAmount", Arrays.asList(0d, 0d, 0d, 1d, 2d, 2d), it -> true);
         formTimeMultiplier = COMMON_BUILDER.comment("How much the duration of time a player can stay in werewolf form is multiplied by").defineList("formTimeMultiplier", Arrays.asList(1d, 1.5d, 2d, 3d, 4d, 5d), it -> true);
         ageBuffsHowl = COMMON_BUILDER.comment("Whether higher age ranks buffs the mobs summoned by howling").define("ageBuffsHowl", true);
@@ -64,7 +71,11 @@ public class WerewolvesAgeingConfig {
         biteSaturation = COMMON_BUILDER.comment("How much saturation a bite gives").defineInRange("biteSaturation", 0.1D, 0D, 1.2D);
         nutritionMultipliers = COMMON_BUILDER.comment("How much more nourishing raw meat is for a werewolf based on age rank").defineList("nutritionMultipliers", Arrays.asList(1d, 1d, 2d, 2d, 3d, 3d), it -> true);
         saturationMultipliers = COMMON_BUILDER.comment("How much more saturating raw meat is for a werewolf based on age rank").defineList("saturationMultipliers", Arrays.asList(1d, 1d, 1.5d, 1.5d, 2d, 2d), it -> true);
-
+        improvedSensesAge = COMMON_BUILDER.comment("At what age should a werewolf gain the Improved Senses action, allowing you to see invisible players.").defineInRange("improvedSensesAssistAge", 5, 0, 6);
+        improvedSensesCooldown = COMMON_BUILDER.comment("Cooldown for improved senses action").defineInRange("improvedSensesCooldown", 10, 0, Integer.MAX_VALUE);
+        improvedSensesDuration = COMMON_BUILDER.comment("Duration for improved senses action").defineInRange("improvedSensesDuration", 120, 0, Integer.MAX_VALUE);
+        improvedSensesSlowdown = COMMON_BUILDER.comment("Whether you will be slowed down whilst using improved senses").define("improvedSensesSlowdown", true);
+        improvedSensesSensesRequirement = COMMON_BUILDER.comment("Whether improved senses also requires the senses skill").define("improvedSensesSensesRequirement", true);
         ageDamageIncrease = COMMON_BUILDER.comment("How much each age rank increases damage by adding on to base damage. Set all to 0 to disable completely.").defineList("ageDamageIncrease", Arrays.asList(0D, 0D, 1D, 2D, 3D, 4D), it -> true);
         silverDamageMultiplier = COMMON_BUILDER.comment("How much each age rank multiples damage taken, when the silver effect is active.").defineList("silverDamageMultiplier", Arrays.asList(1.0D, 1.0D, 1.1D, 1.15D, 1.2D, 1.25D), it -> true);
         werewolfAgeRankTitles = COMMON_BUILDER.comment("If changed from default, changes the rank number for a given age rank to the provided text.").defineList("werewolfAgeRankTitles", Arrays.asList("1", "2", "3", "4", "5"), it -> it instanceof String);

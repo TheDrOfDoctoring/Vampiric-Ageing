@@ -37,7 +37,7 @@ public class StepAssistAction extends DefaultVampireAction implements ILastingAc
     }
 
     public boolean isEnabled() {
-        return CommonConfig.celerityAction.get();
+        return true;
     }
 
     public void onActivatedClient(IVampirePlayer vampire) {

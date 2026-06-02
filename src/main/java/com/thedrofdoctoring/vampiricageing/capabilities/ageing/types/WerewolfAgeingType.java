@@ -3,11 +3,20 @@ package com.thedrofdoctoring.vampiricageing.capabilities.ageing.types;
 import com.thedrofdoctoring.vampiricageing.VampiricAgeing;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
+import com.thedrofdoctoring.vampiricageing.config.HunterAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
+import com.thedrofdoctoring.vampiricageing.skills.VampiricAgeingSkills;
+import com.thedrofdoctoring.vampiricageing.skills.WerewolfAgeingSkills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.werewolves.api.WReference;
+import de.teamlapen.werewolves.api.entities.player.IWerewolfPlayer;
 import de.teamlapen.werewolves.core.ModAttributes;
+import de.teamlapen.werewolves.core.ModSkills;
+import de.teamlapen.werewolves.entities.player.werewolf.WerewolfPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -39,7 +48,16 @@ public class WerewolfAgeingType implements IAgeType {
     }
 
     @Override
-    public void handleSkills(int age, ServerPlayer player) {}
+    public void handleSkills(int age, ServerPlayer player) {
+        ISkillHandler<IWerewolfPlayer> skillHandler = WerewolfPlayer.get(player).getSkillHandler();
+        boolean requiresSensesSkill = WerewolvesAgeingConfig.improvedSensesSensesRequirement.getAsBoolean();
+        boolean hasImprovedSensesAge = age >= WerewolvesAgeingConfig.improvedSensesAge.get();
+        if((requiresSensesSkill && skillHandler.isSkillEnabled(ModSkills.SENSE) && hasImprovedSensesAge) || !requiresSensesSkill && hasImprovedSensesAge) {
+            skillHandler.enableSkill(WerewolfAgeingSkills.IMPORVED_SENSES_SKILL.get());
+        } else {
+            skillHandler.disableSkill(WerewolfAgeingSkills.IMPORVED_SENSES_SKILL.get());
+        }
+    }
 
     @Override
     public int minFactionRank() {
