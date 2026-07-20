@@ -19,7 +19,7 @@ public class ModPlayerEventHandlerMixin {
             at = @At(value = "INVOKE", target = "Lde/teamlapen/vampirism/util/Helper;isVampire(Lnet/minecraft/world/entity/player/Player;)Z")
     )
     private boolean isTaintedBloodStartSleep(boolean original, @Local(argsOnly = true) CanPlayerSleepEvent event) {
-        int taintedAge = CapabilityHelper.getCumulativeTaintedAge(event.getEntity());
+        int taintedAge = CapabilityHelper. getCumulativeTaintedAge(event.getEntity());
         if(taintedAge >= HunterAgeingConfig.taintedAgeForCoffinUse.get()) {
             return true;
         }

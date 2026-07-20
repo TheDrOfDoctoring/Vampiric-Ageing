@@ -1,12 +1,15 @@
-// 1.21	2024-10-19T08:57:53.1161789	Tags for minecraft:entity_type mod id vampiricageing
+// 1.21	2026-07-21T01:09:54.6502307	Tags for minecraft:entity_type mod id vampiricageing
 a67b01dfe88981831eeac59ea47b9f3c8223738a data/vampiricageing/tags/entity_type/common_devour.json
 4a54bfe3b040a92740fbea48c194f3691072bfd4 data/vampiricageing/tags/entity_type/common_hunt.json
 b84404237740a193523fb78ae39deb937b06d57f data/vampiricageing/tags/entity_type/common_hunt_vampire.json
+b84404237740a193523fb78ae39deb937b06d57f data/vampiricageing/tags/entity_type/common_hunt_werewolf.json
 7754a96cede9347fc94df7e45ade8602278c3cf6 data/vampiricageing/tags/entity_type/exquisite_devour.json
 8a5342facca60cf488eac752fde96e4c2dfcc737 data/vampiricageing/tags/entity_type/graeter_hunt_vampire.json
 5d8b42c7a71f3585158c51285fd3e0b6ae6681c4 data/vampiricageing/tags/entity_type/greater_devour.json
 9416bf03c28f1902f7098c1bee9400954edf358e data/vampiricageing/tags/entity_type/greater_hunt.json
+8a5342facca60cf488eac752fde96e4c2dfcc737 data/vampiricageing/tags/entity_type/greater_hunt_werewolf.json
 a5579bf5a58ec90c6884f844dab4697e920396d5 data/vampiricageing/tags/entity_type/infected_blacklist.json
 a5579bf5a58ec90c6884f844dab4697e920396d5 data/vampiricageing/tags/entity_type/petty_devour.json
 2af517fbec87a89fe9fbe6db4571ce663cbaa75a data/vampiricageing/tags/entity_type/petty_hunt.json
 b0c29916fe87fc042f4b4d651769474f76597524 data/vampiricageing/tags/entity_type/petty_hunt_vampire.json
+b0c29916fe87fc042f4b4d651769474f76597524 data/vampiricageing/tags/entity_type/petty_hunt_werewolf.json

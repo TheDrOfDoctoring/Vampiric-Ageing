@@ -47,10 +47,11 @@ public abstract class VillagerMixin extends AbstractVillager {
                         merchantoffer1.addToSpecialPriceDiff(j);
                     }
                 } else if(isHunter && cumulativeAge == 0 && age > 0) {
-                    double mult = -HunterAgeingConfig.regularTradeDealPricesMultiplier.get().get(age) + 1;
+                    double mult = HunterAgeingConfig.regularTradeDealPricesMultiplier.get().get(age) - 1;
                     for (MerchantOffer merchantoffer1 : this.getOffers()) {
-                        int diff = mult != 0 ? (int) Math.floor((merchantoffer1.getBaseCostA().getCount()) * (mult)) : 0;
-                        merchantoffer1.addToSpecialPriceDiff(diff);
+                        int adjusted = (int) Math.floor((merchantoffer1.getBaseCostA().getCount()) * mult);
+                        int j = mult != 0 ? adjusted : 0;
+                        merchantoffer1.addToSpecialPriceDiff(j);
                     }
                 }
             }

@@ -51,7 +51,7 @@ public class CapabilityHelper {
             int tainted = state.getTemporaryTaintedAgeBonus();
             int bonus = transformed ? 6 : tainted;
             int rank = age.getAge();
-            if(rank == 0 && !transformed) {
+            if(bonus == 0) {
                 return 0;
             }
             return rank + bonus;

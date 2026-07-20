@@ -19,6 +19,9 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.IntValue rankForBiteFood;
     public static final ModConfigSpec.IntValue biteNutrition;
     public static final ModConfigSpec.IntValue levelToBeginAgeMechanic;
+    public static final ModConfigSpec.IntValue pettyHuntWorth;
+    public static final ModConfigSpec.IntValue commonHuntWorth;
+    public static final ModConfigSpec.IntValue greaterHuntWorth;
     public static final ModConfigSpec.IntValue lordLevelRankRequirement;
 
     public static final ModConfigSpec.DoubleValue biteSaturation;
@@ -28,6 +31,7 @@ public class WerewolvesAgeingConfig {
     public static final ModConfigSpec.BooleanValue improvedSensesSlowdown;
     public static final ModConfigSpec.BooleanValue improvedSensesSensesRequirement;
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> devouredForNextAge;
+    public static final ModConfigSpec.ConfigValue<List<? extends Integer>> huntedForNextAge;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> nutritionMultipliers;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> saturationMultipliers;
     public static final ModConfigSpec.ConfigValue<List<? extends Double>> biteDamageMultiplier;
@@ -50,14 +54,19 @@ public class WerewolvesAgeingConfig {
         COMMON_BUILDER.comment("Whenever there is a list with 6 values you can change, the first value refers to a player with Age 0 Rank. The final value therefore refers to an Age 5 Player");
         werewolfAgeing = COMMON_BUILDER.comment("Whether Werewolves can Age. Requires Werewolves Addon for Vampirism.").define("werewolfAgeing", true);
         levelToBeginAgeMechanic = COMMON_BUILDER.comment("The level at which the age mechanic begins").defineInRange("levelToBeginAgeMechanic", 14, 0, 14);
-        ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: DEVOUR").define("ageingMethod", "DEVOUR");
+        COMMON_BUILDER.comment("DEVOUR hunting gains points exclusively from killing mobs with the bite ability, W_HUNTING is when killed through any means, W_MIXED uses the devour worth for devour kills, and the hunt worth when not devouring");
+        ageingMethod = COMMON_BUILDER.comment("Change to select Ageing type. Valid Options include: DEVOUR, W_HUNTING, W_MIXED").define("ageingMethod", "DEVOUR");
         lordLevelRankRequirement = COMMON_BUILDER.comment("This defines the minimum lord level, for werewolves, required to age, 0 to not require a lord level").defineInRange("werewolfLordLevelRankRequirement", 0, 0, 5);
-
+        COMMON_BUILDER.comment("Only the DEVOUR ageing method uses devoured for next age, the others use hunted for next age");
         devouredForNextAge = COMMON_BUILDER.comment("How many points worth of devoured entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("devouredforNextAge", Arrays.asList(30, 60, 100, 250, 500), it -> true);
-        pettyDevourWorth = COMMON_BUILDER.comment("How much a petty devour is worth. These are things like basic animals").defineInRange("pettyDevourWorth", 1, 0, 99);
-        commonDevourWorth = COMMON_BUILDER.comment("How much a common devour is worth. These are things like certain hostile mobs").defineInRange("commonDevourWorth", 2, 0, 99);
-        greaterDevourWorth = COMMON_BUILDER.comment("How much a greater devour is worth. These are things like advanced faction mobs").defineInRange("greaterDevourWorth", 5, 0, 99);
-        exquisiteDevourWorth = COMMON_BUILDER.comment("How much a exquisite devour is worth. These are things like vampire barons").defineInRange("exquisiteDevourWorth", 10, 0, 99);
+        pettyDevourWorth = COMMON_BUILDER.comment("How much a petty devour is worth. These are things like basic animals").defineInRange("pettyDevourWorth", 1, 0, 999999999);
+        commonDevourWorth = COMMON_BUILDER.comment("How much a common devour is worth. These are things like certain hostile mobs").defineInRange("commonDevourWorth", 2, 0, 999999999);
+        greaterDevourWorth = COMMON_BUILDER.comment("How much a greater devour is worth. These are things like advanced faction mobs").defineInRange("greaterDevourWorth", 5, 0, 999999999);
+        exquisiteDevourWorth = COMMON_BUILDER.comment("How much a exquisite devour is worth. These are things like vampire barons").defineInRange("exquisiteDevourWorth", 10, 0, 999999999);
+        pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires or hunters").defineInRange("pettyHuntWorth", 1, 0, 999999999);
+        commonHuntWorth = COMMON_BUILDER.comment("How much a common hunt is worth. These are things like advanced vampires or hunters").defineInRange("commonHuntWorth", 3, 0, 999999999);
+        greaterHuntWorth = COMMON_BUILDER.comment("How much a greater hunt is worth. These are things like vampire barons").defineInRange("greaterHuntWorth", 5, 0, 999999999);
+        huntedForNextAge = COMMON_BUILDER.comment("How many points worth of hunted entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("huntedforNextAge", Arrays.asList(20, 40, 80, 160, 250), it -> true);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 2D, 2D, 4D, 4D, 6D), t -> true);
         biteDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies bite damage. Bite damage multiplier is strange and values of 0 should be treated as 1, values like 0.2 should be treated as a 1.2 multiplier").defineList("biteDamageMultiplier", Arrays.asList(0d, 0d, 0d, 0.125d, 0.25d, 0.5d), it -> true);
         silverOilDamageMultiplier = COMMON_BUILDER.comment("How much each rank multiplies damages from Silver Oil. Values are set to 1 by default as to disable it by default.").defineList("silverOilMultiplier", Arrays.asList(1d, 1d, 1d, 1d, 1d, 1d), it -> true);

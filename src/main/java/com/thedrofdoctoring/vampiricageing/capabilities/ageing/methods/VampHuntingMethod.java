@@ -7,6 +7,7 @@ import com.thedrofdoctoring.vampiricageing.config.CommonConfig;
 import com.thedrofdoctoring.vampiricageing.data.EntityTypeTagProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
@@ -19,7 +20,7 @@ public class VampHuntingMethod extends HuntingMethod {
     private static int[] points;
 
     @Override
-    public void onAgedKill(LivingEntity target, Player sourceKiller) {
+    public void onAgedKill(LivingEntity target, Player sourceKiller, DamageSource source) {
         int pointWorth = 0;
         if(target.getType().is(EntityTypeTagProvider.pettyHuntVampire)) {
             pointWorth = CommonConfig.pettyHuntWorth.get();

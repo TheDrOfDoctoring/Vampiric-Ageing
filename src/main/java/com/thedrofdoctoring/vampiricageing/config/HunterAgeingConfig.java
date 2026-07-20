@@ -113,9 +113,9 @@ public class HunterAgeingConfig {
         wiseEyeSlowdown = COMMON_BUILDER.comment("Whether you will be slowed down whilst using wise eye").define("wiseEyeSlowdown", true);
         fasterRegenerationAge = COMMON_BUILDER.comment("At what age should a hunter gain Faster Regeneration").defineInRange("fasterRegeneration", 3, 0, 5);
         fasterRegenerationMultPerAgeRank  = COMMON_BUILDER.comment("Multiplies the rate of healing and exhaustion gain from Faster Regeneration").defineList("fasterRegenerationMultPerAgeRank", Arrays.asList(1d, 1d, 1d, 1d, 1d, 1d), it -> true);
-        pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires").defineInRange("pettyHuntWorth", 1, 0, 99);
-        commonHuntWorth = COMMON_BUILDER.comment("How much a common hunt is worth. These are things like advanced vampires").defineInRange("commonHuntWorth", 3, 0, 99);
-        greaterHuntWorth = COMMON_BUILDER.comment("How much a greater hunt is worth. These are things like vampire barons").defineInRange("greaterHuntWorth", 5, 0, 99);
+        pettyHuntWorth = COMMON_BUILDER.comment("How much a petty hunt is worth. These are things like basic versions of vampires").defineInRange("pettyHuntWorth", 1, 0, 999999999);
+        commonHuntWorth = COMMON_BUILDER.comment("How much a common hunt is worth. These are things like advanced vampires").defineInRange("commonHuntWorth", 3, 0, 999999999);
+        greaterHuntWorth = COMMON_BUILDER.comment("How much a greater hunt is worth. These are things like vampire barons").defineInRange("greaterHuntWorth", 5, 0, 999999999);
         huntedForNextAge = COMMON_BUILDER.comment("How many points worth of hunted entities are needed to increase Age Rank. Count is reset on Rank Up").defineList("huntedforNextAge", Arrays.asList(20, 40, 80, 160, 250), it -> true);
         maxHealthIncrease = COMMON_BUILDER.comment("Max Health Increase for each rank. This is addition, not multiplier based").defineList("maxHealthIncrease", Arrays.asList(0D, 1D, 1D, 2D, 2D, 4D), t -> true);
         movementSpeedBonus = COMMON_BUILDER.comment("How much faster a hunter is at each age rank. This is additive, not a multiplier").defineList("movementSpeedBonus", Arrays.asList(0d, 0.0125d, 0.015d, 0.02d, 0.025d, 0.035d), t -> true);

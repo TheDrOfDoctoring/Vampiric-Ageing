@@ -71,7 +71,7 @@ public class AgeingEventHandler {
         if (event.getSource().getEntity() instanceof Player player) {
             AgeingManager manager = AgeingManager.getAge(player);
             if (manager.getMethod() instanceof HuntingMethod method) {
-                method.onAgedKill(event.getEntity(), player);
+                method.onAgedKill(event.getEntity(), player, event.getSource());
             }
         }
     }

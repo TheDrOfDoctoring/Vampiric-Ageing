@@ -94,6 +94,9 @@ public class VampiricAgeing
         if(ModList.get().isLoaded(WEREWOLVES_MODID)) {
             AgeingRegistry.registerAgeType(AgeingReference.WEREWOLF);
             AgeingRegistry.registerAgeMethod(new DevourMethod());
+            AgeingRegistry.registerAgeMethod(new WerewolfHuntingMethod());
+            AgeingRegistry.registerAgeMethod(new WerewolfMixedHuntingMethod());
+
 
             container.registerConfig(ModConfig.Type.COMMON, WerewolvesAgeingConfig.WEREWOLF_AGEING_CONFIG,MODID+"-werewolfAgeing.toml");
             NeoForge.EVENT_BUS.register(new WerewolfAgeingHandler());

@@ -19,31 +19,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class WerewolfAgeingHandler {
 
-
-
-    @SubscribeEvent
-    public void onEntityDeath(LivingDeathEvent event) {
-        if(event.getSource().getEntity() instanceof Player player && event.getSource().is(ModDamageTypes.BITE)) {
-            AgeingManager age = AgeingManager.getAge(player);
-            int pointWorth;
-            if(!(age.getMethod() instanceof DevourMethod)) return;
-
-            if(event.getEntity().getType().is(EntityTypeTagProvider.pettyDevour)) {
-                pointWorth = WerewolvesAgeingConfig.pettyDevourWorth.get();
-            } else if(event.getEntity().getType().is(EntityTypeTagProvider.commonDevour)) {
-                pointWorth = WerewolvesAgeingConfig.commonDevourWorth.get();
-            } else if(event.getEntity().getType().is(EntityTypeTagProvider.greaterDevour)) {
-                pointWorth = WerewolvesAgeingConfig.greaterDevourWorth.get();
-            } else if(event.getEntity().getType().is(EntityTypeTagProvider.exquisiteDevour)) {
-                pointWorth = WerewolvesAgeingConfig.exquisiteDevourWorth.get();
-            } else {
-                pointWorth = 0;
-            }
-            age.increaseRankPoints(pointWorth);
-            age.sync(false);
-        }
-
-    }
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();

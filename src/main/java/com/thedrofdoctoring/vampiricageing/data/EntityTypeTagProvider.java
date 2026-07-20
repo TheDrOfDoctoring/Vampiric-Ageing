@@ -27,11 +27,14 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> commonHunt = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("common_hunt"));
     public static final TagKey<EntityType<?>> greaterHunt = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("greater_hunt"));
 
-
     public static final TagKey<EntityType<?>> pettyHuntVampire = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("petty_hunt_vampire"));
     public static final TagKey<EntityType<?>> commonHuntVampire = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("common_hunt_vampire"));
     public static final TagKey<EntityType<?>> greaterHuntVampire = TagKey.create(Registries.ENTITY_TYPE,VampiricAgeing.rl("graeter_hunt_vampire"));
     public static final TagKey<EntityType<?>> infectedBlacklist = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("infected_blacklist"));
+
+    public static final TagKey<EntityType<?>> pettyHuntWerewolf = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("petty_hunt_werewolf"));
+    public static final TagKey<EntityType<?>> commonHuntWerewolf = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("common_hunt_werewolf"));
+    public static final TagKey<EntityType<?>> greaterHuntWerewolf = TagKey.create(Registries.ENTITY_TYPE, VampiricAgeing.rl("greater_hunt_werewolf"));
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
         this.tag(pettyDevour).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);
@@ -46,6 +49,10 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
         this.tag(pettyHuntVampire).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get());
         this.tag(commonHuntVampire).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
         this.tag(greaterHuntVampire).add(ModEntities.VAMPIRE_BARON.get());
+
+        this.tag(pettyHuntWerewolf).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get());
+        this.tag(commonHuntWerewolf).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
+        this.tag(greaterHuntWerewolf).add(ModEntities.VAMPIRE_BARON.get());
 
         //entities that dont count towards infected counter
         this.tag(infectedBlacklist).add(EntityType.SHEEP, EntityType.COW, EntityType.PIG, EntityType.FOX, EntityType.SQUID, EntityType.GLOW_SQUID, EntityType.AXOLOTL, EntityType.FROG, EntityType.GOAT, EntityType.WOLF, EntityType.HORSE, EntityType.DONKEY);

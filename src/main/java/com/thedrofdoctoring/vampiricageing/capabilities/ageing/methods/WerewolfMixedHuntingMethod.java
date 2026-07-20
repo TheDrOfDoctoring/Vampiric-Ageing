@@ -2,7 +2,6 @@ package com.thedrofdoctoring.vampiricageing.capabilities.ageing.methods;
 
 import com.thedrofdoctoring.vampiricageing.AgeingReference;
 import com.thedrofdoctoring.vampiricageing.capabilities.AgeingManager;
-import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeMethod;
 import com.thedrofdoctoring.vampiricageing.capabilities.ageing.IAgeType;
 import com.thedrofdoctoring.vampiricageing.config.WerewolvesAgeingConfig;
 import com.thedrofdoctoring.vampiricageing.data.EntityTypeTagProvider;
@@ -16,15 +15,15 @@ import net.neoforged.fml.ModList;
 
 import java.util.Arrays;
 
-public class DevourMethod extends HuntingMethod {
-    private static int[] devoured;
-    private static final String ID = "DEVOUR";
+public class WerewolfMixedHuntingMethod extends HuntingMethod {
 
+    private static int[] devoured;
+    private static final String ID = "W_MIXED";
 
     @Override
     public int[] getRankProgressions() {
         if(devoured == null) {
-            devoured = Arrays.stream(WerewolvesAgeingConfig.devouredForNextAge.get().toArray()).mapToInt(o -> (int)o).toArray();
+            devoured = Arrays.stream(WerewolvesAgeingConfig.huntedForNextAge.get().toArray()).mapToInt(o -> (int)o).toArray();
         }
         return devoured;
     }
@@ -45,13 +44,13 @@ public class DevourMethod extends HuntingMethod {
     @Override
     public void displayLevelRequirements(Player player, int points, int age) {
         int pointsForNextAge = getRankProgressions()[age] - points;
-        player.displayClientMessage(Component.translatable("text.vampiricageing.progress_devour", pointsForNextAge).withStyle(ChatFormatting.DARK_RED), true);
+        player.displayClientMessage(Component.translatable("text.vampiricageing.progress_hunted", pointsForNextAge).withStyle(ChatFormatting.DARK_RED), true);
     }
 
     @Override
     public void onAgedKill(LivingEntity target, Player sourceKiller, DamageSource source) {
+        int pointWorth = 0;
         if(source.is(ModDamageTypes.BITE)) {
-            int pointWorth = 0;
             if(target.getType().is(EntityTypeTagProvider.pettyDevour)) {
                 pointWorth = WerewolvesAgeingConfig.pettyDevourWorth.get();
             } else if(target.getType().is(EntityTypeTagProvider.commonDevour)) {
@@ -61,10 +60,17 @@ public class DevourMethod extends HuntingMethod {
             } else if(target.getType().is(EntityTypeTagProvider.exquisiteDevour)) {
                 pointWorth = WerewolvesAgeingConfig.exquisiteDevourWorth.get();
             }
-
-            if(pointWorth > 0) {
-                AgeingManager.getAge(sourceKiller).increaseRankPoints(pointWorth);
+        } else {
+            if(target.getType().is(EntityTypeTagProvider.pettyHuntWerewolf)) {
+                pointWorth = WerewolvesAgeingConfig.pettyHuntWorth.get();
+            } else if(target.getType().is(EntityTypeTagProvider.commonHuntWerewolf)) {
+                pointWorth = WerewolvesAgeingConfig.commonHuntWorth.get();
+            } else if(target.getType().is(EntityTypeTagProvider.greaterHuntWerewolf)) {
+                pointWorth = WerewolvesAgeingConfig.greaterHuntWorth.get();
             }
+        }
+        if(pointWorth > 0) {
+            AgeingManager.getAge(sourceKiller).increaseRankPoints(pointWorth);
         }
     }
 }
